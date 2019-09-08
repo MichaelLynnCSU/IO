@@ -107,6 +107,7 @@ With Sheets("Report")
     .Cells(1, 17).Value = "Alarm Block"
     .Cells(1, 18).Value = "Chart"
     .Cells(1, 25).Value = "ET200M/RTU"
+    .Cells(1, 26).Value = "AI-Range"
 End With
 
 Dim intn_Data, intn_Report, intk, intai As Integer
@@ -130,17 +131,17 @@ With Sheets("HWConfig")
             strRTU = "ET200M"
         End If
         'Extract symbol, comment and channel #
-        For I = 1 To intn_Data Step 1
-            If Left(.Cells(I, j).Value, 6) = "SYMBOL" Then
+        For i = 1 To intn_Data Step 1
+            If Left(.Cells(i, j).Value, 6) = "SYMBOL" Then
                 'Keep track of how many
                 intk = intk + 1
                 'Extract channel # (between 1st and 2nd comma)
-                strchannel = Trim(Mid(.Cells(I, j), InStr(1, .Cells(I, j), ",") + 1, 3))
+                strchannel = Trim(Mid(.Cells(i, j), InStr(1, .Cells(i, j), ",") + 1, 3))
                 If Right(strchannel, 1) = "," Then
                     strchannel = Left(strchannel, Len(strchannel) - 1)
                 End If
                 'Extract symbol (between 2nd and 3rd comma)
-                strsymbol = Mid(.Cells(I, j), InStr(1, .Cells(I, j), strchannel))
+                strsymbol = Mid(.Cells(i, j), InStr(1, .Cells(i, j), strchannel))
                 strsymbol = Right(strsymbol, Len(strsymbol) - Len(strchannel) - 3)
                 
                 'Extract comment (to the right of last comma)
@@ -206,7 +207,7 @@ With Sheets("HWConfig")
 '                    Next k
 '                End If
 '            End If
-        Next I
+        Next i
     Next j
 End With
 
@@ -215,9 +216,9 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "Signal Connections"
 frmCH_AI_Signals.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(3, 2).Value2)
-wb2.Sheets(1).Range("K:K").Copy Destination:=wb.Sheets("Signal Connections").Range("A1")
-wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Signal Connections").Range("B1")
-wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("Signal Connections").Range("C1")
+wb2.Sheets(1).range("K:K").Copy Destination:=wb.Sheets("Signal Connections").range("A1")
+wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("Signal Connections").range("B1")
+wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("Signal Connections").range("C1")
 wb2.Close
 'Add block to report
 Dim strLoc, strBlock As String
@@ -226,14 +227,14 @@ intn_Report = Sheets("Report").Cells(Rows.Count, 6).End(xlUp).Row
 intn_Signal = Sheets("Signal Connections").Cells(Rows.Count, 1).End(xlUp).Row
 strBlock = ""
 With Sheets("Report")
-For I = 2 To intn_Report Step 1
+For i = 2 To intn_Report Step 1
     For j = 2 To intn_Signal Step 1
-        If .Cells(I, 1).Value = Sheets("Signal Connections").Cells(j, 1).Value Then
-            .Cells(I, 16).Value = Sheets("Signal Connections").Cells(j, 2).Value
-            .Cells(I, 23).Value2 = Sheets("Signal Connections").Cells(j, 3).Value
+        If .Cells(i, 1).Value = Sheets("Signal Connections").Cells(j, 1).Value Then
+            .Cells(i, 16).Value = Sheets("Signal Connections").Cells(j, 2).Value
+            .Cells(i, 23).Value2 = Sheets("Signal Connections").Cells(j, 3).Value
         End If
     Next j
-Next I
+Next i
 End With
 
 'Pull Over Range Values
@@ -244,50 +245,50 @@ If Not Len(wsh_Path.Cells(4, 2)) > 0 Then
     frmRanges.Show
 End If
 Set wb2 = Workbooks.Open(wsh_Path.Cells(4, 2).Value2)
-wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Range").Range("A1")
-wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Range").Range("B1")
-wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("Range").Range("C1")
-wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("Range").Range("D1")
-wb2.Sheets(1).Range("L:L").Copy Destination:=wb.Sheets("Range").Range("E1")
+wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("Range").range("A1")
+wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("Range").range("B1")
+wb2.Sheets(1).range("J:J").Copy Destination:=wb.Sheets("Range").range("C1")
+wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("Range").range("D1")
+wb2.Sheets(1).range("L:L").Copy Destination:=wb.Sheets("Range").range("E1")
 wb2.Close
 'sort by block then I/O Name
-With Sheets("Range").Range("A:G")
+With Sheets("Range").range("A:G")
         .Cells.Sort Key1:=.Columns(Application.Match("Block", .Rows(1), 0)), Order1:=xlAscending, _
                     Key2:=.Columns(Application.Match("I/O name", .Rows(1), 0)), Order2:=xlDescending, _
                     Orientation:=xlTopToBottom, Header:=xlYes
 End With
 intn_Range = Sheets("Range").Cells(Rows.Count, 1).End(xlUp).Row
 'Add new block to report
-Range("F2").Select
+range("F2").Select
 ActiveCell.FormulaR1C1 = "=MID(RC[-1],FIND(RC[-2],RC[-1])+LEN(RC[-2])+1,LEN(RC[-1])-FIND(RC[-2],RC[-1])+1)"
-Range("G2").Select
+range("G2").Select
 ActiveCell.FormulaR1C1 = "=LEFT(RC[-1],FIND("".U"",RC[-1])-1)"
-Range("F2:G2").Select
-Selection.AutoFill Destination:=Range("F2:G" & intn_Range)
-Range("F2:G" & intn_Range).Select
+range("F2:G2").Select
+Selection.AutoFill Destination:=range("F2:G" & intn_Range)
+range("F2:G" & intn_Range).Select
 
 'Add range to report
 Sheets("Report").Select
-Range("G2").Select
+range("G2").Select
 ActiveCell.FormulaR1C1 = "=MATCH(RC16,Range!C1,0)"
-Range("G2").Select
-Selection.AutoFill Destination:=Range("G2:H2"), Type:=xlFillDefault
-Range("G2:H2").Select
-Selection.AutoFill Destination:=Range("G2:H" & intn_Report), Type:=xlFillDefault
+range("G2").Select
+Selection.AutoFill Destination:=range("G2:H2"), Type:=xlFillDefault
+range("G2:H2").Select
+Selection.AutoFill Destination:=range("G2:H" & intn_Report), Type:=xlFillDefault
 With Sheets("Report")
-For I = 2 To intn_Report Step 1
-    If Not Len(.Cells(I, 16).Value) > 0 Then
-        .Cells(I, 7).Value = ""
-        .Cells(I, 8).Value = ""
+For i = 2 To intn_Report Step 1
+    If Not Len(.Cells(i, 16).Value) > 0 Then
+        .Cells(i, 7).Value = ""
+        .Cells(i, 8).Value = ""
     Else:
-        If IsError(Sheets("Range").Cells(.Cells(I, 7).Value + 2, 7)) = True Then
-            .Cells(I, 17).Value = ""
-        Else: .Cells(I, 17).Value = Sheets("Range").Cells(.Cells(I, 7).Value + 2, 7).Value
+        If IsError(Sheets("Range").Cells(.Cells(i, 7).Value + 2, 7)) = True Then
+            .Cells(i, 17).Value = ""
+        Else: .Cells(i, 17).Value = Sheets("Range").Cells(.Cells(i, 7).Value + 2, 7).Value
         End If
-        .Cells(I, 7).Value = Sheets("Range").Cells(.Cells(I, 7).Value, 3).Value
-        .Cells(I, 8).Value = Sheets("Range").Cells(.Cells(I, 8).Value + 1, 3).Value
+        .Cells(i, 7).Value = Sheets("Range").Cells(.Cells(i, 7).Value, 3).Value
+        .Cells(i, 8).Value = Sheets("Range").Cells(.Cells(i, 8).Value + 1, 3).Value
     End If
-Next I
+Next i
 End With
 
 'Add DI Values
@@ -295,8 +296,8 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "DI Signal"
 frmCH_DI_Signals.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(11, 2).Value2)
-wb2.Sheets(1).Range("K:K").Copy Destination:=wb.Sheets("DI Signal").Range("A1")
-wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("DI Signal").Range("B1")
+wb2.Sheets(1).range("K:K").Copy Destination:=wb.Sheets("DI Signal").range("A1")
+wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("DI Signal").range("B1")
 wb2.Close
 'Add block to report
 Dim intn_DISignal As Integer
@@ -304,16 +305,16 @@ intn_Report = Sheets("Report").Cells(Rows.Count, 1).End(xlUp).Row
 intn_DISignal = Sheets("DI Signal").Cells(Rows.Count, 1).End(xlUp).Row
 With Sheets("Report")
 .Cells(1, 23).Value = "Digital Block"
-For I = 2 To intn_Report Step 1
-    If .Cells(I, 24).Value > 0 Then
+For i = 2 To intn_Report Step 1
+    If .Cells(i, 24).Value > 0 Then
         For j = 2 To intn_Signal Step 1
-            If .Cells(I, 1).Value = Sheets("DI Signal").Cells(j, 1).Value Then
-                .Cells(I, 19).Value = Sheets("DI Signal").Cells(j, 2).Value
-                .Cells(I, 13).Value2 = "Digital"
+            If .Cells(i, 1).Value = Sheets("DI Signal").Cells(j, 1).Value Then
+                .Cells(i, 19).Value = Sheets("DI Signal").Cells(j, 2).Value
+                .Cells(i, 13).Value2 = "Digital"
             End If
         Next j
     End If
-Next I
+Next i
 End With
 
 'Pull Address
@@ -335,37 +336,37 @@ Loop
 Close #1
 With Sheets("Symbol Table")
     intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
-    For I = intn_SymbolTable To 1 Step -1
-        .Cells(I, 2).Value2 = Right(Left(.Cells(I, 1).Value2, 28), Len(Left(.Cells(I, 1).Value2, 28)) - 4)
-        .Cells(I, 3).Value2 = Trim(Mid(.Cells(I, 1).Value2, 29, 2))
-        .Cells(I, 4).Value2 = Trim(Mid(.Cells(I, 1).Value2, 34, 7))
-        If .Cells(I, 3).Value2 = "I" Or .Cells(I, 3).Value2 = "IW" Or .Cells(I, 3).Value2 = "Q" Or .Cells(I, 3).Value2 = "QW" Then
-            .Cells(I, 6).Value = 1
+    For i = intn_SymbolTable To 1 Step -1
+        .Cells(i, 2).Value2 = Right(Left(.Cells(i, 1).Value2, 28), Len(Left(.Cells(i, 1).Value2, 28)) - 4)
+        .Cells(i, 3).Value2 = Trim(Mid(.Cells(i, 1).Value2, 29, 2))
+        .Cells(i, 4).Value2 = Trim(Mid(.Cells(i, 1).Value2, 34, 7))
+        If .Cells(i, 3).Value2 = "I" Or .Cells(i, 3).Value2 = "IW" Or .Cells(i, 3).Value2 = "Q" Or .Cells(i, 3).Value2 = "QW" Then
+            .Cells(i, 6).Value = 1
         End If
-        If .Cells(I, 3).Value2 = "I" Or .Cells(I, 3).Value2 = "Q" Then
-            .Cells(I, 5).Value2 = .Cells(I, 3).Value2 & " " & Format(.Cells(I, 4).Value2, "0.0")
-        Else: .Cells(I, 5).Value2 = .Cells(I, 3).Value2 & " " & .Cells(I, 4).Value2
+        If .Cells(i, 3).Value2 = "I" Or .Cells(i, 3).Value2 = "Q" Then
+            .Cells(i, 5).Value2 = .Cells(i, 3).Value2 & " " & Format(.Cells(i, 4).Value2, "0.0")
+        Else: .Cells(i, 5).Value2 = .Cells(i, 3).Value2 & " " & .Cells(i, 4).Value2
         End If
-        If .Cells(I, 3).Value2 = "I" Then
-            .Cells(I, 7).Value2 = "DI 24V"
+        If .Cells(i, 3).Value2 = "I" Then
+            .Cells(i, 7).Value2 = "DI 24V"
         End If
-        If .Cells(I, 3).Value2 = "Q" Then
-            .Cells(I, 7).Value2 = "DO 24V"
+        If .Cells(i, 3).Value2 = "Q" Then
+            .Cells(i, 7).Value2 = "DO 24V"
         End If
-        If .Cells(I, 6).Value = "" Then
-            .Cells(I, 6).EntireRow.Delete
+        If .Cells(i, 6).Value = "" Then
+            .Cells(i, 6).EntireRow.Delete
         End If
-    Next I
+    Next i
     intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
-    Sheets("Report").Range("A:A").Copy Destination:=wb.Sheets("Symbol Table").Range("H1")
-    For I = 1 To intn_Report Step 1
+    Sheets("Report").range("A:A").Copy Destination:=wb.Sheets("Symbol Table").range("H1")
+    For i = 1 To intn_Report Step 1
         For j = 1 To intn_SymbolTable Step 1
-            If .Cells(I, 8).Value2 = Trim(.Cells(j, 2).Value2) Then
-                Sheets("Report").Cells(I, 2).Value2 = .Cells(j, 5).Value2
-                Sheets("Report").Cells(I, 13).Value2 = .Cells(j, 7).Value2
+            If .Cells(i, 8).Value2 = Trim(.Cells(j, 2).Value2) Then
+                Sheets("Report").Cells(i, 2).Value2 = .Cells(j, 5).Value2
+                Sheets("Report").Cells(i, 13).Value2 = .Cells(j, 7).Value2
             End If
         Next j
-    Next I
+    Next i
 End With
 
 'Pull Over Alarm Values
@@ -383,10 +384,10 @@ frmAlarm.Show
 
 'Pull columns from Nickajack_Plant_NJH_Meas_Mon_Alarming
 Set wb2 = Workbooks.Open(wsh_Path.Cells(5, 2).Value2)
-wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Alarm").Range("A1")
-wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Alarm").Range("B1")
-wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("Alarm").Range("C1")
-wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("Alarm").Range("D1")
+wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("Alarm").range("A1")
+wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("Alarm").range("B1")
+wb2.Sheets(1).range("J:J").Copy Destination:=wb.Sheets("Alarm").range("C1")
+wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("Alarm").range("D1")
 wb2.Close
 
 ''sort by block then I/O Name
@@ -435,12 +436,12 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 '  Debug.Print "rows_Symbol: " & rows_Symbol
 '  Debug.Print "rows_Signal: " & rows_Signal
   
-    For I = 2 To rows_Symbol Step 1
+    For i = 2 To rows_Symbol Step 1
     
       For j = 2 To rows_Signal Step 1
       
         'get a signal(i) and symbol(j) value
-        current_symbol = Sheets("Report").Cells(I, 1).Value2
+        current_symbol = Sheets("Report").Cells(i, 1).Value2
         current_signal = Sheets("Signal Connections").Cells(j, 1).Value2
          ' Debug.Print "current_symbol: " & current_symbol
          ' Debug.Print "current_signal: " & current_signal
@@ -587,23 +588,23 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
                                                 
                                                 If IOTag = "U_AH" Then
 '                                                  Debug.Print "intAlarmAH: " & intAlarmAH
-                                                  Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(I, 12)
+                                                  Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 12)
                                                   
                                                 End If
                                                 
                                                 If IOTag = "U_WH" Then
 '                                                  Debug.Print "intAlarmWH: " & intAlarmWH
-                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(I, 10)
+                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 10)
                                                 End If
                                                 
                                                 If IOTag = "U_WL" Then
 '                                                  Debug.Print "intAlarmWL: " & intAlarmWL
-                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(I, 9)
+                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 9)
                                                 End If
                                                 
                                                 If IOTag = "U_AL" Then
 '                                                  Debug.Print "intAlarmAL: " & intAlarmAL
-                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(I, 11)
+                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 11)
                                                 End If
                                                 
                                            
@@ -662,7 +663,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
     
 
   For q = 2 To rows_symbol_Report Step 1
-    Debug.Print "CURRENT COUNT ", q
+    'Debug.Print "CURRENT COUNT ", q
     ' after symbol is matched with its messafwes set it nack to -1
     Dim target_channel As String
     target_channel = "-1"
@@ -675,13 +676,18 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
     symbol_from_report = Sheets("Report").Cells(q, 1).Value2
     'Debug.Print symbol_from_report
     
-
-    For I = 2 To cols_HWConfig_T Step 1
+          If q > 161 Then
+              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
+                  'Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
+               End If
+          End If
+                            
+    For i = 2 To cols_HWConfig_T Step 1
         For j = 2 To rows_HWConfig_T Step 1
         'start part A of algorithm
         
               Dim HWConfig_line As String
-              HWConfig_line = Sheets("HWConfig").Cells(j, I).Value2
+              HWConfig_line = Sheets("HWConfig").Cells(j, i).Value2
         
         
                 'get signal from HWConfig and match it to symbol from report
@@ -696,14 +702,13 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                   remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
                   
                             If q > 161 Then
-                              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
-                                  Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
-                               End If
-                               
-                              If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
-                                  Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
-                              End If
-                                 
+                              If i > 32 Then
+                                'Debug.Print "CURRENT LINE ", HWConfig_line
+                                'Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
+                                    If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
+                                        'Debug.Print "CHECK IF THE SYMBOL O PASSES", signal_from_HWCONFIG
+                                    End If
+                                End If
                             End If
                                
                                
@@ -732,9 +737,10 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                 ElseIf current_channel_T = "6" Or current_channel_T = "7" Then
                                    current_channel_T = "3"
                                 Else
-                                   Debug.Print "WE GOT HERE, OUT OF SIGNAL RANGE ", current_channel_T
+                                   'Debug.Print "WE GOT HERE, OUT OF SIGNAL RANGE ", current_channel_T
                                 End If
-                                                             
+                                   
+                                                                         
                                          
                                     If Trim(current_signal_T) = Trim(symbol_from_report) Then
                                          
@@ -898,11 +904,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                  End If
                              End If
                                 
-                                
-                                
-                                
-                                
-                            
+                                                       
 
                             End If
 
@@ -914,11 +916,11 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
               current_symbol_T = ""
           
         Next j
-      Next I
+      Next i
       If Len(target_message) > 1 Then
-            Debug.Print "NAME ", symbol_from_report, "SYMBOL MESSAGES", target_message
-            Debug.Print "FOUND CHANNEL MATCH AI", target_channel
-            Dim TxtRng  As Range
+            'Debug.Print "NAME ", symbol_from_report, "SYMBOL MESSAGES", target_message
+            'Debug.Print "FOUND CHANNEL MATCH AI", target_channel
+            Dim TxtRng  As range
             Set TxtRng = Sheets("Report").Cells(q, 13)
             TxtRng.Value = target_message
             target_message = ""
@@ -1073,34 +1075,34 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "DI"
 frmDI.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(12, 2).Value2)
-wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("DI").Range("A1")
-wb2.Sheets(1).Range("L:L").Copy Destination:=wb.Sheets("DI").Range("B1")
+wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("DI").range("A1")
+wb2.Sheets(1).range("L:L").Copy Destination:=wb.Sheets("DI").range("B1")
 wb2.Close
 intn_DI = Sheets("DI").Cells(Rows.Count, 1).End(xlUp).Row
 With Sheets("DI")
     Sheets("Report").Cells(1, 20).Value2 = "Sig #"
     Sheets("Report").Cells(1, 21).Value2 = "Block #"
     Sheets("Report").Cells(1, 22).Value2 = "Digital Chart"
-    For I = 2 To intn_Report Step 1
+    For i = 2 To intn_Report Step 1
         For j = 1 To intn_DI Step 1
-            If Sheets("Report").Cells(I, 19).Value2 = .Cells(j, 1).Value2 Then
+            If Sheets("Report").Cells(i, 19).Value2 = .Cells(j, 1).Value2 Then
                 'Sig #
-                Sheets("Report").Cells(I, 20).Value2 = Right(.Cells(j, 2).Value2, Len(.Cells(j, 2).Value2) - InStrRev(.Cells(j, 2).Value2, ".I"))
+                Sheets("Report").Cells(i, 20).Value2 = Right(.Cells(j, 2).Value2, Len(.Cells(j, 2).Value2) - InStrRev(.Cells(j, 2).Value2, ".I"))
                 'Block#
-                Sheets("Report").Cells(I, 21).Value2 = Left(.Cells(j, 2).Value2, Len(.Cells(j, 2)) - Len(Sheets("Report").Cells(I, 20)))
-                Sheets("Report").Cells(I, 21).Value2 = Right(Sheets("Report").Cells(I, 21).Value2, Len(Sheets("Report").Cells(I, 21).Value2) - InStrRev(Sheets("Report").Cells(I, 21).Value2, "\"))
+                Sheets("Report").Cells(i, 21).Value2 = Left(.Cells(j, 2).Value2, Len(.Cells(j, 2)) - Len(Sheets("Report").Cells(i, 20)))
+                Sheets("Report").Cells(i, 21).Value2 = Right(Sheets("Report").Cells(i, 21).Value2, Len(Sheets("Report").Cells(i, 21).Value2) - InStrRev(Sheets("Report").Cells(i, 21).Value2, "\"))
                 'Chart
-                Sheets("Report").Cells(I, 22).Value2 = Left(.Cells(j, 2).Value2, Len(.Cells(j, 2)) - (Len(.Cells(j, 2)) - InStrRev(.Cells(j, 2).Value2, "\")))
-                If Len(Sheets("Report").Cells(I, 22).Value2) > 0 Then
-                    Sheets("Report").Cells(I, 22).Value2 = Left(Sheets("Report").Cells(I, 22).Value2, Len(Sheets("Report").Cells(I, 22).Value2) - 1)
+                Sheets("Report").Cells(i, 22).Value2 = Left(.Cells(j, 2).Value2, Len(.Cells(j, 2)) - (Len(.Cells(j, 2)) - InStrRev(.Cells(j, 2).Value2, "\")))
+                If Len(Sheets("Report").Cells(i, 22).Value2) > 0 Then
+                    Sheets("Report").Cells(i, 22).Value2 = Left(Sheets("Report").Cells(i, 22).Value2, Len(Sheets("Report").Cells(i, 22).Value2) - 1)
                 End If
-                Sheets("Report").Cells(I, 22).Value2 = Right(Sheets("Report").Cells(I, 22).Value2, Len(Sheets("Report").Cells(I, 22).Value2) - InStrRev(Sheets("Report").Cells(I, 22).Value2, ".IN"))
-                If Len(Sheets("Report").Cells(I, 22).Value2) > 3 Then
-                    Sheets("Report").Cells(I, 22).Value2 = Right(Sheets("Report").Cells(I, 22).Value2, Len(Sheets("Report").Cells(I, 22).Value2) - 4)
+                Sheets("Report").Cells(i, 22).Value2 = Right(Sheets("Report").Cells(i, 22).Value2, Len(Sheets("Report").Cells(i, 22).Value2) - InStrRev(Sheets("Report").Cells(i, 22).Value2, ".IN"))
+                If Len(Sheets("Report").Cells(i, 22).Value2) > 3 Then
+                    Sheets("Report").Cells(i, 22).Value2 = Right(Sheets("Report").Cells(i, 22).Value2, Len(Sheets("Report").Cells(i, 22).Value2) - 4)
                 End If
             End If
         Next j
-    Next I
+    Next i
 End With
 
 'Add DI Alarm Text
@@ -1109,85 +1111,85 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "DI Alarm"
 frmDIAlarm.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(13, 2).Value2)
-wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("DI Alarm").Range("A1")
-wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("DI Alarm").Range("B1")
-wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("DI Alarm").Range("C1")
-wb2.Sheets(1).Range("H:H").Copy Destination:=wb.Sheets("DI Alarm").Range("D1")
-wb2.Sheets(1).Range("N:N").Copy Destination:=wb.Sheets("DI Alarm").Range("E1")
+wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("DI Alarm").range("A1")
+wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("DI Alarm").range("B1")
+wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("DI Alarm").range("C1")
+wb2.Sheets(1).range("H:H").Copy Destination:=wb.Sheets("DI Alarm").range("D1")
+wb2.Sheets(1).range("N:N").Copy Destination:=wb.Sheets("DI Alarm").range("E1")
 wb2.Close
 intn_DIAlarm = Sheets("DI Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 With Sheets("DI Alarm")
-    For I = 2 To intn_Report Step 1
+    For i = 2 To intn_Report Step 1
         For j = 1 To intn_DIAlarm Step 1
-            If Sheets("Report").Cells(I, 22).Value2 = .Cells(j, 1) And Sheets("Report").Cells(I, 21).Value2 = .Cells(j, 2).Value2 Then
-                If Sheets("Report").Cells(I, 20).Value2 = "I_1" Then
+            If Sheets("Report").Cells(i, 22).Value2 = .Cells(j, 1) And Sheets("Report").Cells(i, 21).Value2 = .Cells(j, 2).Value2 Then
+                If Sheets("Report").Cells(i, 20).Value2 = "I_1" Then
                     If .Cells(j, 3).Value2 = "EV_ID1" And .Cells(j, 4) = "SIG_1" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_2" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_2" Then
                     If .Cells(j, 3).Value2 = "EV_ID1" And .Cells(j, 4) = "SIG_2" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_3" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_3" Then
                     If .Cells(j, 3).Value2 = "EV_ID1" And .Cells(j, 4) = "SIG_3" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_4" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_4" Then
                     If .Cells(j, 3).Value2 = "EV_ID1" And .Cells(j, 4) = "SIG_4" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_5" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_5" Then
                     If .Cells(j, 3).Value2 = "EV_ID1" And .Cells(j, 4) = "SIG_5" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_6" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_6" Then
                     If .Cells(j, 3).Value2 = "EV_ID1" And .Cells(j, 4) = "SIG_6" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_7" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_7" Then
                     If .Cells(j, 3).Value2 = "EV_ID1" And .Cells(j, 4) = "SIG_7" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_8" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_8" Then
                     If .Cells(j, 3).Value2 = "EV_ID1" And .Cells(j, 4) = "SIG_8" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_9" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_9" Then
                     If .Cells(j, 3).Value2 = "EV_ID2" And .Cells(j, 4) = "SIG_1" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_10" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_10" Then
                     If .Cells(j, 3).Value2 = "EV_ID2" And .Cells(j, 4) = "SIG_2" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_11" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_11" Then
                     If .Cells(j, 3).Value2 = "EV_ID2" And .Cells(j, 4) = "SIG_3" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_12" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_12" Then
                     If .Cells(j, 3).Value2 = "EV_ID2" And .Cells(j, 4) = "SIG_4" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_13" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_13" Then
                     If .Cells(j, 3).Value2 = "EV_ID2" And .Cells(j, 4) = "SIG_5" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_14" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_14" Then
                     If .Cells(j, 3).Value2 = "EV_ID2" And .Cells(j, 4) = "SIG_6" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_15" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_15" Then
                     If .Cells(j, 3).Value2 = "EV_ID2" And .Cells(j, 4) = "SIG_7" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
-                ElseIf Sheets("Report").Cells(I, 20).Value2 = "I_16" Then
+                ElseIf Sheets("Report").Cells(i, 20).Value2 = "I_16" Then
                     If .Cells(j, 3).Value2 = "EV_ID2" And .Cells(j, 4) = "SIG_8" Then
-                        Sheets("Report").Cells(I, 15).Value2 = .Cells(j, 5).Value2
+                        Sheets("Report").Cells(i, 15).Value2 = .Cells(j, 5).Value2
                     End If
                 End If
             End If
         Next j
-    Next I
+    Next i
 End With
 
 'Add Rack 1 SBO Data
@@ -1197,27 +1199,36 @@ Set wshRack = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sh
 frmRack.Show
 If Len(wsh_Path.Cells(7, 2)) > 5 Then
     Set wb2 = Workbooks.Open(wsh_Path.Cells(7, 2).Value2)
-    wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Rack").Range("A1")
-    wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Rack").Range("B1")
-    wb2.Sheets(1).Range("G:G").Copy Destination:=wb.Sheets("Rack").Range("C1")
+    wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("Rack").range("A1")
+    wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("Rack").range("B1")
+    wb2.Sheets(1).range("G:G").Copy Destination:=wb.Sheets("Rack").range("C1")
     wb2.Close
     With Sheets("Rack")
         intn_Rack = .Cells(Rows.Count, 1).End(xlUp).Row
         intn_Report = Sheets("Report").Cells(Rows.Count, 6).End(xlUp).Row
-        For I = 2 To intn_Rack Step 2
-            .Cells(I, 4).Value2 = Right(.Cells(I, 1).Value2, Len(.Cells(I, 1)) - 4)
-            .Cells(I, 5).Value2 = Right(.Cells(I, 2).Value2, Len(.Cells(I, 2)) - 1)
-            .Cells(I, 5).Value2 = Left(.Cells(I, 5).Value2, Len(.Cells(I, 5)) - 3)
+        For i = 2 To intn_Rack Step 2
+            .Cells(i, 4).Value2 = Right(.Cells(i, 1).Value2, Len(.Cells(i, 1)) - 4)
+            .Cells(i, 5).Value2 = Right(.Cells(i, 2).Value2, Len(.Cells(i, 2)) - 1)
+            .Cells(i, 5).Value2 = Left(.Cells(i, 5).Value2, Len(.Cells(i, 5)) - 3)
             
             'Add data to report
-            Sheets("Report").Cells(intn_Report + I / 2, 1).Value2 = .Cells(I, 3).Value2
-            Sheets("Report").Cells(intn_Report + I / 2, 4).Value = 1
-            Sheets("Report").Cells(intn_Report + I / 2, 5).Value2 = .Cells(I, 4).Value2
-            Sheets("Report").Cells(intn_Report + I / 2, 6).Value2 = .Cells(I, 5).Value2
-            Sheets("Report").Cells(intn_Report + I / 2, 13).Value2 = "WR_X_SBO"
-        Next I
+            Sheets("Report").Cells(intn_Report + i / 2, 1).Value2 = .Cells(i, 3).Value2
+            Sheets("Report").Cells(intn_Report + i / 2, 4).Value = 1
+            Sheets("Report").Cells(intn_Report + i / 2, 5).Value2 = .Cells(i, 4).Value2
+            Sheets("Report").Cells(intn_Report + i / 2, 6).Value2 = .Cells(i, 5).Value2
+            Sheets("Report").Cells(intn_Report + i / 2, 13).Value2 = "WR_X_SBO"
+        Next i
     End With
 End If
+
+
+
+
+
+
+
+
+
 
 'Add Rack 1 AI1 Data
 Dim intn_AI As Integer
@@ -1226,47 +1237,174 @@ Set wshAI = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Shee
 frmAI.Show
 If Len(wsh_Path.Cells(8, 2)) > 5 Then
     Set wb2 = Workbooks.Open(wsh_Path.Cells(8, 2).Value2)
-    wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("AI").Range("A1")
-    wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("AI").Range("B1")
-    wb2.Sheets(1).Range("G:G").Copy Destination:=wb.Sheets("AI").Range("C1")
-    wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("AI").Range("D1")
+    wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("AI").range("A1")
+    wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("AI").range("B1")
+    wb2.Sheets(1).range("G:G").Copy Destination:=wb.Sheets("AI").range("C1")
+    wb2.Sheets(1).range("J:J").Copy Destination:=wb.Sheets("AI").range("D1")
+    wb2.Sheets(1).range("AB:AB").Copy Destination:=wb.Sheets("AI").range("J1")
     wb2.Close
+
+    
+   
+    
     With Sheets("AI")
         intn_AI = .Cells(Rows.Count, 1).End(xlUp).Row
-        For I = 2 To intn_AI Step 1
-            .Cells(I, 5).Value2 = Right(.Cells(I, 1).Value2, Len(.Cells(I, 1)) - 4)
-            .Cells(I, 6).Value2 = Left(.Cells(I, 2).Value2, 1)
-            .Cells(I, 7).Value2 = Right(.Cells(I, 2).Value2, Len(.Cells(I, 2)) - 1)
-            If .Cells(I, 6).Value2 = "V" Then
-                .Cells(I, 7).Value2 = Left(.Cells(I, 7).Value2, Len(.Cells(I, 7)) - 5)
-                .Cells(I, 8).Value2 = Right(.Cells(I, 2).Value2, 5)
+        For i = 2 To intn_AI Step 1
+            .Cells(i, 5).Value2 = Right(.Cells(i, 1).Value2, Len(.Cells(i, 1)) - 4)
+            .Cells(i, 6).Value2 = Left(.Cells(i, 2).Value2, 1)
+            .Cells(i, 7).Value2 = Right(.Cells(i, 2).Value2, Len(.Cells(i, 2)) - 1)
+            If .Cells(i, 6).Value2 = "V" Then
+                .Cells(i, 7).Value2 = Left(.Cells(i, 7).Value2, Len(.Cells(i, 7)) - 5)
+                .Cells(i, 8).Value2 = Right(.Cells(i, 2).Value2, 5)
             End If
-        Next I
+        Next i
         .Cells(1, 5).Value2 = "Slot #"
         .Cells(1, 6).Value2 = "V/Q"
         .Cells(1, 7).Value2 = "Channel #"
         .Cells(1, 8).Value2 = "Low/High"
     End With
-    With Sheets("AI").Range("A:H")
+    With Sheets("AI").range("A:H")
         .Cells.Sort Key1:=.Columns(Application.Match("Slot #", .Rows(1), 0)), Order1:=xlAscending, _
                     Key2:=.Columns(Application.Match("Channel #", .Rows(1), 0)), Order2:=xlAscending, _
                     Key3:=.Columns(Application.Match("Low/High", .Rows(1), 0)), Order2:=xlAscending, _
                     Orientation:=xlTopToBottom, Header:=xlYes
     End With
+    
+    
     'Add data to report
     With Sheets("AI")
         intn_Report = Sheets("Report").Cells(Rows.Count, 6).End(xlUp).Row
-        For I = 4 To intn_AI Step 3
-            Sheets("Report").Cells(intn_Report + (I - 1) / 3, 1).Value2 = .Cells(I, 3).Value2
-            Sheets("Report").Cells(intn_Report + (I - 1) / 3, 4).Value = 1
-            Sheets("Report").Cells(intn_Report + (I - 1) / 3, 5).Value2 = .Cells(I, 5).Value2
-            Sheets("Report").Cells(intn_Report + (I - 1) / 3, 6).Value2 = .Cells(I, 7).Value2
-            Sheets("Report").Cells(intn_Report + (I - 1) / 3, 7).Value2 = .Cells(I - 2, 4).Value2
-            Sheets("Report").Cells(intn_Report + (I - 1) / 3, 8).Value2 = .Cells(I - 1, 4).Value2
-            Sheets("Report").Cells(intn_Report + I / 2, 13).Value2 = "RD_X_AI1"
-        Next I
+        For i = 4 To intn_AI Step 3
+            Sheets("Report").Cells(intn_Report + (i - 1) / 3, 1).Value2 = .Cells(i, 3).Value2
+            Sheets("Report").Cells(intn_Report + (i - 1) / 3, 4).Value = 1
+            Sheets("Report").Cells(intn_Report + (i - 1) / 3, 5).Value2 = .Cells(i, 5).Value2
+            Sheets("Report").Cells(intn_Report + (i - 1) / 3, 6).Value2 = .Cells(i, 7).Value2
+            Sheets("Report").Cells(intn_Report + (i - 1) / 3, 7).Value2 = .Cells(i - 2, 4).Value2
+            Sheets("Report").Cells(intn_Report + (i - 1) / 3, 8).Value2 = .Cells(i - 1, 4).Value2
+            Sheets("Report").Cells(intn_Report + i / 2, 13).Value2 = "RD_X_AI1"
+        Next i
     End With
 End If
+
+'Add relevant data to NOC
+
+Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+    ws2.Name = "Normal OC"
+frmNewDigit.Show
+Set wb2 = Workbooks.Open(wsh_Path.Cells(14, 2).Value2)
+wb2.Sheets(1).range("L:L").Copy Destination:=wb.Sheets("Normal OC").range("A1")
+wb2.Sheets(1).range("K:K").Copy Destination:=wb.Sheets("Normal OC").range("B1")
+wb2.Close
+
+'-----------------------------------new code for AI & NOC
+
+
+
+
+    Dim rows_symbol_Report_AI
+    rows_symbol_Report_AI = Sheets("Report").UsedRange.Rows.Count
+    
+    Dim rows_HWConfig_AI
+    rows_HWConfig_AI = Sheets("AI").UsedRange.Rows.Count
+    
+    Dim rows_HWConfig_NOC
+    rows_HWConfig_NOC = Sheets("Normal OC").UsedRange.Rows.Count
+
+    For q = 2 To rows_symbol_Report_AI Step 1
+
+        Dim symbol_from_report_AI As String
+
+        symbol_from_report_AI = Sheets("Report").Cells(q, 1).Value2
+       ' Debug.Print symbol_from_report_AI
+   
+            'Add missing (AI) RDX block types
+            For j = 2 To rows_HWConfig_AI Step 1
+
+                Dim IOComment As String
+                current_IOComment = Sheets("AI").Cells(j, 3)
+               ' Debug.Print current_IOComment
+
+
+                If Trim(symbol_from_report_AI) = Trim(current_IOComment) Then
+                
+                      Dim checkForEmpty As String
+                      checkForEmpty = Sheets("Report").Cells(q, 13)
+                      
+                      
+                      If Len(checkForEmpty) < 1 Then
+                      Dim current_IOBlock As String
+                      current_IOBlock = Sheets("AI").Cells(j, 10)
+                     ' Debug.Print current_IOBlock
+                      Sheets("AI").Cells(j, 10).Copy Sheets("Report").Cells(q, 13)
+                      End If
+
+                End If
+
+            Next
+            
+                
+
+            
+           ' add NOCs from new digital lists to the report
+           For k = 2 To rows_HWConfig_NOC Step 1
+            
+                Dim noc_signal As String
+                noc_signal = Sheets("Normal OC").Cells(k, 1)
+                'Debug.Print noc_signal
+
+
+                If Trim(symbol_from_report_AI) = Trim(noc_signal) Then
+                        
+                      If noc_signal <> "Spare" Then
+                         Dim current_NOC As String
+                         current_NOC = Sheets("Normal OC").Cells(k, 2)
+                         'Debug.Print current_NOC
+                         'Debug.Print noc_signal
+                         Sheets("Normal OC").Cells(k, 2).Copy Sheets("Report").Cells(q, 14)
+                      End If
+                End If
+            
+
+        Next
+        
+        'split the AI type and the Range
+        
+          
+        Dim seperateString As String
+        seperateString = Sheets("Report").Cells(q, 13)
+      
+
+        Dim range2
+        Dim type2
+             
+        Dim POS
+        
+        POS = InStr(seperateString, """")
+        range2 = Mid(seperateString, POS + 1, Len(seperateString))
+        
+        POS = InStr(range2, """")
+        range2 = Mid(range2, POS + 1, Len(range2))
+        'Debug.Print range2
+        range2 = Replace(range2, """", "")
+    
+        type2 = Mid(seperateString, 1, POS)
+        'Debug.Print type2
+        type2 = Replace(type2, """", "")
+        
+        Sheets("Report").Cells(q, 13).Value = Trim(range2)
+        Sheets("Report").Cells(q, 26).Value = Trim(type2)
+    
+        
+        
+        
+        
+    Next
+    
+'-----------------------------------end code for AI & NOC
+
+
+
+
 
 'Add SOE Data
 Dim intn_SOE As Integer
@@ -1275,46 +1413,46 @@ Set wshSOE = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.She
 frmSOE.Show
 If Len(wsh_Path.Cells(9, 2)) > 5 Then
     Set wb2 = Workbooks.Open(wsh_Path.Cells(9, 2).Value2)
-    wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("SOE").Range("A1")
-    wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("SOE").Range("B1")
-    wb2.Sheets(1).Range("G:G").Copy Destination:=wb.Sheets("SOE").Range("C1")
-    wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("SOE").Range("D1")
-    wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("SOE").Range("E1")
+    wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("SOE").range("A1")
+    wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("SOE").range("B1")
+    wb2.Sheets(1).range("G:G").Copy Destination:=wb.Sheets("SOE").range("C1")
+    wb2.Sheets(1).range("J:J").Copy Destination:=wb.Sheets("SOE").range("D1")
+    wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("SOE").range("E1")
     wb2.Close
     With Sheets("SOE")
         intn_SOE = .Cells(Rows.Count, 1).End(xlUp).Row
         intn_Report = Sheets("Report").Cells(Rows.Count, 6).End(xlUp).Row
-        For I = 2 To intn_SOE Step 1
-            .Cells(I, 6).Value2 = Right(.Cells(I, 1).Value2, Len(.Cells(I, 1).Value2) - 4)
-            .Cells(I, 7).Value2 = Left(.Cells(I, 2).Value2, 1)
-            If .Cells(I, 7).Value2 = "Q" Then
-                .Cells(I, 8).Value2 = Right(.Cells(I, 2).Value2, Len(.Cells(I, 2).Value2) - 1)
-            Else: .Cells(I, 8).Value2 = Right(.Cells(I, 2).Value2, Len(.Cells(I, 2).Value2) - 3)
+        For i = 2 To intn_SOE Step 1
+            .Cells(i, 6).Value2 = Right(.Cells(i, 1).Value2, Len(.Cells(i, 1).Value2) - 4)
+            .Cells(i, 7).Value2 = Left(.Cells(i, 2).Value2, 1)
+            If .Cells(i, 7).Value2 = "Q" Then
+                .Cells(i, 8).Value2 = Right(.Cells(i, 2).Value2, Len(.Cells(i, 2).Value2) - 1)
+            Else: .Cells(i, 8).Value2 = Right(.Cells(i, 2).Value2, Len(.Cells(i, 2).Value2) - 3)
             End If
-        Next I
+        Next i
         .Cells(1, 6).Value2 = "Slot #"
         .Cells(1, 7).Value2 = "I/Q"
         .Cells(1, 8).Value2 = "Channel #"
     End With
-    With Sheets("SOE").Range("A:H")
+    With Sheets("SOE").range("A:H")
             .Cells.Sort Key1:=.Columns(Application.Match("Slot #", .Rows(1), 0)), Order1:=xlAscending, _
                         Key2:=.Columns(Application.Match("Channel #", .Rows(1), 0)), Order2:=xlAscending, _
                         Key3:=.Columns(Application.Match("I/Q", .Rows(1), 0)), Order2:=xlAscending, _
                         Orientation:=xlTopToBottom, Header:=xlYes
     End With
     With Sheets("SOE")
-        For I = 3 To intn_SOE Step 2
-            Sheets("Report").Cells(intn_Report + (I - 1) / 2, 1).Value2 = .Cells(I, 3).Value2
-            Sheets("Report").Cells(intn_Report + (I - 1) / 2, 4).Value = 1
-            Sheets("Report").Cells(intn_Report + (I - 1) / 2, 5).Value2 = .Cells(I, 6).Value2
-            Sheets("Report").Cells(intn_Report + (I - 1) / 2, 6).Value2 = .Cells(I, 8).Value2
-            If .Cells(I - 1, 4).Value = 0 Then
-                Sheets("Report").Cells(intn_Report + (I - 1) / 2, 14).Value2 = "NO"
-            Else: Sheets("Report").Cells(intn_Report + (I - 1) / 2, 14).Value2 = "NC"
+        For i = 3 To intn_SOE Step 2
+            Sheets("Report").Cells(intn_Report + (i - 1) / 2, 1).Value2 = .Cells(i, 3).Value2
+            Sheets("Report").Cells(intn_Report + (i - 1) / 2, 4).Value = 1
+            Sheets("Report").Cells(intn_Report + (i - 1) / 2, 5).Value2 = .Cells(i, 6).Value2
+            Sheets("Report").Cells(intn_Report + (i - 1) / 2, 6).Value2 = .Cells(i, 8).Value2
+            If .Cells(i - 1, 4).Value = 0 Then
+                Sheets("Report").Cells(intn_Report + (i - 1) / 2, 14).Value2 = "NO"
+            Else: Sheets("Report").Cells(intn_Report + (i - 1) / 2, 14).Value2 = "NC"
             End If
-            Sheets("Report").Cells(intn_Report + (I - 1) / 2, 22).Value2 = .Cells(I, 5).Value2
-            Sheets("Report").Cells(intn_Report + (I - 1) / 2, 13).Value2 = "RD_X_SOE"
-        Next I
+            Sheets("Report").Cells(intn_Report + (i - 1) / 2, 22).Value2 = .Cells(i, 5).Value2
+            Sheets("Report").Cells(intn_Report + (i - 1) / 2, 13).Value2 = "RD_X_SOE"
+        Next i
     End With
 End If
 
@@ -1325,11 +1463,11 @@ Set wshSOE_Message = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWork
 frmSOE_Message.Show
 If Len(wsh_Path.Cells(10, 2)) > 5 Then
     Set wb2 = Workbooks.Open(wsh_Path.Cells(10, 2).Value2)
-    wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("SOE Message").Range("A1")
-    wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("SOE Message").Range("B1")
-    wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("SOE Message").Range("C1")
-    wb2.Sheets(1).Range("H:H").Copy Destination:=wb.Sheets("SOE Message").Range("D1")
-    wb2.Sheets(1).Range("N:N").Copy Destination:=wb.Sheets("SOE Message").Range("E1")
+    wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("SOE Message").range("A1")
+    wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("SOE Message").range("B1")
+    wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("SOE Message").range("C1")
+    wb2.Sheets(1).range("H:H").Copy Destination:=wb.Sheets("SOE Message").range("D1")
+    wb2.Sheets(1).range("N:N").Copy Destination:=wb.Sheets("SOE Message").range("E1")
     wb2.Close
     With Sheets("SOE Message")
         intn_SOE_Message = .Cells(Rows.Count, 1).End(xlUp).Row
@@ -1337,32 +1475,32 @@ If Len(wsh_Path.Cells(10, 2)) > 5 Then
         .Cells(1, 7).Value2 = "Msg #"
         .Cells(1, 8).Value2 = "Sig #"
         .Cells(1, 9).Value2 = "Channel #"
-        For I = 2 To intn_SOE_Message Step 1
-            .Cells(I, 6).Value2 = Right(.Cells(I, 2).Value2, Len(.Cells(I, 2).Value2) - 4)
-            .Cells(I, 7).Value2 = Right(.Cells(I, 3).Value2, 1)
-            .Cells(I, 8).Value2 = Right(.Cells(I, 4).Value2, 1)
-            If .Cells(I, 7).Value2 = 1 Then
-                .Cells(I, 9).Value = .Cells(I, 8).Value - 1
-            ElseIf .Cells(I, 7).Value2 = 2 Then
-                .Cells(I, 9).Value = .Cells(I, 8).Value2 + 7
-            ElseIf .Cells(I, 7).Value2 = 3 And .Cells(I, 8).Value2 = 1 Then
-                .Cells(I, 9).Value = .Cells(I, 8).Value + 15
-            ElseIf .Cells(I, 7).Value2 = 4 Then
-                .Cells(I, 9).Value = .Cells(I, 8).Value + 23
+        For i = 2 To intn_SOE_Message Step 1
+            .Cells(i, 6).Value2 = Right(.Cells(i, 2).Value2, Len(.Cells(i, 2).Value2) - 4)
+            .Cells(i, 7).Value2 = Right(.Cells(i, 3).Value2, 1)
+            .Cells(i, 8).Value2 = Right(.Cells(i, 4).Value2, 1)
+            If .Cells(i, 7).Value2 = 1 Then
+                .Cells(i, 9).Value = .Cells(i, 8).Value - 1
+            ElseIf .Cells(i, 7).Value2 = 2 Then
+                .Cells(i, 9).Value = .Cells(i, 8).Value2 + 7
+            ElseIf .Cells(i, 7).Value2 = 3 And .Cells(i, 8).Value2 = 1 Then
+                .Cells(i, 9).Value = .Cells(i, 8).Value + 15
+            ElseIf .Cells(i, 7).Value2 = 4 Then
+                .Cells(i, 9).Value = .Cells(i, 8).Value + 23
             End If
-        Next I
+        Next i
     End With
     'Add Alarm Text to Report
     With Sheets("Report")
-        For I = intn_Report To intn_Report + intn_SOE Step 1
+        For i = intn_Report To intn_Report + intn_SOE Step 1
             For j = 2 To intn_SOE_Message Step 1
-                If .Cells(I, 5).Value2 = Sheets("SOE Message").Cells(j, 6).Value2 And _
-                    .Cells(I, 6).Value2 = Sheets("SOE Message").Cells(j, 9).Value2 And _
-                    .Cells(I, 22).Value2 = Sheets("SOE Message").Cells(j, 1).Value2 Then
-                        .Cells(I, 15).Value2 = Sheets("SOE Message").Cells(j, 5).Value2
+                If .Cells(i, 5).Value2 = Sheets("SOE Message").Cells(j, 6).Value2 And _
+                    .Cells(i, 6).Value2 = Sheets("SOE Message").Cells(j, 9).Value2 And _
+                    .Cells(i, 22).Value2 = Sheets("SOE Message").Cells(j, 1).Value2 Then
+                        .Cells(i, 15).Value2 = Sheets("SOE Message").Cells(j, 5).Value2
                 End If
             Next j
-        Next I
+        Next i
     End With
 End If
 
@@ -1383,7 +1521,7 @@ End If
 'Application.DisplayAlerts = True
 
 'Sort by Rack then Slot then Channel #
-With Sheets("Report").Range("A:Z")
+With Sheets("Report").range("A:Z")
         .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
                     Key2:=.Columns(Application.Match("Rack", .Rows(1), 0)), Order2:=xlAscending, _
                     Key3:=.Columns(Application.Match("Slot", .Rows(1), 0)), Order2:=xlAscending, _
@@ -1416,9 +1554,9 @@ With Sheets("Report")
     intn_Report = .Cells(Rows.Count, 1).End(xlUp).Row
     .Cells(1, 1).EntireColumn.Insert
     .Cells(1, 1).Value2 = "Row #"
-    For I = 2 To intn_Report Step 1
-        .Cells(I, 1).Value = I - 1
-    Next I
+    For i = 2 To intn_Report Step 1
+        .Cells(i, 1).Value = i - 1
+    Next i
 End With
 
 'Top align cells
@@ -1429,10 +1567,10 @@ For Each wks In Worksheets
 Next wks
 
 'Add data to template
-Set wbTemplate = Workbooks.Open("C:\Users\hailv\Desktop\07 - IO List Tool\TEMPLATE IO List Report For Extraction Tool.xlsx")
-wb.Sheets("Report").Range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").Range("B1")
-wb.Sheets("Report").Range("A2:Z" & intn_Report).Copy
-wbTemplate.Sheets("Report").Range("A2").PasteSpecial xlPasteValues
+Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\")
+wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
+wb.Sheets("Report").range("A2:Z" & intn_Report).Copy
+wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
 
 'SaveAs
 frmSaveAs.Show
