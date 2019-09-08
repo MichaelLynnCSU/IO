@@ -320,24 +320,24 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 
 
 'Testing ouput for relevant sheets that exist
-Debug.Print "Report: "
-Debug.Print "Symbol: " & Sheets("Signal Connections").Cells(2, 1)
-
-Debug.Print "Signal Connections: "
-Debug.Print "Signal: " & Sheets("Signal Connections").Cells(1, 1)
-Debug.Print "Block: " & Sheets("Signal Connections").Cells(1, 2)
-Debug.Print "Chart: " & Sheets("Signal Connections").Cells(1, 3)
-
-Debug.Print "Range: "
-Debug.Print "Block: " & Sheets("Range").Cells(1, 1)
-Debug.Print "Chart: " & Sheets("Range").Cells(1, 4)
-Debug.Print "Interconnect: " & Sheets("Range").Cells(1, 5)
-
-Debug.Print "Alarm: "
-Debug.Print "Block: " & Sheets("Alarm").Cells(1, 1)
-Debug.Print "Chart: " & Sheets("Alarm").Cells(1, 4)
-Debug.Print "I/O Tag: " & Sheets("Alarm").Cells(1, 10)
-Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
+'Debug.Print "Report: "
+'Debug.Print "Symbol: " & Sheets("Signal Connections").Cells(2, 1)
+'
+'Debug.Print "Signal Connections: "
+'Debug.Print "Signal: " & Sheets("Signal Connections").Cells(1, 1)
+'Debug.Print "Block: " & Sheets("Signal Connections").Cells(1, 2)
+'Debug.Print "Chart: " & Sheets("Signal Connections").Cells(1, 3)
+'
+'Debug.Print "Range: "
+'Debug.Print "Block: " & Sheets("Range").Cells(1, 1)
+'Debug.Print "Chart: " & Sheets("Range").Cells(1, 4)
+'Debug.Print "Interconnect: " & Sheets("Range").Cells(1, 5)
+'
+'Debug.Print "Alarm: "
+'Debug.Print "Block: " & Sheets("Alarm").Cells(1, 1)
+'Debug.Print "Chart: " & Sheets("Alarm").Cells(1, 4)
+'Debug.Print "I/O Tag: " & Sheets("Alarm").Cells(1, 10)
+'Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
 
 'Start Part A
 
@@ -353,8 +353,8 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
   rows_Symbol = Sheets("Report").UsedRange.Rows.Count
   rows_Signal = Sheets("Signal Connections").UsedRange.Rows.Count
   
-  Debug.Print "rows_Symbol: " & rows_Symbol
-  Debug.Print "rows_Signal: " & rows_Signal
+'  Debug.Print "rows_Symbol: " & rows_Symbol
+'  Debug.Print "rows_Signal: " & rows_Signal
   
     For i = 2 To rows_Symbol Step 1
     
@@ -436,17 +436,17 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
                             'if .U is found and it is either at the very end or in the middle but has a " right after it then find the block name
                             If intEndPos > 0 Then
                               If (intEndPos = Len(current_range_interconnetion_block) - 1) Then  'check if .U at the end of the string
-                                Debug.Print "It's at the end"
+'                                Debug.Print "It's at the end"
                               ElseIf Asc(Mid(current_range_interconnetion_block, intEndPos + 2, 1)) = 34 Then  'if .U in the middle check if there is double quote after the U (ascii of " is 34)
-                                Debug.Print "It's in the middle and has double quote after the U"
+'                                Debug.Print "It's in the middle and has double quote after the U"
                               Else
-                                Debug.Print "string not found"
+'                                Debug.Print "string not found"
                                 intEndPos = 0  'set to 0 so will not try to find block name
                               End If
                               If intEndPos > 0 Then 'the .U was found so now get the block name from the string
                                 intStartPos = InStrRev(current_range_interconnetion_block, "\", intEndPos)
                                 current_range_interconnetion_block_U = Mid(current_range_interconnetion_block, intStartPos + 1, intEndPos - intStartPos - 1)
-                                Debug.Print "Found string:"; current_range_interconnetion_block_U
+'                                Debug.Print "Found string:"; current_range_interconnetion_block_U
                               End If
                                 
                            
@@ -507,42 +507,42 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
                                                 'Debug.Print "IOTag: " & IOTag
                                                 
                                                 If IOTag = "U_AH" Then
-                                                  Debug.Print "intAlarmAH: " & intAlarmAH
+'                                                  Debug.Print "intAlarmAH: " & intAlarmAH
                                                   Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 12)
                                                   
                                                 End If
                                                 
                                                 If IOTag = "U_WH" Then
-                                                  Debug.Print "intAlarmWH: " & intAlarmWH
+'                                                  Debug.Print "intAlarmWH: " & intAlarmWH
                                                     Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 10)
                                                 End If
                                                 
                                                 If IOTag = "U_WL" Then
-                                                  Debug.Print "intAlarmWL: " & intAlarmWL
+'                                                  Debug.Print "intAlarmWL: " & intAlarmWL
                                                     Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 9)
                                                 End If
                                                 
                                                 If IOTag = "U_AL" Then
-                                                  Debug.Print "intAlarmAL: " & intAlarmAL
+'                                                  Debug.Print "intAlarmAL: " & intAlarmAL
                                                     Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 11)
                                                 End If
                                                 
                                            
-                                                Debug.Print "current_symbol: " & current_symbol
-                                                
-                                                Debug.Print "current_signal_block: " & current_signal_block
-                                                Debug.Print "current_signal_chart: " & current_signal_chart
-                                                
-                                                Debug.Print "current_range_block: " & current_range_block
-                                                Debug.Print "current_range_chart: " & current_range_chart
-                                                  
-                                                Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
-                                                
-                                                Debug.Print "strCurrentAlarmBlock: " & strCurrentAlarmBlock
-                                                Debug.Print "current_range_interconnetion_block_U: " & current_range_interconnetion_block_U
-
-                                                Debug.Print "strCurrentAlarmChart: " & strCurrentAlarmChart
-                                                Debug.Print "current_range_chart: " & current_range_chart
+'                                                Debug.Print "current_symbol: " & current_symbol
+'
+'                                                Debug.Print "current_signal_block: " & current_signal_block
+'                                                Debug.Print "current_signal_chart: " & current_signal_chart
+'
+'                                                Debug.Print "current_range_block: " & current_range_block
+'                                                Debug.Print "current_range_chart: " & current_range_chart
+'
+'                                                Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
+'
+'                                                Debug.Print "strCurrentAlarmBlock: " & strCurrentAlarmBlock
+'                                                Debug.Print "current_range_interconnetion_block_U: " & current_range_interconnetion_block_U
+'
+'                                                Debug.Print "strCurrentAlarmChart: " & strCurrentAlarmChart
+'                                                Debug.Print "current_range_chart: " & current_range_chart
                                                 
                                             End If
                                           End If
@@ -565,6 +565,173 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
     Next
 
 'End Part A
+  
+  
+Dim rows_symbol_Report
+Dim rows_HWConfig_T
+
+rows_symbol_Report = Sheets("Report").UsedRange.Rows.Count
+rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
+
+Debug.Print rows_symbol_Report
+Debug.Print rows_HWConfig_T
+
+    Dim symbol_from_report As String
+    Dim HWConfig_line As String
+    
+    Dim current_symbol_T As String
+    
+    Dim current_channel_T As String
+    Dim current_message_T As String
+    Dim current_signal_T As String
+    Dim target_channel As String
+    Dim remander_current_symbol_T As String
+        
+  For i = 2 To rows_symbol_Report Step 1
+  
+    symbol_from_report = Sheets("Report").Cells(i, 1).Value2
+    Debug.Print symbol_from_report
+    
+    
+'        Debug.Print "row count", rows_HWConfig_T
+        
+        For j = 2 To rows_HWConfig_T Step 1
+         
+          'Start part A type algorthim
+           
+              'get string
+              HWConfig_line = Sheets("HWConfig").Cells(j, i).Value2
+'              Debug.Print "current line", HWConfig_line
+        
+                'get symbol
+                If InStr(HWConfig_line, ",") > 0 Then
+                  
+                  intEndPos = InStr(HWConfig_line, ",")
+                  intStartPos = 1
+                  current_symbol_T = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+'                  Debug.Print Trim(current_symbol_T)
+                
+                End If
+                
+              If Trim(current_symbol_T) = Trim("SYMBOL  I") Then
+                               
+                  Debug.Print "current line", HWConfig_line
+                  Debug.Print current_symbol_T
+                     
+                  'store the rest of the string
+                  remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
+                  Debug.Print remander_current_symbol
+                  
+                  'get channel
+                  intEndPos = InStr(remander_current_symbol, ",")
+                  intStartPos = 1
+                  current_channel = Mid(remander_current_symbol, intStartPos, intEndPos - 1)
+                  Debug.Print current_channel
+                  
+                  'store the rest of the string
+                  remander_current_symbol = Mid(remander_current_symbol, intEndPos + 2, Len(HWConfig_line))
+                  Debug.Print remander_current_symbol
+                  
+                  'get signal
+                  Debug.Print remander_current_symbol
+                  intEndPos = InStr(remander_current_symbol, ",")
+                  intStartPos = 1
+                  current_signal = Mid(remander_current_symbol, intStartPos + 1, intEndPos - 3)
+                  Debug.Print current_signal
+                  
+                  
+                      If current_signal = symbol_from_report Then
+                      
+                          target_channel = current_channel
+                                           
+                      End If
+                      
+                  ' reset current_symbol_T
+                current_symbol_T = ""
+                
+             End If
+        ' end part A of algorithm
+        
+        ' part B of parse String algorithm
+
+                 Dim current_AI_4_type As String
+                 Dim remander_AI_4_type As String
+              
+                 Dim current_ID_AI_4_type As String
+                 Dim remander_ID_AI_4_type As String
+              
+                 Dim current_channel_AI_4_type As Integer
+                 Dim remander_channel_AI_4_type As String
+              
+                 Dim remander_messages_AI_4_type As String
+                 Debug.Print AI_4_type, "testing string in new module"
+        
+                      'get symbol
+                      If InStr(HWConfig_line, ",") > 0 Then
+                          
+                          intEndPos = InStr(HWConfig_line, ",")
+                          intStartPos = 1
+                          current_symbol_T = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+        '                  Debug.Print Trim(current_symbol_T)
+                        
+                      End If
+                        
+                      
+                      If Trim(current_symbol_T) = Trim("AI_TYPE") Then
+              
+                      Debug.Print target_channel, "my target channel"
+                      
+                      'get AI_type
+                      intEndPos = InStr(HWConfig_line, ",")
+                      intStartPos = 1
+                      current_AI_4_type = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+                      Debug.Print current_AI_4_type
+                      
+                      'store the rest of the string
+                      remander_AI_4_type = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
+                      Debug.Print remander_AI_4_type
+                      
+                      
+                      'get AI_ID_type
+                      intEndPos = InStr(remander_AI_4_type, ",")
+                      intStartPos = 1
+                      current_ID_AI_4_type = Mid(remander_AI_4_type, intStartPos, intEndPos - 1)
+                      Debug.Print current_ID_AI_4_type
+                      
+                      'store the rest of the string
+                      remander_ID_Range_4_type = Mid(remander_AI_4_type, intEndPos + 2, Len(remander_AI_4_type))
+                      Debug.Print remander_ID_Range_4_type
+                      
+                      'get AI_channel_type
+                      intEndPos = InStr(remander_ID_Range_4_type, ",")
+                      intStartPos = 1
+                      current_channel_AI_4_type = Mid(remander_ID_Range_4_type, intStartPos, intEndPos - 1)
+                      Debug.Print Trim(current_channel_AI_4_type)
+                      
+                      'store the rest of the string, thing left is the messages
+                      remander_messages_AI_4_type = Mid(remander_ID_AI_4_type, intEndPos + 2, Len(remander_ID_AI_4_type))
+                      Debug.Print remander_messages_AI_4_type
+
+                      End If
+                     
+                    ' end part B of algorithm
+          
+        Next
+      
+  Next
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
 'Add alarm to report
