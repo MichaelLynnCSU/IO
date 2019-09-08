@@ -734,8 +734,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                 Else
                                    Debug.Print "WE GOT HERE, OUT OF SIGNAL RANGE ", current_channel_T
                                 End If
-                                   
-                                                                         
+                                                             
                                          
                                     If Trim(current_signal_T) = Trim(symbol_from_report) Then
                                          
