@@ -1569,7 +1569,8 @@ End If
 'Add the new soe tab
 Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     ws2.Name = "SOE_Seperator"
-    
+  
+       
         Dim iRowsForSOE As Integer
         rowsForSOE = Sheets("Report").UsedRange.Count
             
@@ -1608,6 +1609,7 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
                     End If
               
              ' End If
+          
               
 
         Next
@@ -1620,6 +1622,49 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
          iIndex = iIndex - 1
         Loop
 
+
+  ' move SBO data
+  ' create a tab
+   Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+   ws2.Name = "SBO_Seperator"
+   
+   Dim iIndexSBO As Integer
+   iIndexSBO = 1
+   
+   Dim bRunnungSBO As Boolean
+   bRunnungSBO = True
+   
+   Dim iStartCountSBO As Integer
+   iStartCountSBO = 0
+
+Dim iRowsForSBO As Integer
+rowsForSBO = Sheets("Report").UsedRange.Count
+    
+            For q = 2 To rowsForSBO Step 1
+                
+                    Dim strCurrentSymSBO As String
+                        ' get the current symbol
+                        strCurrentSymSBO = Sheets("Report").Cells(q, 2)
+                          
+                        ' check if the current symbol is the type we want
+                        Dim strCheckTypeSBO As String
+                        strCheckTypeSBO = Sheets("Report").Cells(q, 13)
+                    
+                        
+                        If strCheckTypeSBO = "WR_X_SBO" Then
+                                 If bRunnungSBO Then
+                                    iStartCountSBO = q
+                                    bRunnungSBO = False
+                                 End If
+                                 
+                            'Sheets("SOB_Seperator").Cells(2, 2).Value = "test"
+                            Sheets("Report").Rows(q).EntireRow.Copy
+                            Sheets("SBO_Seperator").range("A" & iIndexSBO).PasteSpecial Paste:=xlValues
+                            iIndexSBO = iIndexSBO + 1
+                                               
+                        End If
+                           
+            Next
 
 'Clean up workbook
 'Application.DisplayAlerts = False
