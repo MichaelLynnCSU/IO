@@ -162,50 +162,50 @@ With Sheets("HWConfig")
                 Sheets("Report").Cells(intk + intn_Report, 25).Value2 = strRTU
             End If
             'Extract signal type
-            If Left(.Cells(I, j).Value, 5) = "  AI_" Then
-                intai = intai + 1
-                strAI = Mid(.Cells(I, j), InStrRev(.Cells(I, j), ",") - 1, 1)
-                straitype = Mid(.Cells(I, j), InStrRev(.Cells(I, j), ",") + 3)
-                straitype = Left(straitype, Len(straitype) - 1)
-                'Add signal type to report
-                If strAI = 0 Then
-                    For k = intn_Report + 1 To intk + intn_Report Step 1
-                        If Sheets("Report").Cells(k, 6) = 0 Or Sheets("Report").Cells(k, 6) = 1 Then
-                            If Not Len(Sheets("Report").Cells(k, 13)) > 0 Then
-                                Sheets("Report").Cells(k, 13).Value2 = straitype
-                            Else: Sheets("Report").Cells(k, 13).Value2 = Sheets("Report").Cells(k, 13).Value2 & ", " & straitype
-                            End If
-                        End If
-                    Next k
-                ElseIf strAI = 1 Then
-                    For k = intn_Report + 1 To intk + intn_Report Step 1
-                        If Sheets("Report").Cells(k, 6) = 2 Or Sheets("Report").Cells(k, 6) = 3 Then
-                            If Not Len(Sheets("Report").Cells(k, 13)) > 0 Then
-                                Sheets("Report").Cells(k, 13).Value2 = straitype
-                            Else: Sheets("Report").Cells(k, 13).Value2 = Sheets("Report").Cells(k, 13).Value2 & ", " & straitype
-                            End If
-                        End If
-                    Next k
-                ElseIf strAI = 2 Then
-                    For k = intn_Report + 1 To intk + intn_Report Step 1
-                        If Sheets("Report").Cells(k, 6) = 4 Or Sheets("Report").Cells(k, 6) = 5 Then
-                            If Not Len(Sheets("Report").Cells(k, 13)) > 0 Then
-                                Sheets("Report").Cells(k, 13).Value2 = straitype
-                            Else: Sheets("Report").Cells(k, 13).Value2 = Sheets("Report").Cells(k, 13).Value2 & ", " & straitype
-                            End If
-                        End If
-                    Next k
-                ElseIf strAI = 3 Then
-                    For k = intn_Report + 1 To intk + intn_Report Step 1
-                        If Sheets("Report").Cells(k, 6) = 6 Or Sheets("Report").Cells(k, 6) = 7 Then
-                            If Not Len(Sheets("Report").Cells(k, 13)) > 0 Then
-                                Sheets("Report").Cells(k, 13).Value2 = straitype
-                            Else: Sheets("Report").Cells(k, 13).Value2 = Sheets("Report").Cells(k, 13).Value2 & ", " & straitype
-                            End If
-                        End If
-                    Next k
-                End If
-            End If
+'            If Left(.Cells(I, j).Value, 5) = "  AI_" Then
+'                intai = intai + 1
+'                strAI = Mid(.Cells(I, j), InStrRev(.Cells(I, j), ",") - 1, 1)
+'                straitype = Mid(.Cells(I, j), InStrRev(.Cells(I, j), ",") + 3)
+'                straitype = Left(straitype, Len(straitype) - 1)
+'                'Add signal type to report
+'                If strAI = 0 Then
+'                    For k = intn_Report + 1 To intk + intn_Report Step 1
+'                        If Sheets("Report").Cells(k, 6) = 0 Or Sheets("Report").Cells(k, 6) = 1 Then
+'                            If Not Len(Sheets("Report").Cells(k, 13)) > 0 Then
+'                                Sheets("Report").Cells(k, 13).Value2 = straitype
+'                            Else: Sheets("Report").Cells(k, 13).Value2 = Sheets("Report").Cells(k, 13).Value2 & ", " & straitype
+'                            End If
+'                        End If
+'                    Next k
+'                ElseIf strAI = 1 Then
+'                    For k = intn_Report + 1 To intk + intn_Report Step 1
+'                        If Sheets("Report").Cells(k, 6) = 2 Or Sheets("Report").Cells(k, 6) = 3 Then
+'                            If Not Len(Sheets("Report").Cells(k, 13)) > 0 Then
+'                                Sheets("Report").Cells(k, 13).Value2 = straitype
+'                            Else: Sheets("Report").Cells(k, 13).Value2 = Sheets("Report").Cells(k, 13).Value2 & ", " & straitype
+'                            End If
+'                        End If
+'                    Next k
+'                ElseIf strAI = 2 Then
+'                    For k = intn_Report + 1 To intk + intn_Report Step 1
+'                        If Sheets("Report").Cells(k, 6) = 4 Or Sheets("Report").Cells(k, 6) = 5 Then
+'                            If Not Len(Sheets("Report").Cells(k, 13)) > 0 Then
+'                                Sheets("Report").Cells(k, 13).Value2 = straitype
+'                            Else: Sheets("Report").Cells(k, 13).Value2 = Sheets("Report").Cells(k, 13).Value2 & ", " & straitype
+'                            End If
+'                        End If
+'                    Next k
+'                ElseIf strAI = 3 Then
+'                    For k = intn_Report + 1 To intk + intn_Report Step 1
+'                        If Sheets("Report").Cells(k, 6) = 6 Or Sheets("Report").Cells(k, 6) = 7 Then
+'                            If Not Len(Sheets("Report").Cells(k, 13)) > 0 Then
+'                                Sheets("Report").Cells(k, 13).Value2 = straitype
+'                            Else: Sheets("Report").Cells(k, 13).Value2 = Sheets("Report").Cells(k, 13).Value2 & ", " & straitype
+'                            End If
+'                        End If
+'                    Next k
+'                End If
+'            End If
         Next I
     Next j
 End With
@@ -265,6 +265,7 @@ ActiveCell.FormulaR1C1 = "=LEFT(RC[-1],FIND("".U"",RC[-1])-1)"
 Range("F2:G2").Select
 Selection.AutoFill Destination:=Range("F2:G" & intn_Range)
 Range("F2:G" & intn_Range).Select
+
 'Add range to report
 Sheets("Report").Select
 Range("G2").Select
@@ -313,6 +314,58 @@ For I = 2 To intn_Report Step 1
         Next j
     End If
 Next I
+End With
+
+'Pull Address
+Dim FileNum As Long
+Dim TotalFile As String
+Dim Lines() As String
+Dim strSymbolTable As String
+Set wshSymbolText = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+    wshSymbolText.Name = "Symbol Table"
+frmSymboTable.Show
+Open wsh_Path.Cells(6, 2).Value2 For Input As #1
+intc = 1
+intr = 1
+Do Until EOF(1)
+    Line Input #1, readLine
+    ActiveSheet.Cells(intr, intc).Value = readLine
+    intr = intr + 1
+Loop
+Close #1
+With Sheets("Symbol Table")
+    intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
+    For I = intn_SymbolTable To 1 Step -1
+        .Cells(I, 2).Value2 = Right(Left(.Cells(I, 1).Value2, 28), Len(Left(.Cells(I, 1).Value2, 28)) - 4)
+        .Cells(I, 3).Value2 = Trim(Mid(.Cells(I, 1).Value2, 29, 2))
+        .Cells(I, 4).Value2 = Trim(Mid(.Cells(I, 1).Value2, 34, 7))
+        If .Cells(I, 3).Value2 = "I" Or .Cells(I, 3).Value2 = "IW" Or .Cells(I, 3).Value2 = "Q" Or .Cells(I, 3).Value2 = "QW" Then
+            .Cells(I, 6).Value = 1
+        End If
+        If .Cells(I, 3).Value2 = "I" Or .Cells(I, 3).Value2 = "Q" Then
+            .Cells(I, 5).Value2 = .Cells(I, 3).Value2 & " " & Format(.Cells(I, 4).Value2, "0.0")
+        Else: .Cells(I, 5).Value2 = .Cells(I, 3).Value2 & " " & .Cells(I, 4).Value2
+        End If
+        If .Cells(I, 3).Value2 = "I" Then
+            .Cells(I, 7).Value2 = "DI 24V"
+        End If
+        If .Cells(I, 3).Value2 = "Q" Then
+            .Cells(I, 7).Value2 = "DO 24V"
+        End If
+        If .Cells(I, 6).Value = "" Then
+            .Cells(I, 6).EntireRow.Delete
+        End If
+    Next I
+    intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
+    Sheets("Report").Range("A:A").Copy Destination:=wb.Sheets("Symbol Table").Range("H1")
+    For I = 1 To intn_Report Step 1
+        For j = 1 To intn_SymbolTable Step 1
+            If .Cells(I, 8).Value2 = Trim(.Cells(j, 2).Value2) Then
+                Sheets("Report").Cells(I, 2).Value2 = .Cells(j, 5).Value2
+                Sheets("Report").Cells(I, 13).Value2 = .Cells(j, 7).Value2
+            End If
+        Next j
+    Next I
 End With
 
 'Pull Over Alarm Values
@@ -593,10 +646,6 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 'End Part A
   
   
-  
-  
-  
-  
 Dim rows_symbol_Report
 Dim rows_HWConfig_T
 Dim cols_HWConfig_T
@@ -610,205 +659,228 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
 'Debug.Print rows_HWConfig_T
 'Debug.Print cols_HWConfig_T
 
-    Dim symbol_from_report As String
-    Dim HWConfig_line As String
+    
 
-    Dim TxtRng  As Range
-    Dim TestArray() As String
-    
-    
   For q = 2 To rows_symbol_Report Step 1
     ' after symbol is matched with its messafwes set it nack to -1
-    
-    current_channel_T = "-1"
+    Dim target_channel As String
     target_channel = "-1"
     
-    current_message_T = ""
+    Dim target_message As String
     target_message = ""
+
     
+    Dim symbol_from_report As String
     symbol_from_report = Sheets("Report").Cells(q, 1).Value2
+    'Debug.Print symbol_from_report
+    
 
     For I = 2 To cols_HWConfig_T Step 1
         For j = 2 To rows_HWConfig_T Step 1
-         
-          'Start part A type algorthim
-           
+        'start part A of algorithm
+        
+              Dim HWConfig_line As String
               HWConfig_line = Sheets("HWConfig").Cells(j, I).Value2
-              
-              TestArray = Split(HWConfig_line, ",")
-
-              Dim configSymbol
-              configSymbol = TestArray(1)
-              If Trim(configSymbol) = Trim("SYMBOL  I") Then
-                    'get AI_type
-                                                                   
-  
-                  Dim addQuotes
-                  addQuotes = """ & TestArray(4) & """
-                     
-                      If addQuotes = symbol_from_report Then
-                          Debug.Print "found symbol match ", current_signal, symbol_from_report
-                          target_channel = current_channel_T
-                          Debug.Print "TARGET SIGNAL ", target_channel
-                                           
-                      End If
-                    
+        
+        
+                'get signal from HWConfig and match it to symbol from report
+                If InStr(HWConfig_line, ",") > 0 Then
+                  
+                  intEndPos = InStr(HWConfig_line, ",")
+                  intStartPos = 1
+                  Dim signal_from_HWCONFIG As String
+                  signal_from_HWCONFIG = ""
+                  signal_from_HWCONFIG = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+                  Dim remander_current_symbol_T As String
+                  remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
+                  
+                              
+                                         
+                          If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Then
+                               
+                               intEndPos = InStr(remander_current_symbol, ",")
+                               intStartPos = 1
+                               Dim current_channel_T As String
+                               current_channel_T = Mid(remander_current_symbol, intStartPos, intEndPos - 1)
+                               remander_current_symbol = Mid(remander_current_symbol, intEndPos + 2, Len(HWConfig_line))
+                               
+                               
+                               intEndPos = InStr(remander_current_symbol, ",")
+                               intStartPos = 1
+                               Dim current_signal_T As String
+                               current_signal_T = Mid(remander_current_symbol, intStartPos + 1, intEndPos - 3)
+            
+                                    If Trim(current_signal_T) = Trim(symbol_from_report) Then
+                                        
+                                        'Debug.Print "found symbol match ", current_signal_T, symbol_from_report
+                                        target_channel = current_channel_T
+                                        'Debug.Print "current_channel_T ", current_channel_T
+                                        'Debug.Print "target_channel ", target_channel
+                                                         
+                                    End If
+                            End If
                 
-             End If
+                   End If
+                  
+                              
+                
         ' end part A of algorithm
         
-'        ' part B of parse String algorithm
-'
-'
-'
-'                 Dim current_AI_4_type As String
-'                 Dim remander_AI_4_type As String
-'
-'                 Dim current_ID_AI_4_type As String
-'                 Dim remander_ID_AI_4_type As String
-'
-'                 Dim current_channel_AI_4_type As String
-'                 Dim remander_channel_AI_4_type As String
-'
-'                 Dim remander_messages_AI_4_type As String
-'
-'                 current_channel_AI_4_type = "-1"
-'
-'                      'get symbol
-'                      If InStr(HWConfig_line, ",") > 0 Then
-'
-'                          intEndPos = InStr(HWConfig_line, ",")
-'                          intStartPos = 1
-'                          current_symbol_T = Mid(HWConfig_line, intStartPos, intEndPos - 1)
-'                          'Debug.Print "current_symbol_T for AI_type", Trim(current_symbol_T)
-'
-'                      End If
-'
-'
-'                      If Trim(current_symbol_T) = Trim("AI_TYPE") Then
-'                            'Debug.Print "FOUND AI LINE ", Trim(HWConfig_line)
-'
-'                              If target_channel <> "-1" Then
-'                                  'Debug.Print "CURRENT AI CHANNEL ", target_channel
-'
-'                                  'get AI_type
-'                                  intEndPos = InStr(HWConfig_line, ",")
-'                                  intStartPos = 1
-'                                  current_AI_4_type = Mid(HWConfig_line, intStartPos, intEndPos - 1)
-'                                'Debug.Print current_AI_4_type
-'
-'                                  'store the rest of the string
-'                                  remander_AI_4_type = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
-'                                 'Debug.Print remander_AI_4_type
-'
-'
-'                                  'get AI_ID_type
-'                                  intEndPos = InStr(remander_AI_4_type, ",")
-'                                  intStartPos = 1
-'                                  current_ID_AI_4_type = Mid(remander_AI_4_type, intStartPos, intEndPos - 1)
-'                                  'Debug.Print "check current ID ", current_ID_AI_4_type
-'
-'                                  'store the rest of the string
-'                                  remander_ID_Range_4_type = Mid(remander_AI_4_type, intEndPos + 2, Len(remander_AI_4_type))
-'                                 'Debug.Print "remander_ID_Range_4_type, "; remander_ID_Range_4_type
-'
-'                                  'get AI_channel_type
-'                                  intEndPos = InStr(remander_ID_Range_4_type, ",")
-'                                  intStartPos = 1
-'                                  current_channel_AI_4_type = Mid(remander_ID_Range_4_type, intStartPos, intEndPos - 1)
-'                                'Debug.Print "get AI_channel_type ", Trim(current_channel_AI_4_type)
-'
-'                                  'store the rest of the string, thing left is the messages
-'                                  remander_messages_AI_4_type = Mid(remander_ID_Range_4_type, intEndPos + 2, Len(remander_ID_Range_4_type))
-'                                 'Debug.Print "current sybmol AI messages", remander_messages_AI_4_type
-'
-'                                        If Trim(target_channel) = Trim(current_channel_AI_4_type) Then
-'                                            Debug.Print "FOUND CHANNEL MATCH AI", target_channel, current_channel_AI_4_type
-'                                           'Debug.Print "current messages from channel", remander_messages_AI_4_type
-'                                            target_message = target_message & remander_messages_AI_4_type
-'                                           Debug.Print "FINAL MESSAGE", target_message
-'                                        End If
-'
-'
-'
-'                             End If
-'
-'                       End If
+        ' part B of parse String algorithm
+        
+ 
+                    'get symbol
+                    If InStr(HWConfig_line, ",") > 0 Then
+
+                          intEndPos = InStr(HWConfig_line, ",")
+                          intStartPos = 1
+                          Dim current_symbol_T2
+                          current_symbol_T2 = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+                          'Debug.Print "current_symbol_T2 for AI_type", Trim(current_symbol_T2)
+                          
+                
+                            
+                          If Trim(current_symbol_T2) = Trim("AI_TYPE") Then
+                              'Debug.Print "FOUND AI LINE ", Trim(HWConfig_line)
+                              'Debug.Print "CURRENT SYMBOL2 ", current_symbol_T2
+        
+                                 If target_channel <> "-1" Then
+                                    Debug.Print "TARGET CHANNEL ", target_channel
+                              
+                                    'get AI_type
+                                    intEndPos = InStr(HWConfig_line, ",")
+                                    intStartPos = 1
+                                    Dim current_AI_4_type As String
+                                    current_AI_4_type = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+                                    'Debug.Print current_AI_4_type
+                                   
+    
+                                      'store the rest of the string
+                                      Dim remander_AI_4_type As String
+                                      remander_AI_4_type = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
+                                     'Debug.Print remander_AI_4_type
+    
+    
+                                      'get AI_ID_type
+                                      intEndPos = InStr(remander_AI_4_type, ",")
+                                      intStartPos = 1
+                                      Dim current_ID_AI_4_type As String
+                                      current_ID_AI_4_type = Mid(remander_AI_4_type, intStartPos, intEndPos - 1)
+                                      'Debug.Print "check current ID ", current_ID_AI_4_type
+    
+                                      'store the rest of the string
+                                      Dim remander_ID_Range_4_type
+                                      remander_ID_Range_4_type = Mid(remander_AI_4_type, intEndPos + 2, Len(remander_AI_4_type))
+                                     'Debug.Print "remander_ID_Range_4_type, "; remander_ID_Range_4_type
+    
+                                      'get AI_channel_type
+                                      intEndPos = InStr(remander_ID_Range_4_type, ",")
+                                      intStartPos = 1
+                                      Dim current_channel_AI_4_type
+                                      current_channel_AI_4_type = Mid(remander_ID_Range_4_type, intStartPos, intEndPos - 1)
+                                    'Debug.Print "get AI_channel_type ", Trim(current_channel_AI_4_type)
+    
+                                      'store the rest of the string, thing left is the messages
+                                      Dim remander_messages_AI_4_type
+                                      remander_messages_AI_4_type = Mid(remander_ID_Range_4_type, intEndPos + 2, Len(remander_ID_Range_4_type))
+                                     'Debug.Print "current sybmol AI messages", remander_messages_AI_4_type
+                              
+                                            If Trim(target_channel) = Trim(current_channel_AI_4_type) Then
+
+                                                ' Debug.Print "FOUND CHANNEL MATCH AI", target_channel, current_channel_AI_4_type
+                                                'Debug.Print "current messages from channel", remander_messages_AI_4_type
+                                                 target_message = remander_messages_AI_4_type
+                                               ' Debug.Print "AI MESSAGE", target_message
+                                                'target_channel = ""
+                                             End If
+                           
+                                End If
+
+                         End If
+                      
+                  End If
+
                      
+
                     ' end part B of algorithm
                     
                     
                     ' part C of String alogrithm
-                    
-'                            Dim current_Range_4_type As String
-'                            Dim remander_Range_4_type As String
-'
-'                            Dim current_ID_Range_type As String
-'                            Dim remander_ID_Range_type As String
-'
-'                            Dim current_channel_Range_4_type As String
-'                            Dim remander_channel_Range_4_type As String
-'
-'                            Dim remander_messages_Range_4_type As String
-'
-'                            'get symbol
-'                            If InStr(HWConfig_line, ",") > 0 Then
-'
-'                                intEndPos = InStr(HWConfig_line, ",")
-'                                intStartPos = 1
-'                                current_symbol_T = Mid(HWConfig_line, intStartPos, intEndPos - 1)
-'                             'Debug.Print Trim(current_symbol_T)
-'
-'                            End If
-'
-'
-'                            If Trim(current_symbol_T) = Trim("AI_RANGE") Then
-'                                    'Debug.Print "FOUND RANGE LINE ", Trim(HWConfig_line)
-'                                    If target_channel <> "-1" Then
-'                                  'Debug.Print "CURRENT RANGE CHANNEL ", target_channel
-'
-'
-'                                    intEndPos = InStr(HWConfig_line, ",")
-'                                    intStartPos = 1
-'                                    current_Range_4_type = Mid(HWConfig_line, intStartPos, intEndPos - 1)
-'                                   'Debug.Print current_Range_4_type
-'
-'                                    'store the rest of the string
-'                                    remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
-'                                    'Debug.Print remander_current_symbol
-'
-'
-'                                    'get AI_ID_type
-'                                    intEndPos = InStr(remander_current_symbol, ",")
-'                                    intStartPos = 1
-'                                    Dim AI_ID_type As String
-'                                    AI_ID_type = Mid(remander_current_symbol, intStartPos, intEndPos - 1)
-'                                  'Debug.Print remander_current_symbol
-'
-'                                    'store the rest of the string
-'                                    remander_current_symbol = Mid(remander_current_symbol, intEndPos + 2, Len(remander_current_symbol))
-'                                'Debug.Print "DEBUGING PURPOSE", remander_current_symbol
-'
-'                                    'get AI_channel_type
-'                                    intEndPos = InStr(remander_current_symbol, ",")
-'                                    intStartPos = 1
-'                                    current_channel_Range_4_type = Mid(remander_current_symbol, intStartPos, intEndPos - 1)
-'                                ' Debug.Print Trim(current_channel)
-'
-'                                    'store the rest of the string, thing left is the messages
-'                                    remander_messages_Range_4_type = Mid(remander_current_symbol, intEndPos + 2, Len(remander_current_symbol))
-'                                    'Debug.Print remander_messages_Range_4_type
-'
-'
-'                                          If Trim(target_channel) = Trim(current_channel_Range_4_type) Then
-'                                              Debug.Print "FOUND CHANNEL MATCH RANGE", target_channel, current_channel_Range_4_type
-'                                            Debug.Print "current messages from channel", remander_messages_Range_4_type
-'                                              target_message = remander_messages_Range_4_type & target_message
-'                                              'Debug.Print "concatenate messages", target_message
-'                                          End If
-'
-'                                 End If
-'                             End If
+
+
+
+                            'get symbol
+                            If InStr(HWConfig_line, ",") > 0 Then
+
+                                intEndPos = InStr(HWConfig_line, ",")
+                                intStartPos = 1
+                                Dim current_symbol_T
+                                current_symbol_T = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+                                
+                                
+                                
+                                 If Trim(current_symbol_T) = Trim("AI_RANGE") Then
+                                    'Debug.Print "FOUND RANGE LINE ", Trim(HWConfig_line)
+                                    If target_channel <> "-1" Then
+                                  'Debug.Print "CURRENT RANGE CHANNEL ", target_channel
+
+
+                                    intEndPos = InStr(HWConfig_line, ",")
+                                    intStartPos = 1
+                                    Dim current_Range_4_type2
+                                    current_Range_4_type2 = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+                                   'Debug.Print current_Range_4_type
+
+                                    'store the rest of the string
+                                    Dim remander_current_symbol2
+                                    remander_current_symbol2 = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
+                                    'Debug.Print remander_current_symbol
+
+
+                                    'get AI_ID_type
+                                    intEndPos = InStr(remander_current_symbol2, ",")
+                                    intStartPos = 1
+                                    Dim AI_ID_type As String
+                                    AI_ID_type = Mid(remander_current_symbol2, intStartPos, intEndPos - 1)
+                                  'Debug.Print remander_current_symbol
+
+                                    'store the rest of the string
+                                    remander_current_symbol2 = Mid(remander_current_symbol2, intEndPos + 2, Len(remander_current_symbol2))
+                                   'Debug.Print "DEBUGING PURPOSE", remander_current_symbol
+
+                                    'get AI_channel_type
+                                    intEndPos = InStr(remander_current_symbol2, ",")
+                                    intStartPos = 1
+                                    Dim current_channel_Range_4_type2
+                                    current_channel_Range_4_type2 = Mid(remander_current_symbol2, intStartPos, intEndPos - 1)
+                                ' Debug.Print Trim(current_channel)
+
+                                    'store the rest of the string, thing left is the messages
+                                    Dim remander_messages_Range_4_type2
+                                    remander_messages_Range_4_type2 = Mid(remander_current_symbol2, intEndPos + 2, Len(remander_current_symbol2))
+                                    'Debug.Print remander_messages_Range_4_type
+
+
+                                          If Trim(target_channel) = Trim(current_channel_Range_4_type2) Then
+                                              Debug.Print "FOUND CHANNEL MATCH RANGE", target_channel, current_channel_Range_4_type
+                                              Debug.Print "current messages from channel", remander_messages_Range_4_type
+                                              target_message = remander_messages_Range_4_type2 & target_message
+                                              target_channel = ""
+                                              'Debug.Print "concatenate messages", target_message
+                                          End If
+
+                                 End If
+                             End If
+                                
+                                
+                                
+                                
+                                
+                            
+
+                            End If
+
+
                         ' end C of String alogrithm
                           
                     
@@ -817,11 +889,14 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
           
         Next j
       Next I
-'      If Len(target_message) > 1 Then
-'            Debug.Print "NAME ", symbol_from_report, "SYMBOL MESSAGES", target_message
-'            Set TxtRng = Sheets("Report").Cells(q, 13)
-'            TxtRng.Value = target_message
-'      End If
+      If Len(target_message) > 1 Then
+            Debug.Print "NAME ", symbol_from_report, "SYMBOL MESSAGES", target_message
+            Debug.Print "FOUND CHANNEL MATCH AI", target_channel
+            Dim TxtRng  As Range
+            Set TxtRng = Sheets("Report").Cells(q, 13)
+            TxtRng.Value = target_message
+            target_message = ""
+      End If
   Next q
   
   
@@ -888,57 +963,57 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
 '    Next I
 'End With
 
-'Pull Address
-Dim FileNum As Long
-Dim TotalFile As String
-Dim Lines() As String
-Dim strSymbolTable As String
-Set wshSymbolText = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
-    wshSymbolText.Name = "Symbol Table"
-frmSymboTable.Show
-Open wsh_Path.Cells(6, 2).Value2 For Input As #1
-intc = 1
-intr = 1
-Do Until EOF(1)
-    Line Input #1, readLine
-    ActiveSheet.Cells(intr, intc).Value = readLine
-    intr = intr + 1
-Loop
-Close #1
-With Sheets("Symbol Table")
-    intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
-    For I = intn_SymbolTable To 1 Step -1
-        .Cells(I, 2).Value2 = Right(Left(.Cells(I, 1).Value2, 28), Len(Left(.Cells(I, 1).Value2, 28)) - 4)
-        .Cells(I, 3).Value2 = Trim(Mid(.Cells(I, 1).Value2, 29, 2))
-        .Cells(I, 4).Value2 = Trim(Mid(.Cells(I, 1).Value2, 34, 7))
-        If .Cells(I, 3).Value2 = "I" Or .Cells(I, 3).Value2 = "IW" Or .Cells(I, 3).Value2 = "Q" Or .Cells(I, 3).Value2 = "QW" Then
-            .Cells(I, 6).Value = 1
-        End If
-        If .Cells(I, 3).Value2 = "I" Or .Cells(I, 3).Value2 = "Q" Then
-            .Cells(I, 5).Value2 = .Cells(I, 3).Value2 & " " & Format(.Cells(I, 4).Value2, "0.0")
-        Else: .Cells(I, 5).Value2 = .Cells(I, 3).Value2 & " " & .Cells(I, 4).Value2
-        End If
-        If .Cells(I, 3).Value2 = "I" Then
-            .Cells(I, 7).Value2 = "DI 24V"
-        End If
-        If .Cells(I, 3).Value2 = "Q" Then
-            .Cells(I, 7).Value2 = "DO 24V"
-        End If
-        If .Cells(I, 6).Value = "" Then
-            .Cells(I, 6).EntireRow.Delete
-        End If
-    Next I
-    intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
-    Sheets("Report").Range("A:A").Copy Destination:=wb.Sheets("Symbol Table").Range("H1")
-    For I = 1 To intn_Report Step 1
-        For j = 1 To intn_SymbolTable Step 1
-            If .Cells(I, 8).Value2 = Trim(.Cells(j, 2).Value2) Then
-                Sheets("Report").Cells(I, 2).Value2 = .Cells(j, 5).Value2
-                Sheets("Report").Cells(I, 13).Value2 = .Cells(j, 7).Value2
-            End If
-        Next j
-    Next I
-End With
+''Pull Address
+'Dim FileNum As Long
+'Dim TotalFile As String
+'Dim Lines() As String
+'Dim strSymbolTable As String
+'Set wshSymbolText = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+'    wshSymbolText.Name = "Symbol Table"
+'frmSymboTable.Show
+'Open wsh_Path.Cells(6, 2).Value2 For Input As #1
+'intc = 1
+'intr = 1
+'Do Until EOF(1)
+'    Line Input #1, readLine
+'    ActiveSheet.Cells(intr, intc).Value = readLine
+'    intr = intr + 1
+'Loop
+'Close #1
+'With Sheets("Symbol Table")
+'    intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
+'    For I = intn_SymbolTable To 1 Step -1
+'        .Cells(I, 2).Value2 = Right(Left(.Cells(I, 1).Value2, 28), Len(Left(.Cells(I, 1).Value2, 28)) - 4)
+'        .Cells(I, 3).Value2 = Trim(Mid(.Cells(I, 1).Value2, 29, 2))
+'        .Cells(I, 4).Value2 = Trim(Mid(.Cells(I, 1).Value2, 34, 7))
+'        If .Cells(I, 3).Value2 = "I" Or .Cells(I, 3).Value2 = "IW" Or .Cells(I, 3).Value2 = "Q" Or .Cells(I, 3).Value2 = "QW" Then
+'            .Cells(I, 6).Value = 1
+'        End If
+'        If .Cells(I, 3).Value2 = "I" Or .Cells(I, 3).Value2 = "Q" Then
+'            .Cells(I, 5).Value2 = .Cells(I, 3).Value2 & " " & Format(.Cells(I, 4).Value2, "0.0")
+'        Else: .Cells(I, 5).Value2 = .Cells(I, 3).Value2 & " " & .Cells(I, 4).Value2
+'        End If
+'        If .Cells(I, 3).Value2 = "I" Then
+'            .Cells(I, 7).Value2 = "DI 24V"
+'        End If
+'        If .Cells(I, 3).Value2 = "Q" Then
+'            .Cells(I, 7).Value2 = "DO 24V"
+'        End If
+'        If .Cells(I, 6).Value = "" Then
+'            .Cells(I, 6).EntireRow.Delete
+'        End If
+'    Next I
+'    intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
+'    Sheets("Report").Range("A:A").Copy Destination:=wb.Sheets("Symbol Table").Range("H1")
+'    For I = 1 To intn_Report Step 1
+'        For j = 1 To intn_SymbolTable Step 1
+'            If .Cells(I, 8).Value2 = Trim(.Cells(j, 2).Value2) Then
+'                Sheets("Report").Cells(I, 2).Value2 = .Cells(j, 5).Value2
+'                Sheets("Report").Cells(I, 13).Value2 = .Cells(j, 7).Value2
+'            End If
+'        Next j
+'    Next I
+'End With
 
 ''Add DI Values
 'Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
@@ -1328,7 +1403,7 @@ For Each wks In Worksheets
 Next wks
 
 'Add data to template
-Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction Tool.xlsx")
+Set wbTemplate = Workbooks.Open("C:\Users\hailv\Desktop\07 - IO List Tool\TEMPLATE IO List Report For Extraction Tool.xlsx")
 wb.Sheets("Report").Range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").Range("B1")
 wb.Sheets("Report").Range("A2:Z" & intn_Report).Copy
 wbTemplate.Sheets("Report").Range("A2").PasteSpecial xlPasteValues
