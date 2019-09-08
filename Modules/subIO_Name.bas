@@ -1287,7 +1287,6 @@ If Len(wsh_Path.Cells(8, 2)) > 5 Then
 End If
 
 'Add relevant data to NOC
-
 Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     ws2.Name = "Normal OC"
 frmNewDigit.Show
@@ -1393,14 +1392,14 @@ wb2.Close
         
         Sheets("Report").Cells(q, 13).Value = Trim(range2)
         Sheets("Report").Cells(q, 26).Value = Trim(type2)
-    
         
         
-        
-        
+      
+                 
     Next
+
     
-'-----------------------------------end code for AI & NOC
+'-----------------------------------end code for AI & NOC from the report to the new tab
 
 
 
@@ -1504,6 +1503,55 @@ If Len(wsh_Path.Cells(10, 2)) > 5 Then
     End With
 End If
 
+
+
+'Move the SOE data
+'Add the new soe tab
+Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+    ws2.Name = "SOE_Seperator"
+    
+        Dim iRowsForSOE As Integer
+        rowsForSOE = Sheets("Report").UsedRange.Count
+        
+        For q = 2 To rowsForSOE Step 1
+          
+              If q > 659 Then
+                    Dim strCurrentSym As String
+                    ' get the current symbol
+                    strCurrentSym = Sheets("Report").Cells(q, 2)
+                      
+                    ' check if the current symbol is the type we want
+                    Dim strCheckType As String
+                    strCheckType = Sheets("Report").Cells(q, 13)
+                    
+                    Dim iIndex As Integer
+                    iIndex = 1
+                    
+                    If strCheckType = "RD_X_SOE" Then
+                             Sheets("SOE_Seperator").Cells(2, 2).Value = "test"
+                             iIndex = iIndex + 1
+                                           
+                    End If
+              
+              End If
+              
+
+        Next
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 'Clean up workbook
 'Application.DisplayAlerts = False
 '    Sheets("Signal Connections").Delete
@@ -1567,9 +1615,13 @@ For Each wks In Worksheets
 Next wks
 
 'Add data to template
-Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\")
+Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction ToolV2_testing.xlsx")
+
+' add the new soe tab
+wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
+
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
-wb.Sheets("Report").range("A2:Z" & intn_Report).Copy
+wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
 
 'SaveAs
