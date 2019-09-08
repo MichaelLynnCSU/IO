@@ -107,6 +107,7 @@ With Sheets("Report")
     .Cells(1, 17).Value = "Alarm Block"
     .Cells(1, 18).Value = "Chart"
     .Cells(1, 25).Value = "ET200M/RTU"
+    .Cells(1, 26).Value = "AI-Range"
 End With
 
 Dim intn_Data, intn_Report, intk, intai As Integer
@@ -662,7 +663,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
     
 
   For q = 2 To rows_symbol_Report Step 1
-    Debug.Print "CURRENT COUNT ", q
+    'Debug.Print "CURRENT COUNT ", q
     ' after symbol is matched with its messafwes set it nack to -1
     Dim target_channel As String
     target_channel = "-1"
@@ -1243,59 +1244,8 @@ If Len(wsh_Path.Cells(8, 2)) > 5 Then
     wb2.Sheets(1).Range("AB:AB").Copy Destination:=wb.Sheets("AI").Range("J1")
     wb2.Close
 
-'-----------------------------------new code for AI
-
-
-
-
-    Dim rows_symbol_Report_AI
-    rows_symbol_Report_AI = Sheets("Report").UsedRange.Rows.Count
     
-    Dim cols_HWConfig_AI
-    cols_HWConfig_AI = Sheets("AI").UsedRange.Columns.Count
-    
-    Dim rows_HWConfig_AI
-    rows_HWConfig_AI = Sheets("AI").UsedRange.Rows.Count
-    
-
-    For q = 2 To rows_symbol_Report_AI Step 1
-
-        Dim symbol_from_report_AI As String
-                
-        symbol_from_report_AI = Sheets("Report").Cells(q, 1).Value2
-        Debug.Print symbol_from_report_AI
-          
-            For j = 2 To rows_HWConfig_AI Step 1
-            
-                Dim IOComment As String
-                IOComment = Sheets("AI").Cells(j, 3)
-                
-                If symbol_from_report_AI = IOComment Then
-                
-                
-                
-                
-                End If
-
-
-                          
-            
-            Next
-      
-      
-    Next
-      
-    
-    
-    
-    
-    
-'-----------------------------------end code for AI
-    
-    
-    
-    
-    
+   
     
     With Sheets("AI")
         intn_AI = .Cells(Rows.Count, 1).End(xlUp).Row
@@ -1335,6 +1285,95 @@ If Len(wsh_Path.Cells(8, 2)) > 5 Then
         Next i
     End With
 End If
+
+'Add relevant data to NOC
+
+Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+    ws2.Name = "Normal OC"
+frmCH_AI_Signals.Show
+Set wb2 = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\NJH\Exported Data Files\Nickajack_Plant_NJH_CH_DI_Signals_NO-NC mod.csv")
+wb2.Sheets(1).Range("L:L").Copy Destination:=wb.Sheets("Normal OC").Range("A1")
+wb2.Sheets(1).Range("K:K").Copy Destination:=wb.Sheets("Normal OC").Range("B1")
+wb2.Close
+
+
+'-----------------------------------new code for AI & NOC
+
+
+
+
+    Dim rows_symbol_Report_AI
+    rows_symbol_Report_AI = Sheets("Report").UsedRange.Rows.Count
+    
+    Dim rows_HWConfig_AI
+    rows_HWConfig_AI = Sheets("AI").UsedRange.Rows.Count
+    
+    Dim rows_HWConfig_NOC
+    rows_HWConfig_NOC = Sheets("Normal OC").UsedRange.Rows.Count
+
+    For q = 2 To rows_symbol_Report_AI Step 1
+
+        Dim symbol_from_report_AI As String
+
+        symbol_from_report_AI = Sheets("Report").Cells(q, 1).Value2
+       ' Debug.Print symbol_from_report_AI
+   
+            'Add missing (AI) RDX block types
+            For j = 2 To rows_HWConfig_AI Step 1
+
+                Dim IOComment As String
+                current_IOComment = Sheets("AI").Cells(j, 3)
+               ' Debug.Print current_IOComment
+
+
+                If Trim(symbol_from_report_AI) = Trim(current_IOComment) Then
+                
+                      Dim checkForEmpty As String
+                      checkForEmpty = Sheets("Report").Cells(q, 13)
+                      
+                      
+                      If Len(checkForEmpty) < 1 Then
+                      Dim current_IOBlock As String
+                      current_IOBlock = Sheets("AI").Cells(j, 10)
+                     ' Debug.Print current_IOBlock
+                      Sheets("AI").Cells(j, 10).Copy Sheets("Report").Cells(q, 13)
+                      End If
+
+                End If
+
+            Next
+            
+                
+
+            
+           ' add NOCs from new digital lists to the report
+           For k = 2 To rows_HWConfig_NOC Step 1
+            
+                Dim noc_signal As String
+                noc_signal = Sheets("Normal OC").Cells(k, 1)
+                'Debug.Print noc_signal
+
+
+                If Trim(symbol_from_report_AI) = Trim(noc_signal) Then
+                        
+                      If noc_signal <> "Spare" Then
+                         Dim current_NOC As String
+                         current_NOC = Sheets("Normal OC").Cells(k, 2)
+                         'Debug.Print current_NOC
+                         'Debug.Print noc_signal
+                         Sheets("Normal OC").Cells(k, 2).Copy Sheets("Report").Cells(q, 14)
+                      End If
+                End If
+            
+
+        Next
+    Next
+    
+'-----------------------------------end code for AI & NOC
+
+
+
+
 
 'Add SOE Data
 Dim intn_SOE As Integer
@@ -1497,7 +1536,7 @@ For Each wks In Worksheets
 Next wks
 
 'Add data to template
-Set wbTemplate = Workbooks.Open("C:\Users\hailv\Desktop\07 - IO List Tool\TEMPLATE IO List Report For Extraction Tool.xlsx")
+Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\")
 wb.Sheets("Report").Range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").Range("B1")
 wb.Sheets("Report").Range("A2:Z" & intn_Report).Copy
 wbTemplate.Sheets("Report").Range("A2").PasteSpecial xlPasteValues
