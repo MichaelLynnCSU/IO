@@ -730,8 +730,8 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                           Dim cleanSTRAI As String
                           cleanSTRAI = Replace(LArray(0), """", "")
                           If cleanSTRAI = "DPSUBSYSTEM 1" Then
-                            Debug.Print LArray(0)
-                            Debug.Print LArray(4)
+                            'Debug.Print LArray(0)
+                            'Debug.Print LArray(4)
                             target_address_AI = LArray(4)
                           End If
                           
