@@ -662,6 +662,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
     
 
   For q = 2 To rows_symbol_Report Step 1
+    Debug.Print "CURRENT COUNT ", q
     ' after symbol is matched with its messafwes set it nack to -1
     Dim target_channel As String
     target_channel = "-1"
@@ -709,10 +710,30 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                intStartPos = 1
                                Dim current_signal_T As String
                                current_signal_T = Mid(remander_current_symbol, intStartPos + 1, intEndPos - 3)
-            
+                                
+                                If current_channel_T = "0" Or current_channel_T = "1" Then
+                                   current_channel_T = "0"
+                                ElseIf current_channel_T = "2" Or current_channel_T = "3" Then
+                                   current_channel_T = "1"
+                                ElseIf current_channel_T = "4" Or current_channel_T = "5" Then
+                                   current_channel_T = "2"
+                                ElseIf current_channel_T = "6" Or current_channel_T = "7" Then
+                                   current_channel_T = "3"
+                                Else
+                                   Debug.Print "WE GOT HERE, OUT OF SIGNAL RANGE ", current_channel_T
+                                End If
+                               
+                                        If q = 162 Then
+                                                  If I = 32 Or I = 33 Or I = 34 Then
+                                                      Debug.Print "col search", symbol_from_report
+                                                  End If
+                                         End If
+                                         
+                                 
+                                         
                                     If Trim(current_signal_T) = Trim(symbol_from_report) Then
-                                        
-                                        'Debug.Print "found symbol match ", current_signal_T, symbol_from_report
+                                         
+                                       'Debug.Print "found symbol match ", current_signal_T, symbol_from_report
                                         target_channel = current_channel_T
                                         'Debug.Print "current_channel_T ", current_channel_T
                                         'Debug.Print "target_channel ", target_channel
@@ -738,14 +759,14 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                           current_symbol_T2 = Mid(HWConfig_line, intStartPos, intEndPos - 1)
                           'Debug.Print "current_symbol_T2 for AI_type", Trim(current_symbol_T2)
                           
-                
+         
                             
-                          If Trim(current_symbol_T2) = Trim("AI_TYPE") Then
+                          If Trim(current_symbol_T2) = Trim("AI_TYPE") Or Trim(current_symbol_T2) = Trim("AO_TYPE") Then
                               'Debug.Print "FOUND AI LINE ", Trim(HWConfig_line)
                               'Debug.Print "CURRENT SYMBOL2 ", current_symbol_T2
         
                                  If target_channel <> "-1" Then
-                                    Debug.Print "TARGET CHANNEL ", target_channel
+                                    'Debug.Print "TARGET CHANNEL ", target_channel
                               
                                     'get AI_type
                                     intEndPos = InStr(HWConfig_line, ",")
@@ -784,7 +805,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                       Dim remander_messages_AI_4_type
                                       remander_messages_AI_4_type = Mid(remander_ID_Range_4_type, intEndPos + 2, Len(remander_ID_Range_4_type))
                                      'Debug.Print "current sybmol AI messages", remander_messages_AI_4_type
-                              
+                                        
                                             If Trim(target_channel) = Trim(current_channel_AI_4_type) Then
 
                                                 ' Debug.Print "FOUND CHANNEL MATCH AI", target_channel, current_channel_AI_4_type
@@ -819,7 +840,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                 
                                 
                                 
-                                 If Trim(current_symbol_T) = Trim("AI_RANGE") Then
+                                 If Trim(current_symbol_T) = Trim("AI_RANGE") Or Trim(current_symbol_T) = Trim("AO_RANGE") Then
                                     'Debug.Print "FOUND RANGE LINE ", Trim(HWConfig_line)
                                     If target_channel <> "-1" Then
                                   'Debug.Print "CURRENT RANGE CHANNEL ", target_channel
@@ -862,8 +883,8 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
 
 
                                           If Trim(target_channel) = Trim(current_channel_Range_4_type2) Then
-                                              Debug.Print "FOUND CHANNEL MATCH RANGE", target_channel, current_channel_Range_4_type
-                                              Debug.Print "current messages from channel", remander_messages_Range_4_type
+                                              'Debug.Print "FOUND CHANNEL MATCH RANGE", target_channel, current_channel_Range_4_type
+                                              'Debug.Print "current messages from channel", remander_messages_Range_4_type
                                               target_message = remander_messages_Range_4_type2 & target_message
                                               target_channel = ""
                                               'Debug.Print "concatenate messages", target_message
