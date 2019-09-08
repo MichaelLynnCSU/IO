@@ -621,7 +621,8 @@ Debug.Print cols_HWConfig_T
                 End If
                 
               If Trim(current_symbol_T) = Trim("SYMBOL  I") Then
-                               
+                    'get AI_type
+    
                   Debug.Print "current line", HWConfig_line
                   Debug.Print current_symbol_T
                      
@@ -690,7 +691,7 @@ Debug.Print cols_HWConfig_T
                             Debug.Print "FOUND AI LINE ", Trim(HWConfig_line)
                       
                               If target_channel <> "-1" Then
-                                  Debug.Print "FOUND TARGET CHANNEL ", target_channel
+                                  Debug.Print "CURRENT AI CHANNEL ", target_channel
                                   
                                   'get AI_type
                                   intEndPos = InStr(HWConfig_line, ",")
@@ -724,11 +725,10 @@ Debug.Print cols_HWConfig_T
                                   Debug.Print "current sybmol AI messages", remander_messages_AI_4_type
                                   
                                         If Trim(target_channel) = Trim(current_channel_AI_4_type) Then
-                                            Debug.Print "found channel match ", target_channel, current_channel_AI_4_type
-                                            target_channel = current_channel
+                                            Debug.Print "FOUND CHANNEL MATCH", target_channel, current_channel_AI_4_type
                                             Debug.Print "current messages from channel", remander_messages_AI_4_type
-                                            target_message = remander_messages_AI_4_type
-                                                             
+                                            target_message = target_message & remander_messages_AI_4_type
+                                            Debug.Print "FINAL MESSAGE", target_message
                                         End If
                         
                
@@ -765,41 +765,51 @@ Debug.Print cols_HWConfig_T
                         
                       
                             If Trim(current_symbol_T) = Trim("AI_RANGE") Then
-                            
-'                                    Debug.Print target_channel, "my target channel"
+                                    Debug.Print "FOUND RANGE LINE ", Trim(HWConfig_line)
+                                    If target_channel <> "-1" Then
+                                    Debug.Print "CURRENT RANGE CHANNEL ", target_channel
                                     
-                                    'get AI_range_type
+                                    
                                     intEndPos = InStr(HWConfig_line, ",")
                                     intStartPos = 1
                                     current_Range_4_type = Mid(HWConfig_line, intStartPos, intEndPos - 1)
-'                                    Debug.Print current_Range_4_type
+                                    Debug.Print current_Range_4_type
                                     
                                     'store the rest of the string
-                                    remander_Range_4_type = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
-'                                    Debug.Print remander_Range_4_type
+                                    remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
+                                    Debug.Print remander_current_symbol
                                     
                                     
-                                    'get AI_range_ID_type
-                                    intEndPos = InStr(remander_Range_4_type, ",")
+                                    'get AI_ID_type
+                                    intEndPos = InStr(remander_current_symbol, ",")
                                     intStartPos = 1
-                                    current_ID_Range_type = Mid(remander_Range_4_type, intStartPos, intEndPos - 1)
-'                                    Debug.Print remander_ID_Range_type
+                                    Dim AI_ID_type As String
+                                    AI_ID_type = Mid(remander_current_symbol, intStartPos, intEndPos - 1)
+                                    Debug.Print remander_current_symbol
                                     
                                     'store the rest of the string
-                                    remander_ID_AI_4_type = Mid(remander_Range_4_type, intEndPos + 2, Len(remander_Range_4_type))
-'                                    Debug.Print remander_ID_AI_4_type
+                                    remander_current_symbol = Mid(remander_current_symbol, intEndPos + 2, Len(remander_current_symbol))
+                                    Debug.Print "DEBUGING PURPOSE", remander_current_symbol
                                     
-                                    'get AI_range_channel_type
-                                    intEndPos = InStr(remander_ID_AI_4_type, ",")
+                                    'get AI_channel_type
+                                    intEndPos = InStr(remander_current_symbol, ",")
                                     intStartPos = 1
-                                    current_channel_Range_4_type = Mid(remander_ID_AI_4_type, intStartPos, intEndPos - 1)
-'                                    Debug.Print Trim(current_channel_Range_4_type)
+                                    current_channel = Mid(remander_current_symbol, intStartPos, intEndPos - 1)
+                                    Debug.Print Trim(current_channel)
                                     
                                     'store the rest of the string, thing left is the messages
-                                    remander_messages_Range_4_type = Mid(remander_ID_AI_4_type, intEndPos + 2, Len(remander_ID_AI_4_type))
-'                                    Debug.Print remander_messages_Range_4_type
+                                    remander_messages_Range_4_type = Mid(remander_current_symbol, intEndPos + 2, Len(remander_current_symbol))
+                                    Debug.Print remander_messages_Range_4_type
+
+
+                                          If Trim(target_channel) = Trim(current_channel) Then
+                                              Debug.Print "FOUND CHANNEL MATCH", target_channel, current_channel
+                                              Debug.Print "current messages from channel", remander_messages_Range_4_type
+                                              target_message = remander_messages_Range_4_type & target_message
+                                              Debug.Print "concatenate messages", target_message
+                                          End If
                               
-                              
+                                 End If
                              End If
                         ' end C of String alogrithm
                           
