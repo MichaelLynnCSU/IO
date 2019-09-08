@@ -639,15 +639,15 @@ Debug.Print rows_HWConfig_T
                   current_signal = Mid(remander_current_symbol, intStartPos + 1, intEndPos - 3)
                   Debug.Print current_signal
                   
-                  
-                      If current_signal = symbol_from_report Then
-                      
+                      Debug.Print current_channel
+                      Debug.Print symbol_from_report
+                      If Trim(current_signal) = Trim(symbol_from_report) Then
+                          Debug.Print current_channel
                           target_channel = current_channel
+                          Debug.Print target_channel
                                            
                       End If
-                      
-                  ' reset current_symbol_T
-                current_symbol_T = ""
+                    
                 
              End If
         ' end part A of algorithm
@@ -664,7 +664,6 @@ Debug.Print rows_HWConfig_T
                  Dim remander_channel_AI_4_type As String
               
                  Dim remander_messages_AI_4_type As String
-                 Debug.Print AI_4_type, "testing string in new module"
         
                       'get symbol
                       If InStr(HWConfig_line, ",") > 0 Then
@@ -709,12 +708,80 @@ Debug.Print rows_HWConfig_T
                       Debug.Print Trim(current_channel_AI_4_type)
                       
                       'store the rest of the string, thing left is the messages
-                      remander_messages_AI_4_type = Mid(remander_ID_AI_4_type, intEndPos + 2, Len(remander_ID_AI_4_type))
-                      Debug.Print remander_messages_AI_4_type
+                      remander_messages_AI_4_type = Mid(remander_ID_Range_4_type, intEndPos + 2, Len(remander_ID_Range_4_type))
+                      Debug.Print "missing type", remander_messages_AI_4_type
 
                       End If
                      
                     ' end part B of algorithm
+                    
+                    
+                    ' part C of String alogrithm
+                    
+                            Dim current_Range_4_type As String
+                            Dim remander_Range_4_type As String
+                            
+                            Dim current_ID_Range_type As String
+                            Dim remander_ID_Range_type As String
+                            
+                            Dim current_channel_Range_4_type As Integer
+                            Dim remander_channel_Range_4_type As String
+                            
+                            Dim remander_messages_Range_4_type As String
+                              
+                            'get symbol
+                            If InStr(HWConfig_line, ",") > 0 Then
+                                
+                                intEndPos = InStr(HWConfig_line, ",")
+                                intStartPos = 1
+                                current_symbol_T = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+              '                  Debug.Print Trim(current_symbol_T)
+                              
+                            End If
+                        
+                      
+                            If Trim(current_symbol_T) = Trim("AI_RANGE") Then
+                            
+                                    Debug.Print target_channel, "my target channel"
+                                    
+                                    'get AI_range_type
+                                    intEndPos = InStr(HWConfig_line, ",")
+                                    intStartPos = 1
+                                    current_Range_4_type = Mid(HWConfig_line, intStartPos, intEndPos - 1)
+                                    Debug.Print current_Range_4_type
+                                    
+                                    'store the rest of the string
+                                    remander_Range_4_type = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
+                                    Debug.Print remander_Range_4_type
+                                    
+                                    
+                                    'get AI_range_ID_type
+                                    intEndPos = InStr(remander_Range_4_type, ",")
+                                    intStartPos = 1
+                                    current_ID_Range_type = Mid(remander_Range_4_type, intStartPos, intEndPos - 1)
+                                    Debug.Print remander_ID_Range_type
+                                    
+                                    'store the rest of the string
+                                    remander_ID_AI_4_type = Mid(remander_Range_4_type, intEndPos + 2, Len(remander_Range_4_type))
+                                    Debug.Print remander_ID_AI_4_type
+                                    
+                                    'get AI_range_channel_type
+                                    intEndPos = InStr(remander_ID_AI_4_type, ",")
+                                    intStartPos = 1
+                                    current_channel_Range_4_type = Mid(remander_ID_AI_4_type, intStartPos, intEndPos - 1)
+                                    Debug.Print Trim(current_channel_Range_4_type)
+                                    
+                                    'store the rest of the string, thing left is the messages
+                                    remander_messages_Range_4_type = Mid(remander_ID_AI_4_type, intEndPos + 2, Len(remander_ID_AI_4_type))
+                                    Debug.Print remander_messages_Range_4_type
+                              
+                              
+                             End If
+                        ' end C of String alogrithm
+                          
+                    
+              ' reset current_symbol_T
+              current_symbol_T = ""
           
         Next
       
