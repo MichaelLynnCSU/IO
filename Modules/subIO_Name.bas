@@ -1504,6 +1504,16 @@ If Len(wsh_Path.Cells(10, 2)) > 5 Then
 End If
 
 
+        'Sort by Rack then Slot then Channel #
+        With Sheets("Report").range("A:Z")
+                .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
+                            Key2:=.Columns(Application.Match("Rack", .Rows(1), 0)), Order2:=xlAscending, _
+                            Key3:=.Columns(Application.Match("Slot", .Rows(1), 0)), Order2:=xlAscending, _
+                            Key3:=.Columns(Application.Match("Channel", .Rows(1), 0)), Order2:=xlAscending, _
+                            Orientation:=xlTopToBottom, Header:=xlYes
+        End With
+                
+                
 
 'Move the SOE data
 'Add the new soe tab
@@ -1512,10 +1522,19 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     
         Dim iRowsForSOE As Integer
         rowsForSOE = Sheets("Report").UsedRange.Count
+            
+        Dim iIndex As Integer
+        iIndex = 1
+        
+        Dim bRunnung As Boolean
+        bRunnung = True
+        
+        Dim iStartCount As Integer
+        iStartCount = 0
         
         For q = 2 To rowsForSOE Step 1
           
-              If q > 659 Then
+           '   If q > 659 Then
                     Dim strCurrentSym As String
                     ' get the current symbol
                     strCurrentSym = Sheets("Report").Cells(q, 2)
@@ -1523,20 +1542,38 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
                     ' check if the current symbol is the type we want
                     Dim strCheckType As String
                     strCheckType = Sheets("Report").Cells(q, 13)
-                    
-                    Dim iIndex As Integer
-                    iIndex = 1
+                
                     
                     If strCheckType = "RD_X_SOE" Then
-                             Sheets("SOE_Seperator").Cells(2, 2).Value = "test"
-                             iIndex = iIndex + 1
+                             If bRunnung Then
+                                iStartCount = q
+                                bRunnung = False
+                             End If
+                             
+                        'Sheets("SOE_Seperator").Cells(2, 2).Value = "test"
+                        Sheets("Report").Rows(q).EntireRow.Copy
+                        Sheets("SOE_Seperator").range("A" & iIndex).PasteSpecial Paste:=xlValues
+                        iIndex = iIndex + 1
                                            
                     End If
               
-              End If
+             ' End If
               
 
         Next
+        
+        
+        Dim lRow
+        lRow = iStartCount + iIndex
+        Do While lRow >= iStartCount
+        
+            Sheets("Report").Rows(iStartCount).EntireRow.Delete
+        
+         lRow = lRow - 1
+        Loop
+        
+        
+        
 
 
 
@@ -1568,14 +1605,14 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
 '    Sheets("DI Alarm").Delete
 'Application.DisplayAlerts = True
 
-'Sort by Rack then Slot then Channel #
-With Sheets("Report").range("A:Z")
-        .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
-                    Key2:=.Columns(Application.Match("Rack", .Rows(1), 0)), Order2:=xlAscending, _
-                    Key3:=.Columns(Application.Match("Slot", .Rows(1), 0)), Order2:=xlAscending, _
-                    Key3:=.Columns(Application.Match("Channel", .Rows(1), 0)), Order2:=xlAscending, _
-                    Orientation:=xlTopToBottom, Header:=xlYes
-End With
+''Sort by Rack then Slot then Channel #
+'With Sheets("Report").range("A:Z")
+'        .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
+'                    Key2:=.Columns(Application.Match("Rack", .Rows(1), 0)), Order2:=xlAscending, _
+'                    Key3:=.Columns(Application.Match("Slot", .Rows(1), 0)), Order2:=xlAscending, _
+'                    Key3:=.Columns(Application.Match("Channel", .Rows(1), 0)), Order2:=xlAscending, _
+'                    Orientation:=xlTopToBottom, Header:=xlYes
+'End With
 
 'Clean up report
 'Sheets("Report").Range("V1:Z1").EntireColumn.Delete
@@ -1615,14 +1652,18 @@ For Each wks In Worksheets
 Next wks
 
 'Add data to template
-Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction ToolV2_testing.xlsx")
+Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction ToolV2.xlsx")
 
 ' add the new soe tab
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
 
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
+
 wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
+
+wb.Sheets("SOE_Seperator").range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
 
 'SaveAs
 frmSaveAs.Show
