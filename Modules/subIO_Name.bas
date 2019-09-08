@@ -3,7 +3,7 @@ Sub subIO_Name()
 '
 ' IO_Name Macro
 '
-'read in data
+'read in data simple save rerun
 Application.ScreenUpdating = False
 ActiveSheet.Name = "HWConfig"
 Set wb = ThisWorkbook
@@ -32,9 +32,9 @@ Do Until EOF(1)
 Loop
 Close #1
 
-'Delete any irrelevate sections (relevant sections are those with data for slots > 4
+'Delete any irrelevate sections (relevant sections are those with data for slots > 4)
 For j = intc To 1 Step -1
-    If Not InStr(Cells(1, j).Value, "SLOT") > 0 Then
+    If Not InStr(Cells(1, j).Value, "DPADDRESS") > 0 Then
         Cells(1, j).EntireColumn.Delete
     End If
 Next j
@@ -76,10 +76,11 @@ With Sheets("Report")
     .Cells(1, 16).Value = "Block"
     .Cells(1, 17).Value = "Alarm Block"
     .Cells(1, 18).Value = "Chart"
+    .Cells(1, 25).Value = "ET200M/RTU"
 End With
 
 Dim intn_Data, intn_Report, intk, intai As Integer
-Dim strchannel, strsymbol, strcomment, strtype, straitype, strrack, strslot, strDig As String
+Dim strchannel, strsymbol, strcomment, strtype, straitype, strrack, strslot, strDig, strRTU As String
 
 'Extract data and move to report
 With Sheets("HWConfig")
@@ -94,6 +95,10 @@ With Sheets("HWConfig")
         strrack = Mid(.Cells(1, j), InStr(1, .Cells(1, j), ",") + Len("DPADDRESS") + 3, 2)
         'Extract slot #
         strslot = Mid(.Cells(1, j), InStr(1, .Cells(1, j), ",") + Len("DPADDRESS") + 3 + Len(strrack) + 3 + Len("SLOT"), 1)
+        'ET200M
+        If InStr(1, .Cells(1, j), "IM 153-2") > 0 Then
+            strRTU = "ET200M"
+        End If
         'Extract symbol, comment and channel #
         For i = 1 To intn_Data Step 1
             If Left(.Cells(i, j).Value, 6) = "SYMBOL" Then
@@ -123,6 +128,8 @@ With Sheets("HWConfig")
                 If strDig > 0 Then
                     Sheets("Report").Cells(intk + intn_Report, 13).Value2 = "Digital"
                 End If
+                'Add RTU/ET200M to report
+                Sheets("Report").Cells(intk + intn_Report, 25).Value2 = strRTU
             End If
             'Extract signal type
             If Left(.Cells(i, j).Value, 5) = "  AI_" Then
@@ -263,12 +270,18 @@ Dim intAL As Integer
 Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     ws2.Name = "Alarm"
 frmAlarm.Show
+
+
+'Pull columns from Nickajack_Plant_NJH_Meas_Mon_Alarming
 Set wb2 = Workbooks.Open(wsh_Path.Cells(5, 2).Value2)
 wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Alarm").Range("A1")
 wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Alarm").Range("B1")
 wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("Alarm").Range("C1")
 wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("Alarm").Range("D1")
+wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Alarm").Range("J1")
+wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("Alarm").Range("K1")
 wb2.Close
+
 'sort by block then I/O Name
 With Sheets("Alarm").Range("A:C")
         .Cells.Sort Key1:=.Columns(Application.Match("Block", .Rows(1), 0)), Order1:=xlAscending, MatchCase:=True, _
@@ -276,6 +289,126 @@ With Sheets("Alarm").Range("A:C")
                     Orientation:=xlTopToBottom, Header:=xlYes
 End With
 intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
+
+
+'Testing ouput for relevant sheets that exist
+Debug.Print "Report: "
+Debug.Print "Symbol: " & Sheets("Signal Connections").Cells(2, 1)
+
+Debug.Print "Signal Connections: "
+Debug.Print "Signal: " & Sheets("Signal Connections").Cells(1, 1)
+Debug.Print "Block: " & Sheets("Signal Connections").Cells(1, 2)
+Debug.Print "Chart: " & Sheets("Signal Connections").Cells(1, 3)
+
+Debug.Print "Range: "
+Debug.Print "Block: " & Sheets("Range").Cells(1, 1)
+Debug.Print "Chart: " & Sheets("Range").Cells(1, 4)
+Debug.Print "Interconnect: " & Sheets("Range").Cells(1, 5)
+
+Debug.Print "Alarm: "
+Debug.Print "Block: " & Sheets("Alarm").Cells(1, 1)
+Debug.Print "Chart: " & Sheets("Alarm").Cells(1, 4)
+Debug.Print "I/O Tag: " & Sheets("Alarm").Cells(1, 10)
+Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
+
+'Start Part A
+
+  Dim current_symbol As String
+  
+  Dim current_signal As String
+  Dim current_signal_block As String
+  Dim current_signal_chart As String
+  
+  Dim rows_Symbol As Integer
+  Dim rows_Signal As Integer
+  
+  rows_Symbol = Sheets("Report").UsedRange.Rows.Count
+  rows_Signal = Sheets("Signal Connections").UsedRange.Rows.Count
+  
+'  Debug.Print "rows_Symbol: " & rows_Symbol
+'  Debug.Print "rows_Signal: " & rows_Signal
+  
+    For i = 2 To rows_Symbol Step 1
+    
+      For j = 2 To rows_Signal Step 1
+      
+        'get a signal(i) and symbol(j) value
+        current_symbol = Sheets("Report").Cells(i, 1).Value2
+        current_signal = Sheets("Signal Connections").Cells(j, 1).Value2
+'          Debug.Print "current_symbol: " & current_symbol
+'          Debug.Print "current_signal: " & current_signal
+        
+        'search for a signal and symbol match
+        If current_symbol = current_signal Then
+          current_signal_block = Sheets("Signal Connections").Cells(j, 2).Value2
+          current_signal_chart = Sheets("Signal Connections").Cells(j, 3).Value2
+           
+'          Debug.Print "current_signal: " & current_signal
+'          Debug.Print "current_signal_block: " & current_signal_block
+'          Debug.Print "current_signal_chart: " & current_signal_chart
+          
+            'Start Part B
+  
+                  Dim current_range_block As String
+                  Dim current_range_chart As String
+                  Dim current_range_interconnetion_block As String
+                
+                  Dim row_range As Integer
+                  row_range = Sheets("Range").UsedRange.Rows.Count
+                  
+                      For k = 2 To row_range Step 1
+                          'get a range_block(i) and range_chart value
+                          current_range_block = Sheets("Range").Cells(k, 1).Value2
+                          current_range_chart = Sheets("Range").Cells(k, 4).Value2
+'                            Debug.Print "current_signal_block: " & current_signal_block
+'                            Debug.Print "current_signal_chart: " & current_signal_chart
+'                            Debug.Print "current_range_block: " & current_range_block
+'                            Debug.Print "current_range_chart: " & current_range_chart
+                            
+                           'search for a symbol and range match
+                        If current_signal_block = current_range_block Then
+                          If current_signal_chart = current_range_chart Then
+                          current_range_interconnetion_block = Sheets("Range").Cells(k, 5).Value2
+'                          Debug.Print "current_range_chart: " & current_range_chart
+                          
+                          If InStr(current_range_interconnetion_block, ".U""") > 0 Then
+                          Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
+                          End If
+                          
+                            'Start Part C
+                            
+                        '  Debug.Print "current_range_chart: " & current_range_chart
+                          
+                          
+                       '   Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
+                          
+                          Dim alarm_block As Integer
+                          Dim alarm_chart As Integer
+'                          Debug.Print "alarm_block: " & alarm_block
+'                          Debug.Print "alarm_chart: " & alarm_chart
+                            
+                            
+                            
+                            
+                            
+                            'End Part C
+                          
+                          End If
+                        End If
+                     Next
+  
+            
+            'End Part B
+          
+        End If
+        
+     Next
+     
+    Next
+
+'End Part A
+  
+  
 'Add alarm to report
 Sheets("Report").Range("Q:Q").Copy Destination:=wb.Sheets("Alarm").Range("H1")
 With Sheets("Alarm")
@@ -286,7 +419,7 @@ With Sheets("Alarm")
         intAL = 0
         If Len(.Cells(i, 8).Value2) > 0 Then
             For j = 1 To intn_Alarm Step 1
-                If .Cells(i, 8).Value2 = .Cells(j, 1).Value2 And .Cells(i, 23).Value2 = .Cells(j, 4).Value2 Then
+                If .Cells(i, 17).Value2 = .Cells(j, 1).Value2 And .Cells(i, 23).Value2 = .Cells(j, 4).Value2 Then
                     If .Cells(j, 2).Value2 = "U_AH" Then
                         intAH = intAH + 1
                         If intAH > 1 Then
@@ -349,9 +482,18 @@ With Sheets("Symbol Table")
         .Cells(i, 2).Value2 = Right(Left(.Cells(i, 1).Value2, 28), Len(Left(.Cells(i, 1).Value2, 28)) - 4)
         .Cells(i, 3).Value2 = Trim(Mid(.Cells(i, 1).Value2, 29, 2))
         .Cells(i, 4).Value2 = Trim(Mid(.Cells(i, 1).Value2, 34, 7))
-        .Cells(i, 5).Value2 = .Cells(i, 3).Value2 & " " & .Cells(i, 4).Value2
         If .Cells(i, 3).Value2 = "I" Or .Cells(i, 3).Value2 = "IW" Or .Cells(i, 3).Value2 = "Q" Or .Cells(i, 3).Value2 = "QW" Then
             .Cells(i, 6).Value = 1
+        End If
+        If .Cells(i, 3).Value2 = "I" Or .Cells(i, 3).Value2 = "Q" Then
+            .Cells(i, 5).Value2 = .Cells(i, 3).Value2 & " " & Format(.Cells(i, 4).Value2, "0.0")
+        Else: .Cells(i, 5).Value2 = .Cells(i, 3).Value2 & " " & .Cells(i, 4).Value2
+        End If
+        If .Cells(i, 3).Value2 = "I" Then
+            .Cells(i, 7).Value2 = "DI 24V"
+        End If
+        If .Cells(i, 3).Value2 = "Q" Then
+            .Cells(i, 7).Value2 = "DO 24V"
         End If
         If .Cells(i, 6).Value = "" Then
             .Cells(i, 6).EntireRow.Delete
@@ -363,6 +505,7 @@ With Sheets("Symbol Table")
         For j = 1 To intn_SymbolTable Step 1
             If .Cells(i, 8).Value2 = Trim(.Cells(j, 2).Value2) Then
                 Sheets("Report").Cells(i, 2).Value2 = .Cells(j, 5).Value2
+                Sheets("Report").Cells(i, 13).Value2 = .Cells(j, 7).Value2
             End If
         Next j
     Next i
@@ -758,7 +901,7 @@ Next wks
 'Add data to template
 Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction Tool.xlsx")
 wb.Sheets("Report").Range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").Range("B1")
-wb.Sheets("Report").Range("A2:Y" & intn_Report).Copy
+wb.Sheets("Report").Range("A2:Z" & intn_Report).Copy
 wbTemplate.Sheets("Report").Range("A2").PasteSpecial xlPasteValues
 
 'SaveAs
