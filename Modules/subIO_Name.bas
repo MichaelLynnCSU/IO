@@ -1666,6 +1666,15 @@ iRowsForSBO = Sheets("Report").UsedRange.Count
                            
             Next
 
+
+        ' Delete SBO fom report
+        Do While iIndexSBO >= 1
+        
+            Sheets("Report").Rows(iStartCountSBO).EntireRow.Delete
+      
+         iIndexSBO = iIndexSBO - 1
+        Loop
+
 'Clean up workbook
 'Application.DisplayAlerts = False
 '    Sheets("Signal Connections").Delete
