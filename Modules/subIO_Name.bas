@@ -675,7 +675,12 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
     symbol_from_report = Sheets("Report").Cells(q, 1).Value2
     'Debug.Print symbol_from_report
     
-
+          If q > 161 Then
+              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
+                  'Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
+               End If
+          End If
+                            
     For I = 2 To cols_HWConfig_T Step 1
         For j = 2 To rows_HWConfig_T Step 1
         'start part A of algorithm
@@ -696,14 +701,13 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                   remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
                   
                             If q > 161 Then
-                              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
-                                  Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
-                               End If
-                               
-                              If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
-                                  Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
-                              End If
-                                 
+                              If I > 32 Then
+                                Debug.Print "CURRENT LINE ", HWConfig_line
+                                Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
+                                    If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
+                                        'Debug.Print "CHECK IF THE SYMBOL O PASSES", signal_from_HWCONFIG
+                                    End If
+                                End If
                             End If
                                
                                
@@ -732,9 +736,10 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                 ElseIf current_channel_T = "6" Or current_channel_T = "7" Then
                                    current_channel_T = "3"
                                 Else
-                                   Debug.Print "WE GOT HERE, OUT OF SIGNAL RANGE ", current_channel_T
+                                   'Debug.Print "WE GOT HERE, OUT OF SIGNAL RANGE ", current_channel_T
                                 End If
-                                                             
+                                   
+                                                                         
                                          
                                     If Trim(current_signal_T) = Trim(symbol_from_report) Then
                                          
@@ -1219,6 +1224,15 @@ If Len(wsh_Path.Cells(7, 2)) > 5 Then
     End With
 End If
 
+
+
+
+
+
+
+
+
+
 'Add Rack 1 AI1 Data
 Dim intn_AI As Integer
 Set wshAI = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
@@ -1230,6 +1244,11 @@ If Len(wsh_Path.Cells(8, 2)) > 5 Then
     wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("AI").Range("B1")
     wb2.Sheets(1).Range("G:G").Copy Destination:=wb.Sheets("AI").Range("C1")
     wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("AI").Range("D1")
+    
+      
+    'Add blocks from te Ai sheet
+    wb2.Sheets(1).Range("AB:AB").Copy Destination:=wb.Sheets("AI").Range("J1")
+    
     wb2.Close
     With Sheets("AI")
         intn_AI = .Cells(Rows.Count, 1).End(xlUp).Row
@@ -1253,6 +1272,21 @@ If Len(wsh_Path.Cells(8, 2)) > 5 Then
                     Key3:=.Columns(Application.Match("Low/High", .Rows(1), 0)), Order2:=xlAscending, _
                     Orientation:=xlTopToBottom, Header:=xlYes
     End With
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     'Add data to report
     With Sheets("AI")
         intn_Report = Sheets("Report").Cells(Rows.Count, 6).End(xlUp).Row
