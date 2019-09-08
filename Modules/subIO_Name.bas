@@ -394,43 +394,71 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
 '                            Debug.Print "current_range_block: " & current_range_block
 '                            Debug.Print "current_range_chart: " & current_range_chart
 
-                 'bug check
-                 If current_symbol = "UNIT 1 STATOR TEMP #10" Then
-                   Debug.Print "current_symbol: " & current_symbol
-                   
-                   Debug.Print "current_signal: " & current_signal
-                   Debug.Print "current_signal_chart: " & current_signal_chart
-                   
-                   Debug.Print "current_range_block: " & current_signal
-                   Debug.Print "current_range_chart: " & current_signal_chart
-                 End If
+
                  
                            'search for a symbol and range match
                         If current_signal_block = current_range_block Then
                           If current_signal_chart = current_range_chart Then
                           current_range_interconnetion_block = Sheets("Range").Cells(k, 5).Value2
-'                          Debug.Print "current_range_chart: " & current_range_chart
-'                          Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
+                          
+                          
+                ' start bug check
+'                 If current_symbol = "UNIT 1 STATOR TEMP #10" Then
+'                   Debug.Print "current_symbol: " & current_symbol
+'
+'                   Debug.Print "current_signal: " & current_signal
+'                   Debug.Print "current_signal_chart: " & current_signal_chart
+'                   Debug.Print "current_signal_block: " & current_signal_block
+'
+'                   Debug.Print "current_range_block: " & current_range_block
+'                   Debug.Print "current_range_chart: " & current_range_chart
+'                   Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
+'                 End If
+                ' End bug check
+                          
+                          
                           
                           'Start Part C
-                          
-                          
-                          'bug check
-                          If current_symbol = "UNIT 1 STATOR TEMP #10" Then
-                            Debug.Print "current_symbol: " & current_symbol
-                            Debug.Print "current_signal: " & current_signal
-                          End If
-                          
+                                                 
                           
                             Dim intEndPos As Integer
                             Dim intStartPos As Integer
                             Dim current_range_interconnetion_block_U As String
                             
-                          'Seperate the block from the string
-                            If InStr(current_range_interconnetion_block, ".U""") > 0 Then
-                                intEndPos = InStr(current_range_interconnetion_block, ".U")
+                            
+                           ' Start new String parsing alogrithm
+                           
+                            'Separate the block from the string
+                            'the .U is a marker in the string to help find where the block name is located. Start from the end and search for .U and check if .U found
+                            '  at end or in middle of interconnect string
+                            intEndPos = InStrRev(current_range_interconnetion_block, ".U")
+                            
+                            'if .U is found and it is either at the very end or in the middle but has a " right after it then find the block name
+                            If intEndPos > 0 Then
+                              If (intEndPos = Len(current_range_interconnetion_block) - 1) Then  'check if .U at the end of the string
+                                Debug.Print "It's at the end"
+                              ElseIf Asc(Mid(current_range_interconnetion_block, intEndPos + 2, 1)) = 34 Then  'if .U in the middle check if there is double quote after the U (ascii of " is 34)
+                                Debug.Print "It's in the middle and has double quote after the U"
+                              Else
+                                Debug.Print "string not found"
+                                intEndPos = 0  'set to 0 so will not try to find block name
+                              End If
+                              If intEndPos > 0 Then 'the .U was found so now get the block name from the string
                                 intStartPos = InStrRev(current_range_interconnetion_block, "\", intEndPos)
                                 current_range_interconnetion_block_U = Mid(current_range_interconnetion_block, intStartPos + 1, intEndPos - intStartPos - 1)
+                                Debug.Print "Found string:"; current_range_interconnetion_block_U
+                              End If
+                                
+                           
+
+                              ' End String parsing alogrithm
+
+
+                          'Seperate the block from the string
+'                            If InStr(current_range_interconnetion_block, ".U""") > 0 Then
+'                                intEndPos = InStr(current_range_interconnetion_block, ".U")
+'                                intStartPos = InStrRev(current_range_interconnetion_block, "\", intEndPos)
+'                                current_range_interconnetion_block_U = Mid(current_range_interconnetion_block, intStartPos + 1, intEndPos - intStartPos - 1)
 '                                Debug.Print "current_range_chart: " & current_range_chart
 '                                Debug.Print "current_range_interconnetion_block_U: " & current_range_interconnetion_block_U
                      
