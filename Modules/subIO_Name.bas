@@ -1,5 +1,35 @@
 Attribute VB_Name = "subIO_Name"
+Sub subIO_DeleteSheets()
+
+'Clean up workbook
+On Error Resume Next
+
+
+Application.DisplayAlerts = False
+    Sheets("Signal Connections").Delete
+    Sheets("HWConfig").Delete
+    Sheets("Range").Delete
+    Sheets("Alarm").Delete
+    Sheets("Symbol Table").Delete
+    Sheets("Rack").Delete
+    Sheets("AI").Delete
+    Sheets("SOE").Delete
+    Sheets("SOE Message").Delete
+    Sheets("DI Signal").Delete
+    Sheets("DI").Delete
+    Sheets("DI Alarm").Delete
+    Sheets("File Paths").Delete
+    Sheets("Report").Delete
+Application.DisplayAlerts = True
+
+End Sub
+
+
 Sub subIO_Name()
+
+
+
+
 '
 ' IO_Name Macro
 '
@@ -278,16 +308,14 @@ wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Alarm").Range("A1")
 wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Alarm").Range("B1")
 wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("Alarm").Range("C1")
 wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("Alarm").Range("D1")
-wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Alarm").Range("J1")
-wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("Alarm").Range("K1")
 wb2.Close
 
-'sort by block then I/O Name
-With Sheets("Alarm").Range("A:C")
-        .Cells.Sort Key1:=.Columns(Application.Match("Block", .Rows(1), 0)), Order1:=xlAscending, MatchCase:=True, _
-                    Key2:=.Columns(Application.Match("I/O name", .Rows(1), 0)), Order2:=xlAscending, MatchCase:=True, _
-                    Orientation:=xlTopToBottom, Header:=xlYes
-End With
+''sort by block then I/O Name
+'With Sheets("Alarm").Range("A:C")
+'        .Cells.Sort Key1:=.Columns(Application.Match("Block", .Rows(1), 0)), Order1:=xlAscending, MatchCase:=True, _
+'                    Key2:=.Columns(Application.Match("I/O name", .Rows(1), 0)), Order2:=xlAscending, MatchCase:=True, _
+'                    Orientation:=xlTopToBottom, Header:=xlYes
+'End With
 intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 
 
@@ -335,20 +363,21 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
         'get a signal(i) and symbol(j) value
         current_symbol = Sheets("Report").Cells(i, 1).Value2
         current_signal = Sheets("Signal Connections").Cells(j, 1).Value2
-          Debug.Print "current_symbol: " & current_symbol
-          Debug.Print "current_signal: " & current_signal
+         ' Debug.Print "current_symbol: " & current_symbol
+         ' Debug.Print "current_signal: " & current_signal
         
         'search for a signal and symbol match
         If current_symbol = current_signal Then
           current_signal_block = Sheets("Signal Connections").Cells(j, 2).Value2
           current_signal_chart = Sheets("Signal Connections").Cells(j, 3).Value2
            
-          Debug.Print "current_signal: " & current_signal
-          Debug.Print "current_signal_block: " & current_signal_block
-          Debug.Print "current_signal_chart: " & current_signal_chart
+'          Debug.Print "current_signal: " & current_signal
+'          Debug.Print "current_signal_block: " & current_signal_block
+'          Debug.Print "current_signal_chart: " & current_signal_chart
           
             'Start Part B
-  
+            
+                                                  
                   Dim current_range_block As String
                   Dim current_range_chart As String
                   Dim current_range_interconnetion_block As String
@@ -360,38 +389,139 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
                           'get a range_block(i) and range_chart value
                           current_range_block = Sheets("Range").Cells(k, 1).Value2
                           current_range_chart = Sheets("Range").Cells(k, 4).Value2
-                            Debug.Print "current_signal_block: " & current_signal_block
-                            Debug.Print "current_signal_chart: " & current_signal_chart
-                            Debug.Print "current_range_block: " & current_range_block
-                            Debug.Print "current_range_chart: " & current_range_chart
-                            
+'                            Debug.Print "current_signal_block: " & current_signal_block
+'                            Debug.Print "current_signal_chart: " & current_signal_chart
+'                            Debug.Print "current_range_block: " & current_range_block
+'                            Debug.Print "current_range_chart: " & current_range_chart
+
+                 'bug check
+                 If current_symbol = "UNIT 1 STATOR TEMP #10" Then
+                   Debug.Print "current_symbol: " & current_symbol
+                   
+                   Debug.Print "current_signal: " & current_signal
+                   Debug.Print "current_signal_chart: " & current_signal_chart
+                   
+                   Debug.Print "current_range_block: " & current_signal
+                   Debug.Print "current_range_chart: " & current_signal_chart
+                 End If
+                 
                            'search for a symbol and range match
                         If current_signal_block = current_range_block Then
                           If current_signal_chart = current_range_chart Then
                           current_range_interconnetion_block = Sheets("Range").Cells(k, 5).Value2
-                          Debug.Print "current_range_chart: " & current_range_chart
+'                          Debug.Print "current_range_chart: " & current_range_chart
+'                          Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
                           
-                          If InStr(current_range_interconnetion_block, ".U""") > 0 Then
-                          Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
+                          'Start Part C
+                          
+                          
+                          'bug check
+                          If current_symbol = "UNIT 1 STATOR TEMP #10" Then
+                            Debug.Print "current_symbol: " & current_symbol
+                            Debug.Print "current_signal: " & current_signal
                           End If
                           
-                            'Start Part C
-                            
-                          Debug.Print "current_range_chart: " & current_range_chart
                           
-                          
-                          Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
-                          
-                          Dim alarm_block As Integer
-                          Dim alarm_chart As Integer
-                          Debug.Print "alarm_block: " & alarm_block
-                          Debug.Print "alarm_chart: " & alarm_chart
+                            Dim intEndPos As Integer
+                            Dim intStartPos As Integer
+                            Dim current_range_interconnetion_block_U As String
                             
-                            
-                            
-                            
-                            
-                            'End Part C
+                          'Seperate the block from the string
+                            If InStr(current_range_interconnetion_block, ".U""") > 0 Then
+                                intEndPos = InStr(current_range_interconnetion_block, ".U")
+                                intStartPos = InStrRev(current_range_interconnetion_block, "\", intEndPos)
+                                current_range_interconnetion_block_U = Mid(current_range_interconnetion_block, intStartPos + 1, intEndPos - intStartPos - 1)
+'                                Debug.Print "current_range_chart: " & current_range_chart
+'                                Debug.Print "current_range_interconnetion_block_U: " & current_range_interconnetion_block_U
+                     
+                                               
+                                    Dim intRowsAlarm As Integer
+                                    Dim strCurrentAlarmBlock As String
+                                    Dim strCurrentAlarmChart As String
+                                    
+                                    Dim IOTag As String
+                                    Dim intAlarmWL As String
+                                    Dim intAlarmWH As String
+                                    Dim intAlarmAL As String
+                                    Dim intAlarmAH As String
+                                    
+                                    intRowsAlarm = Sheets("Alarm").UsedRange.Rows.Count
+                                    
+                                        For m = 2 To intRowsAlarm Step 1
+                                        
+                                          'get a alarm_block(i) and  alarm_chart value
+                                          strCurrentAlarmBlock = Sheets("Alarm").Cells(m, 1).Value2
+                                          strCurrentAlarmChart = Sheets("Alarm").Cells(m, 4).Value2
+                                          
+                                          IOTag = Sheets("Alarm").Cells(m, 2).Value2
+                                          
+                                          
+                                                  
+                                          intAlarmAH = Sheets("Alarm").Cells(m, 11).Value2
+                                          intAlarmWH = Sheets("Alarm").Cells(m, 11).Value2
+                                          
+                                          intAlarmWL = Sheets("Alarm").Cells(m, 11).Value2
+                                          intAlarmAL = Sheets("Alarm").Cells(m, 11).Value2
+                                          
+                                                                                   
+                                          
+'                                          Debug.Print "current_range_chart: " & current_range_chart
+'                                          Debug.Print "current_range_interconnetion_block_U: " & current_range_interconnetion_block_U
+'
+'                                          Debug.Print "strCurrentAlarmBlock: " & strCurrentAlarmBlock
+'                                          Debug.Print "strCurrentAlarmChart: " & strCurrentAlarmChart
+                                          
+                                          
+                                          'search for a range and alarm match
+                                           If strCurrentAlarmBlock = current_range_interconnetion_block_U Then
+                                             If strCurrentAlarmChart = current_range_chart Then
+                                             
+                                                'Debug.Print "IOTag: " & IOTag
+                                                
+                                                If IOTag = "U_AH" Then
+                                                  Debug.Print "intAlarmAH: " & intAlarmAH
+                                                  Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 12)
+                                                  
+                                                End If
+                                                
+                                                If IOTag = "U_WH" Then
+                                                  Debug.Print "intAlarmWH: " & intAlarmWH
+                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 10)
+                                                End If
+                                                
+                                                If IOTag = "U_WL" Then
+                                                  Debug.Print "intAlarmWL: " & intAlarmWL
+                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 9)
+                                                End If
+                                                
+                                                If IOTag = "U_AL" Then
+                                                  Debug.Print "intAlarmAL: " & intAlarmAL
+                                                    Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 11)
+                                                End If
+                                                
+                                           
+                                                Debug.Print "current_symbol: " & current_symbol
+                                                
+                                                Debug.Print "current_signal_block: " & current_signal_block
+                                                Debug.Print "current_signal_chart: " & current_signal_chart
+                                                
+                                                Debug.Print "current_range_block: " & current_range_block
+                                                Debug.Print "current_range_chart: " & current_range_chart
+                                                  
+                                                Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
+                                                
+                                                Debug.Print "strCurrentAlarmBlock: " & strCurrentAlarmBlock
+                                                Debug.Print "current_range_interconnetion_block_U: " & current_range_interconnetion_block_U
+
+                                                Debug.Print "strCurrentAlarmChart: " & strCurrentAlarmChart
+                                                Debug.Print "current_range_chart: " & current_range_chart
+                                                
+                                            End If
+                                          End If
+                                                                                         
+                                Next
+                          End If
+                          'End Part C
                           
                           End If
                         End If
