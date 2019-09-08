@@ -57,7 +57,7 @@ Open wsh_Path.Cells(2, 2).Value2 For Input As #1
 'keep data seperated in different columns (each group in original text file is seperated by an empty row)
 Do Until EOF(1)
     Line Input #1, readline
-    Debug.Print intr, intc, readline
+   ' Debug.Print intr, intc, readline
     If readline = "" Then
 
         intc = intc + 1
@@ -692,20 +692,23 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
     
     Dim target_message As String
     target_message = ""
+    
+    Dim target_address_AI As String
+    target_address = ""
 
     
     Dim symbol_from_report As String
     symbol_from_report = Sheets("Report").Cells(q, 1).Value2
     'Debug.Print symbol_from_report
     
-          If q > 161 Then
-              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
-                  'Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
-               End If
-          End If
+'          If q > 161 Then
+'              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
+'                  'Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
+'               End If
+'          End If
                             
     For i = 2 To cols_HWConfig_T Step 1
-        For j = 2 To rows_HWConfig_T Step 1
+        For j = 1 To rows_HWConfig_T Step 1
         'start part A of algorithm
         
               Dim HWConfig_line As String
@@ -715,6 +718,31 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                 'get signal from HWConfig and match it to symbol from report
                 If InStr(HWConfig_line, ",") > 0 Then
                   
+                  Dim LArray() As String
+                  LArray = Split(HWConfig_line, ",")
+                  
+                  If IsEmpty(LArray) Then
+                  Else
+                        ' UBound(LArray, 1) gives the upper limit of the first dimension, which is 5.
+                        x = UBound(LArray, 1) - LBound(LArray, 1) + 1
+                        If x > 4 Then
+                        ' remove the quotes for the comparison
+                          Dim cleanSTRAI As String
+                          cleanSTRAI = Replace(LArray(0), """", "")
+                          If cleanSTRAI = "DPSUBSYSTEM 1" Then
+                            Debug.Print LArray(0)
+                            Debug.Print LArray(4)
+                            target_address_AI = LArray(4)
+                          End If
+                          
+               
+                        End If
+                  End If
+                  
+                  
+                  
+                  
+                  
                   intEndPos = InStr(HWConfig_line, ",")
                   intStartPos = 1
                   Dim signal_from_HWCONFIG As String
@@ -723,15 +751,15 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                   Dim remander_current_symbol_T As String
                   remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
                   
-                            If q > 161 Then
-                              If i > 32 Then
-                                'Debug.Print "CURRENT LINE ", HWConfig_line
-                                'Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
-                                    If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
-                                        'Debug.Print "CHECK IF THE SYMBOL O PASSES", signal_from_HWCONFIG
-                                    End If
-                                End If
-                            End If
+'                            If q > 161 Then
+'                              If i > 32 Then
+'                                'Debug.Print "CURRENT LINE ", HWConfig_line
+'                                'Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
+'                                    If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
+'                                        'Debug.Print "CHECK IF THE SYMBOL O PASSES", signal_from_HWCONFIG
+'                                    End If
+'                                End If
+'                            End If
                                
                                
                                          
@@ -918,7 +946,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                           If Trim(target_channel) = Trim(current_channel_Range_4_type2) Then
                                               'Debug.Print "FOUND CHANNEL MATCH RANGE", target_channel, current_channel_Range_4_type
                                               'Debug.Print "current messages from channel", remander_messages_Range_4_type
-                                              target_message = remander_messages_Range_4_type2 & target_message
+                                              target_message = remander_messages_Range_4_type2 & target_message & target_address_AI
                                               target_channel = ""
                                               'Debug.Print "concatenate messages", target_message
                                           End If
@@ -1585,13 +1613,11 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
         Next
         
         ' Delete SEO fom report
-        Dim lRow
-        lRow = iStartCount + iIndex
-        Do While lRow >= iStartCount
+        Do While iIndex >= 1
         
             Sheets("Report").Rows(iStartCount).EntireRow.Delete
-        
-         lRow = lRow - 1
+      
+         iIndex = iIndex - 1
         Loop
 
 
