@@ -325,8 +325,8 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
   rows_Symbol = Sheets("Report").UsedRange.Rows.Count
   rows_Signal = Sheets("Signal Connections").UsedRange.Rows.Count
   
-'  Debug.Print "rows_Symbol: " & rows_Symbol
-'  Debug.Print "rows_Signal: " & rows_Signal
+  Debug.Print "rows_Symbol: " & rows_Symbol
+  Debug.Print "rows_Signal: " & rows_Signal
   
     For i = 2 To rows_Symbol Step 1
     
@@ -335,17 +335,17 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
         'get a signal(i) and symbol(j) value
         current_symbol = Sheets("Report").Cells(i, 1).Value2
         current_signal = Sheets("Signal Connections").Cells(j, 1).Value2
-'          Debug.Print "current_symbol: " & current_symbol
-'          Debug.Print "current_signal: " & current_signal
+          Debug.Print "current_symbol: " & current_symbol
+          Debug.Print "current_signal: " & current_signal
         
         'search for a signal and symbol match
         If current_symbol = current_signal Then
           current_signal_block = Sheets("Signal Connections").Cells(j, 2).Value2
           current_signal_chart = Sheets("Signal Connections").Cells(j, 3).Value2
            
-'          Debug.Print "current_signal: " & current_signal
-'          Debug.Print "current_signal_block: " & current_signal_block
-'          Debug.Print "current_signal_chart: " & current_signal_chart
+          Debug.Print "current_signal: " & current_signal
+          Debug.Print "current_signal_block: " & current_signal_block
+          Debug.Print "current_signal_chart: " & current_signal_chart
           
             'Start Part B
   
@@ -360,16 +360,16 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
                           'get a range_block(i) and range_chart value
                           current_range_block = Sheets("Range").Cells(k, 1).Value2
                           current_range_chart = Sheets("Range").Cells(k, 4).Value2
-'                            Debug.Print "current_signal_block: " & current_signal_block
-'                            Debug.Print "current_signal_chart: " & current_signal_chart
-'                            Debug.Print "current_range_block: " & current_range_block
-'                            Debug.Print "current_range_chart: " & current_range_chart
+                            Debug.Print "current_signal_block: " & current_signal_block
+                            Debug.Print "current_signal_chart: " & current_signal_chart
+                            Debug.Print "current_range_block: " & current_range_block
+                            Debug.Print "current_range_chart: " & current_range_chart
                             
                            'search for a symbol and range match
                         If current_signal_block = current_range_block Then
                           If current_signal_chart = current_range_chart Then
                           current_range_interconnetion_block = Sheets("Range").Cells(k, 5).Value2
-'                          Debug.Print "current_range_chart: " & current_range_chart
+                          Debug.Print "current_range_chart: " & current_range_chart
                           
                           If InStr(current_range_interconnetion_block, ".U""") > 0 Then
                           Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
@@ -377,15 +377,15 @@ Debug.Print "Value: " & Sheets("Alarm").Cells(1, 11)
                           
                             'Start Part C
                             
-                        '  Debug.Print "current_range_chart: " & current_range_chart
+                          Debug.Print "current_range_chart: " & current_range_chart
                           
                           
-                       '   Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
+                          Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
                           
                           Dim alarm_block As Integer
                           Dim alarm_chart As Integer
-'                          Debug.Print "alarm_block: " & alarm_block
-'                          Debug.Print "alarm_chart: " & alarm_chart
+                          Debug.Print "alarm_block: " & alarm_block
+                          Debug.Print "alarm_chart: " & alarm_chart
                             
                             
                             
