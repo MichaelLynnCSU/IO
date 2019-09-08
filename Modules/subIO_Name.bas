@@ -1572,7 +1572,7 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
   
        
         Dim iRowsForSOE As Integer
-        rowsForSOE = Sheets("Report").UsedRange.Count
+        iRowsForSOE = Sheets("Report").UsedRange.Count
             
         Dim iIndex As Integer
         iIndex = 1
@@ -1583,7 +1583,7 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
         Dim iStartCount As Integer
         iStartCount = 0
         
-        For q = 2 To rowsForSOE Step 1
+        For q = 2 To iRowsForSOE Step 1
           
            '   If q > 659 Then
                     Dim strCurrentSym As String
@@ -1638,9 +1638,9 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
    iStartCountSBO = 0
 
 Dim iRowsForSBO As Integer
-rowsForSBO = Sheets("Report").UsedRange.Count
+iRowsForSBO = Sheets("Report").UsedRange.Count
     
-            For q = 2 To rowsForSBO Step 1
+            For q = 2 To iRowsForSBO Step 1
                 
                     Dim strCurrentSymSBO As String
                         ' get the current symbol
