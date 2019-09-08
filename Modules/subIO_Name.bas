@@ -40,6 +40,10 @@ Set wb = ThisWorkbook
 Dim intc, intr As Integer
 intr = 1
 intc = 1
+
+Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+ws2.Name = "CPU"
+
 Set wsh_Path = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     wsh_Path.Name = "File Paths"
     wsh_Path.Cells(1, 1).Value2 = "File Name"
@@ -48,15 +52,33 @@ Set wsh_Path = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.S
     wsh_Path.Columns("B:B").ColumnWidth = 100
 frmHWConfig.Show
 Sheets("HWConfig").Select
+
 Open wsh_Path.Cells(2, 2).Value2 For Input As #1
 'keep data seperated in different columns (each group in original text file is seperated by an empty row)
 Do Until EOF(1)
-    Line Input #1, readLine
-    If readLine = "" Then
+    Line Input #1, readline
+    Debug.Print intr, intc, readline
+    If readline = "" Then
+
         intc = intc + 1
         intr = 1
     Else
-        ActiveSheet.Cells(intr, intc).Value = readLine
+    
+       ' Add CPU
+       Dim tArray() As String
+       tArray = Split(readline, " ")
+          'Debug.Print tArray(0)
+          
+          Dim strInString As String
+          strInString = tArray(0)
+      If Trim(strInString) = "STATION" Then
+          Sheets("CPU").Cells(1, 1).Value = readline
+       End If
+    
+    
+    
+    
+        ActiveSheet.Cells(intr, intc).Value = readline
         intr = intr + 1
     End If
 Loop
@@ -329,8 +351,8 @@ Open wsh_Path.Cells(6, 2).Value2 For Input As #1
 intc = 1
 intr = 1
 Do Until EOF(1)
-    Line Input #1, readLine
-    ActiveSheet.Cells(intr, intc).Value = readLine
+    Line Input #1, readline
+    ActiveSheet.Cells(intr, intc).Value = readline
     intr = intr + 1
 Loop
 Close #1
@@ -1562,7 +1584,7 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
 
         Next
         
-        
+        ' Delete SEO fom report
         Dim lRow
         lRow = iStartCount + iIndex
         Do While lRow >= iStartCount
@@ -1571,22 +1593,6 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
         
          lRow = lRow - 1
         Loop
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 'Clean up workbook
@@ -1658,6 +1664,8 @@ Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
 
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
+
+wb.Sheets("CPU").range("A:A").Copy Destination:=wbTemplate.Sheets("CPU").range("A1")
 
 wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
