@@ -695,9 +695,21 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                   Dim remander_current_symbol_T As String
                   remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
                   
-                              
+                            If q > 161 Then
+                              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
+                                  Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
+                               End If
+                               
+                              If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
+                                  Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
+                              End If
+                                 
+                            End If
+                               
+                               
                                          
-                          If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Then
+                          If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
+                               
                                
                                intEndPos = InStr(remander_current_symbol, ",")
                                intStartPos = 1
@@ -722,14 +734,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                 Else
                                    Debug.Print "WE GOT HERE, OUT OF SIGNAL RANGE ", current_channel_T
                                 End If
-                               
-                                        If q = 162 Then
-                                                  If I = 32 Or I = 33 Or I = 34 Then
-                                                      Debug.Print "col search", symbol_from_report
-                                                  End If
-                                         End If
-                                         
-                                 
+                                                             
                                          
                                     If Trim(current_signal_T) = Trim(symbol_from_report) Then
                                          
