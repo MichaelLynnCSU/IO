@@ -1001,6 +1001,18 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                  End If
                End If
                                          
+                If strRackAI = "10" Then
+                 'Debug.Print "rack: ", strRackAI
+                 If strSlotsAI = "8" Then
+                  ' Debug.Print "slot: ", strSlotsAI
+                    Sheets("Report").Cells(q, 13).Value2 = "DO 24V"
+                 End If
+               End If
+                                         
+                                         
+                                         
+                                         
+                                         
       End If
   Next q
   
