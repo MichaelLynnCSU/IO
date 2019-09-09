@@ -2,7 +2,7 @@ Attribute VB_Name = "DCS"
 Sub HDCC()
 Set wb3 = ThisWorkbook
 Set wb = ThisWorkbook
-blnPlaceHolder = False
+blnPlaceHolder = True
 
     If blnPlaceHolder = True Then
     
@@ -30,44 +30,46 @@ blnPlaceHolder = False
             localRTUData = ThisWorkbook.Sheets("Check_blocks").Cells(1, 3).Value2
             dcsRTUData = ThisWorkbook.Sheets("Check_blocks").Cells(1, 4).Value2
         
-        'Add block to report
-        Set ws3 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count))
-            ws3.Name = localData
-        Set oConn = CreateObject("ADODB.Connection")
-        Set mrs = CreateObject("ADODB.Recordset")
-        Dim myPath As String
-        myPath = "X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\WIP Michael L\IO_List_WIP\WIP\105\export data\"
-        oConn.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & myPath & ";Extended Properties='text;HDR=YES;FMT=Delimited';"
-        oConn.Open
-        sSQLSting = "SELECT * From NJH_Info.csv"
-        mrs.Open sSQLSting, oConn
-        '=>Paste the data into a sheet
-        ActiveSheet.Range("A:S").CopyFromRecordset mrs
-        'Add block to report
+'        'Add block to report
+'        Set ws3 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count))
+'            ws3.Name = localData
+'        Set oConn = CreateObject("ADODB.Connection")
+'        Set mrs = CreateObject("ADODB.Recordset")
+'        Dim myPath As String
+'        myPath = "X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\WIP Michael L\IO_List_WIP\WIP\105\export data\"
+'        oConn.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & myPath & ";Extended Properties='text;HDR=YES;FMT=Delimited';"
+'        oConn.Open
+'        sSQLSting = "SELECT * From NJH_Info.csv"
+'        mrs.Open sSQLSting, oConn
+'        '=>Paste the data into a sheet
+'        ActiveSheet.Range("A:S").CopyFromRecordset mrs
+'        'Add block to report
         
-        'Set wb3 = Workbooks.Open("\\NAS-Longmont\Project\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\NJH\DCS data export\export data\" & localData & ".csv")
-        'wb3.Sheets(1).Range("A:S").Copy Destination:=wb.Sheets(localData).Range("A:S")
-        'wb3.Close
+        Set ws3 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count))
+        ws3.Name = localData
+        Set wb3 = Workbooks.Open("C:\Users\aplus\Desktop\Comparsion\CSV_Outputs_LSI_08_28_2019\NJH\CSV\" & localData & ".csv")
+        wb3.Sheets(1).Range("A:S").Copy Destination:=wb.Sheets(localData).Range("A:S")
+        wb3.Close
         
         
         'Add block to report
         Set ws3 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count))
             ws3.Name = dcsData
-        Set wb3 = Workbooks.Open("\\NAS-Longmont\Project\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\NJH\DCS data export\export data\" & dcsData & ".csv")
+        Set wb3 = Workbooks.Open("C:\Users\aplus\Desktop\Comparsion\CSV_Outputs_LSI_08_28_2019\NJH_HDCC\CSV\" & dcsData & ".csv")
         wb3.Sheets(1).Range("A:S").Copy Destination:=wb.Sheets(dcsData).Range("A:S")
         wb3.Close
         
         'Add block to report
         Set ws3 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count))
             ws3.Name = localRTUData
-        Set wb3 = Workbooks.Open("\\NAS-Longmont\Project\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\NJH\DCS data export\export data\" & localRTUData & ".csv")
+        Set wb3 = Workbooks.Open("C:\Users\aplus\Desktop\Comparsion\CSV_Outputs_LSI_08_28_2019\NJH\CSV\" & localRTUData & ".csv")
         wb3.Sheets(1).Range("A:S").Copy Destination:=wb.Sheets(localRTUData).Range("A:S")
         wb3.Close
         
         'Add block to report
         Set ws3 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count))
             ws3.Name = dcsRTUData
-        Set wb3 = Workbooks.Open("\\NAS-Longmont\Project\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\NJH\DCS data export\export data\" & dcsRTUData & ".csv")
+        Set wb3 = Workbooks.Open("C:\Users\aplus\Desktop\Comparsion\CSV_Outputs_LSI_08_28_2019\NJH_HDCC\CSV\" & dcsRTUData & ".csv")
         wb3.Sheets(1).Range("A:S").Copy Destination:=wb.Sheets(dcsRTUData).Range("A:S")
         wb3.Close
         
@@ -77,24 +79,33 @@ blnPlaceHolder = False
                 
                 Dim intRow As Integer
                 Dim intCol As Integer
+                Dim search As Boolean: search = True
                 ' compare DCS against local for messages
+                Sheets(dcsData).Cells(1, 20).Value2 = "SP Local"
+                 Sheets(dcsData).Cells(1, 12).Value2 = "SP HDCC"
                 intRow = Sheets(dcsData).UsedRange.Rows.count
                 intCol = Sheets(localData).UsedRange.Rows.count
                 
                       For k = 2 To intRow Step 1
+                        search = True
                         For j = 2 To intCol Step 1
                             If Sheets(dcsData).Cells(k, 2).Value2 = Sheets(localData).Cells(j, 2).Value2 Then
                                 If Sheets(dcsData).Cells(k, 4).Value2 = Sheets(localData).Cells(j, 4).Value2 Then
-                                    If Sheets(dcsData).Cells(k, 9).Value2 = Sheets(localData).Cells(j, 9).Value2 Then
+                                    If Sheets(dcsData).Cells(k, 10).Value2 = Sheets(localData).Cells(j, 10).Value2 Then
                                            If Replace(LCase(Sheets(dcsData).Cells(k, 12).Value2), " ", "") <> Replace(LCase(Sheets(localData).Cells(j, 12).Value2), " ", "") Then
-                                                Sheets(dcsData).Cells(k, 16).Value2 = Sheets(localData).Cells(j, 12).Value2
-                                                Sheets(dcsData).Cells(k, 11).Value2 = Sheets(localData).Cells(j, 10).Value2
+                                                Sheets(dcsData).Cells(k, 20).Value2 = Sheets(localData).Cells(j, 12).Value2
+                                                Sheets(dcsData).Cells(k, 11).Value2 = Sheets(localData).Cells(j, 11).Value2
+                                                search = False
                                             End If
                                         Exit For
                                     End If
                                 End If
                             End If
                         Next
+                        If search = True Then
+                             Sheets(dcsData).Cells(k, 20).Value2 = "No Match"
+                             search = False
+                        End If
                      Next
         
         ' Part B
