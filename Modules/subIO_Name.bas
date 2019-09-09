@@ -1440,17 +1440,24 @@ wb2.Close
         'Debug.Print type2
         type2 = Replace(type2, """", "")
         
-        Debug.Print range2, "split the strng"
+        'Debug.Print range2, "split the strng"
         
         Dim LArrayRange() As String
         LArrayRange = Split(range2, " ")
         
-        Dim strNewString
-        strNewString = LArrayRange(1)
-        strNewString = strNewString & LArrayRange(0)
+        Dim icheckarraysize
         
-        Sheets("Report").Cells(q, 13).Value = Trim(strNewString)
-        Sheets("Report").Cells(q, 26).Value = Trim(type2)
+        
+         ' UBound(LArray, 1) gives the upper limit of the first dimension, which is 5.
+        icheckarraysize = UBound(LArrayRange, 1) - LBound(LArrayRange, 1) + 1
+        If icheckarraysize > 1 Then
+          Dim strNewString
+          strNewString = LArrayRange(1)
+          strNewString = strNewString & ", " & LArrayRange(0)
+          
+          Sheets("Report").Cells(q, 13).Value = Trim(strNewString)
+          Sheets("Report").Cells(q, 26).Value = Trim(type2)
+        End If
         
         
       
@@ -1738,14 +1745,6 @@ iRowsForRDX = Sheets("Report").UsedRange.Count
 
 
 
-'shift tab
-    Sheets("Report").Columns("Z:Z").Select
-    Selection.Cut
-    Sheets("Report").Columns("N:N").Select
-    Selection.Insert Shift:=xlToRight
-
-
-
 'Clean up workbook
 'Application.DisplayAlerts = False
 '    Sheets("Signal Connections").Delete
@@ -1801,6 +1800,15 @@ With Sheets("Report")
     Next i
 End With
 
+
+'shift tab
+    Sheets("Report").Activate
+    Sheets("Report").Columns("AA:AA").Select
+    Selection.Cut
+    Sheets("Report").Columns("O:O").Select
+    Selection.Insert Shift:=xlToRight
+    
+    
 'Top align cells
 Dim wks As Worksheet
 For Each wks In Worksheets
@@ -1810,7 +1818,7 @@ Next wks
 
 
 
- 
+
 '' switch tabs
 ' Sheets("Report").Columns("AA:AA").Cut Destination:=Sheets("Report").Columns("AB:AB")
 ' Sheets("Report").Columns("O:O").Cut Destination:=Sheets("Report").Columns("AA:AA")
@@ -1841,6 +1849,18 @@ wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths
 wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
 
+Dim strCPUtemplateName As String
+strCPUtemplateName = wb.Sheets("CPU").Cells(1, 1).Value2
+'Debug.Print "testing value ", strCPUtemplateName
+
+Dim TestArray() As String
+TestArray = Split(strCPUtemplateName, ",")
+strCPUtemplateName = TestArray(1)
+
+'Debug.Print "testing value ", strCPUtemplateName
+wbTemplate.Sheets("Report").Name = Replace(strCPUtemplateName, """", "")
+
+
 wb.Sheets("SOE_Seperator").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
 
@@ -1855,6 +1875,9 @@ wbTemplate.Sheets("File Paths").range("A2").PasteSpecial xlPasteValues
 
 'SaveAs
 frmSaveAs.Show
+
+
+
 
 Application.ScreenUpdating = True
 'Freeze top row
