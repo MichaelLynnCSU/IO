@@ -1794,6 +1794,12 @@ For Each wks In Worksheets
     wks.Cells.HorizontalAlignment = xlLeft
 Next wks
 
+' switch tabs
+ Sheets("Report").Columns("AA:AA").Cut Destination:=Sheets("Report").Columns("AB:AB")
+ Sheets("Report").Columns("O:O").Cut Destination:=Sheets("Report").Columns("AA:AA")
+ Sheets("Report").Columns("AB:AB").Cut Destination:=CSheets("Report").Columns("O:O")
+
+
 'Add data to template
 Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction ToolV2.xlsx")
 
