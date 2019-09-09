@@ -1,5 +1,6 @@
 Attribute VB_Name = "Module1"
 Sub subTest()
+'STATION S7400H, "SIMATIC H Station(1)"
 Dim current_range_interconnetion_block As String '"BK2_TEMP\PH_A161kV.U"GEN3_LOAD_RED\3.T1_XFMR"GEN4_LOAD_RED\4.T1_XFMR"AI2_PT272_287\SLOT18.V2
 
 
@@ -18,8 +19,52 @@ Dim strBlock As String
 End Sub
 
 
+Sub Test3()
 
 
+'Pull over block 2
+Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+    ws2.Name = "test button"
+frmCH_AI_Signals.Show
+Set wb2 = Workbooks.Open(wsh_Path.Cells(3, 2).Value2)
+wb2.Sheets(1).range("A:A").Copy Destination:=wb.Sheets("test worksheet").range("A1")
+
+wb2.Close
+
+
+
+
+End Sub
+Sub Test2()
+    
+        Dim seperateString As String
+
+        
+        seperateString = """test1""""test2"""
+
+        Dim range2
+        Dim type2
+        
+        
+        Dim POS
+        Dim RevPOS
+        
+        POS = InStr(seperateString, """")
+        range2 = Mid(seperateString, POS + 1, Len(seperateString))
+        
+        POS = InStr(range2, """")
+        range2 = Mid(range2, POS + 1, Len(range2))
+        Debug.Print range2
+        
+        
+        Dim seperateString2 As String
+        
+        type2 = Mid(seperateString, 1, POS)
+        Debug.Print type2
+
+
+
+End Sub
 Sub SubTest2()
 
 
@@ -66,9 +111,13 @@ Dim remander_messages_Range_4_type As String
 
 ' part A of String alogrithm
 
-'symbol_4_type = "Symbol I, 0, ""GEN4 COOL WTR INLET TEMP"", ""GENERATOR COOLING WATER INLET TEMP"""
-symbol_4_type = "Symbol I, 1, ""U4 BRG COOL DSCH TEMP"", ""BEARING COOLING WATER DISCHARGE TEMP"""
+'SYMBOL  O , 0, "AGC MRU FEEDBACK", ""
+'Symbol I, 0, "GEN4 COOL WTR INLET TEMP", "GENERATOR COOLING WATER INLET TEMP"
+'GEN4 COOL WTR INLET TEMP
 
+'symbol_4_type = "Symbol I, 0, ""GEN4 COOL WTR INLET TEMP"", ""GENERATOR COOLING WATER INLET TEMP"""
+'symbol_4_type = "Symbol I, 1, ""U4 BRG COOL DSCH TEMP"", ""BEARING COOLING WATER DISCHARGE TEMP"""
+symbol_4_type = "Symbol O, 0, ""AGC MRU FEEDBACK"", """
 
 'get symbol
 intEndPos = InStr(symbol_4_type, ",")
@@ -177,4 +226,14 @@ Debug.Print remander_messages_Range_4_type
 
 ' end C of String alogrithm
 
+
+
+
 End Sub
+
+
+                
+                
+
+
+
