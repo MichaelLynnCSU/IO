@@ -1443,7 +1443,7 @@ wb2.Close
         Debug.Print range2, "split the strng"
         
         Dim LArrayRange() As String
-        LArrayRange = Split(LString, "")
+        LArrayRange = Split(range2, " ")
         
         Dim strNewString
         strNewString = LArrayRange(1)
