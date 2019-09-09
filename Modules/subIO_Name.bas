@@ -1440,7 +1440,16 @@ wb2.Close
         'Debug.Print type2
         type2 = Replace(type2, """", "")
         
-        Sheets("Report").Cells(q, 13).Value = Trim(range2)
+        Debug.Print range2, "split the strng"
+        
+        Dim LArrayRange() As String
+        LArrayRange = Split(LString, "")
+        
+        Dim strNewString
+        strNewString = LArrayRange(1)
+        strNewString = strNewString & LArrayRange(0)
+        
+        Sheets("Report").Cells(q, 13).Value = Trim(strNewString)
         Sheets("Report").Cells(q, 26).Value = Trim(type2)
         
         
@@ -1729,6 +1738,11 @@ iRowsForRDX = Sheets("Report").UsedRange.Count
 
 
 
+'shift tab
+    Sheets("Report").Columns("Z:Z").Select
+    Selection.Cut
+    Sheets("Report").Columns("N:N").Select
+    Selection.Insert Shift:=xlToRight
 
 
 
@@ -1794,10 +1808,13 @@ For Each wks In Worksheets
     wks.Cells.HorizontalAlignment = xlLeft
 Next wks
 
-' switch tabs
- Sheets("Report").Columns("AA:AA").Cut Destination:=Sheets("Report").Columns("AB:AB")
- Sheets("Report").Columns("O:O").Cut Destination:=Sheets("Report").Columns("AA:AA")
- Sheets("Report").Columns("AB:AB").Cut Destination:=CSheets("Report").Columns("O:O")
+
+
+ 
+'' switch tabs
+' Sheets("Report").Columns("AA:AA").Cut Destination:=Sheets("Report").Columns("AB:AB")
+' Sheets("Report").Columns("O:O").Cut Destination:=Sheets("Report").Columns("AA:AA")
+' Sheets("Report").Columns("AB:AB").Cut Destination:=Sheets("Report").Columns("O:O")
 
 
 'Add data to template
@@ -1814,11 +1831,12 @@ wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("RDX").rang
 
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
 
-' add CPU to report
-Dim getCountCPU As Integer
-getCountCPU = wbTemplate.Sheets("Report").UsedRange.Rows.Count
-getCountCPU = getCountCPU + 1
-wb.Sheets("CPU").Cells(1, 1).Copy Destination:=wbTemplate.Sheets("Report").Cells(getCountCPU, 1)
+'' add CPU to report
+'Dim getCountCPU As Integer
+'getCountCPU = wbTemplate.Sheets("Report").UsedRange.Rows.Count
+'getCountCPU = getCountCPU + 1
+'wb.Sheets("CPU").Cells(1, 1).Copy Destination:=wbTemplate.Sheets("Report").Cells(getCountCPU, 1)
+
 
 wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
@@ -1831,6 +1849,9 @@ wbTemplate.Sheets("SBO").range("A2").PasteSpecial xlPasteValues
 
 wb.Sheets("RDX_Seperator").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("RDX").range("A2").PasteSpecial xlPasteValues
+
+wb.Sheets("File Paths").range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("File Paths").range("A2").PasteSpecial xlPasteValues
 
 'SaveAs
 frmSaveAs.Show
