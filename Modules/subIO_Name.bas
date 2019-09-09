@@ -238,9 +238,9 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "Signal Connections"
 frmCH_AI_Signals.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(3, 2).Value2)
-wb2.Sheets(1).range("K:K").Copy Destination:=wb.Sheets("Signal Connections").range("A1")
-wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("Signal Connections").range("B1")
-wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("Signal Connections").range("C1")
+wb2.Sheets(1).Range("K:K").Copy Destination:=wb.Sheets("Signal Connections").Range("A1")
+wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Signal Connections").Range("B1")
+wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("Signal Connections").Range("C1")
 wb2.Close
 'Add block to report
 Dim strLoc, strBlock As String
@@ -259,6 +259,8 @@ For i = 2 To intn_Report Step 1
 Next i
 End With
 
+
+
 'Pull Over Range Values
 Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     ws2.Name = "Range"
@@ -266,37 +268,53 @@ frmRanges.Show
 If Not Len(wsh_Path.Cells(4, 2)) > 0 Then
     frmRanges.Show
 End If
+
 Set wb2 = Workbooks.Open(wsh_Path.Cells(4, 2).Value2)
-wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("Range").range("A1")
-wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("Range").range("B1")
-wb2.Sheets(1).range("J:J").Copy Destination:=wb.Sheets("Range").range("C1")
-wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("Range").range("D1")
-wb2.Sheets(1).range("L:L").Copy Destination:=wb.Sheets("Range").range("E1")
+wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Range").Range("A1")
+wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Range").Range("B1")
+wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("Range").Range("C1")
+wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("Range").Range("D1")
+wb2.Sheets(1).Range("L:L").Copy Destination:=wb.Sheets("Range").Range("E1")
 wb2.Close
+
+Debug.Print "testing filepath", wsh_Path.Cells(3, 2).Value2
+Debug.Print "testing filepath", wsh_Path.Cells(4, 2).Value2
+
+'Dim SortSkip() As String
+'Dim strSortSkip As String
+'SortSkip = Split(wsh_Path.Cells(4, 2).Value2, "__")
+'strSortSkip = SortSkip(1)
+
+' RTU test file skip condition
+'If strSortSkip <> "csv.csv" Then
+
 'sort by block then I/O Name
-With Sheets("Range").range("A:G")
+With Sheets("Range").Range("A:G")
         .Cells.Sort Key1:=.Columns(Application.Match("Block", .Rows(1), 0)), Order1:=xlAscending, _
                     Key2:=.Columns(Application.Match("I/O name", .Rows(1), 0)), Order2:=xlDescending, _
                     Orientation:=xlTopToBottom, Header:=xlYes
 End With
+'End If
+
+
 intn_Range = Sheets("Range").Cells(Rows.Count, 1).End(xlUp).Row
 'Add new block to report
-range("F2").Select
+Range("F2").Select
 ActiveCell.FormulaR1C1 = "=MID(RC[-1],FIND(RC[-2],RC[-1])+LEN(RC[-2])+1,LEN(RC[-1])-FIND(RC[-2],RC[-1])+1)"
-range("G2").Select
+Range("G2").Select
 ActiveCell.FormulaR1C1 = "=LEFT(RC[-1],FIND("".U"",RC[-1])-1)"
-range("F2:G2").Select
-Selection.AutoFill Destination:=range("F2:G" & intn_Range)
-range("F2:G" & intn_Range).Select
+Range("F2:G2").Select
+Selection.AutoFill Destination:=Range("F2:G" & intn_Range)
+Range("F2:G" & intn_Range).Select
 
 'Add range to report
 Sheets("Report").Select
-range("G2").Select
+Range("G2").Select
 ActiveCell.FormulaR1C1 = "=MATCH(RC16,Range!C1,0)"
-range("G2").Select
-Selection.AutoFill Destination:=range("G2:H2"), Type:=xlFillDefault
-range("G2:H2").Select
-Selection.AutoFill Destination:=range("G2:H" & intn_Report), Type:=xlFillDefault
+Range("G2").Select
+Selection.AutoFill Destination:=Range("G2:H2"), Type:=xlFillDefault
+Range("G2:H2").Select
+Selection.AutoFill Destination:=Range("G2:H" & intn_Report), Type:=xlFillDefault
 With Sheets("Report")
 For i = 2 To intn_Report Step 1
     If Not Len(.Cells(i, 16).Value) > 0 Then
@@ -318,8 +336,8 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "DI Signal"
 frmCH_DI_Signals.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(11, 2).Value2)
-wb2.Sheets(1).range("K:K").Copy Destination:=wb.Sheets("DI Signal").range("A1")
-wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("DI Signal").range("B1")
+wb2.Sheets(1).Range("K:K").Copy Destination:=wb.Sheets("DI Signal").Range("A1")
+wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("DI Signal").Range("B1")
 wb2.Close
 'Add block to report
 Dim intn_DISignal As Integer
@@ -380,7 +398,7 @@ With Sheets("Symbol Table")
         End If
     Next i
     intn_SymbolTable = .Cells(Rows.Count, 1).End(xlUp).Row
-    Sheets("Report").range("A:A").Copy Destination:=wb.Sheets("Symbol Table").range("H1")
+    Sheets("Report").Range("A:A").Copy Destination:=wb.Sheets("Symbol Table").Range("H1")
     For i = 1 To intn_Report Step 1
         For j = 1 To intn_SymbolTable Step 1
             If .Cells(i, 8).Value2 = Trim(.Cells(j, 2).Value2) Then
@@ -406,10 +424,10 @@ frmAlarm.Show
 
 'Pull columns from Nickajack_Plant_NJH_Meas_Mon_Alarming
 Set wb2 = Workbooks.Open(wsh_Path.Cells(5, 2).Value2)
-wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("Alarm").range("A1")
-wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("Alarm").range("B1")
-wb2.Sheets(1).range("J:J").Copy Destination:=wb.Sheets("Alarm").range("C1")
-wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("Alarm").range("D1")
+wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Alarm").Range("A1")
+wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Alarm").Range("B1")
+wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("Alarm").Range("C1")
+wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("Alarm").Range("D1")
 wb2.Close
 
 ''sort by block then I/O Name
@@ -980,38 +998,42 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
       If Len(target_message) > 1 Then
             'Debug.Print "NAME ", symbol_from_report, "SYMBOL MESSAGES", target_message
             'Debug.Print "FOUND CHANNEL MATCH AI", target_channel
-            Dim TxtRng  As range
-            Set TxtRng = Sheets("Report").Cells(q, 13)
-            TxtRng.Value = target_message
-            target_message = ""
+            Dim strCheckDi As String
+            strCheckDi = Sheets("Report").Cells(q, 13)
+      
+            If Trim(strCheckDi) <> "DI 24V" And Trim(strCheckDi) <> "DO 24V" Then
+                Dim TxtRng  As Range
+                Set TxtRng = Sheets("Report").Cells(q, 13)
+                TxtRng.Value = target_message
+                target_message = ""
+            End If
             
             
             
-             ' repair the slot 7/rack 10 DI 24 error
-              Dim strSlotsAI As String
-              Dim strRackAI As String
-              strSlotsAI = Sheets("Report").Cells(q, 5).Value2
-              strRackAI = Sheets("Report").Cells(q, 4).Value2
-              
-               If strRackAI = "10" Then
-                 'Debug.Print "rack: ", strRackAI
-                 If strSlotsAI = "7" Then
-                  ' Debug.Print "slot: ", strSlotsAI
-                    Sheets("Report").Cells(q, 13).Value2 = "DI 24V"
-                 End If
-               End If
-                                         
-                If strRackAI = "10" Then
-                 'Debug.Print "rack: ", strRackAI
-                 If strSlotsAI = "8" Then
-                  ' Debug.Print "slot: ", strSlotsAI
-                    Sheets("Report").Cells(q, 13).Value2 = "DO 24V"
-                 End If
-               End If
-                                         
-                                         
+'             ' repair the slot 7/rack 10 DI 24 error
+'              Dim strSlotsAI As String
+'              Dim strRackAI As String
+'              strSlotsAI = Sheets("Report").Cells(q, 5).Value2
+'              strRackAI = Sheets("Report").Cells(q, 4).Value2
+'
+'               If strRackAI = "10" Or strRackAI = "11" Or strRackAI = "12" Or strRackAI = "13" Or strRackAI = "14" Then
+'                 'Debug.Print "rack: ", strRackAI
+'                 If strSlotsAI = "7" Then
+'                  ' Debug.Print "slot: ", strSlotsAI
+'                    Sheets("Report").Cells(q, 13).Value2 = "DI 24V"
+'                 End If
+'               End If
+'
+'                If strRackAI = "10" Or strRackAI = "11" Or strRackAI = "12" Or strRackAI = "13" Or strRackAI = "14" Then
+'                 'Debug.Print "rack: ", strRackAI
+'                 If strSlotsAI = "8" Then
+'                  ' Debug.Print "slot: ", strSlotsAI
+'                    Sheets("Report").Cells(q, 13).Value2 = "DO 24V"
+'                 End If
+'               End If
                                          
                                          
+                                                                               
                                          
       End If
   Next q
@@ -1164,8 +1186,8 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "DI"
 frmDI.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(12, 2).Value2)
-wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("DI").range("A1")
-wb2.Sheets(1).range("L:L").Copy Destination:=wb.Sheets("DI").range("B1")
+wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("DI").Range("A1")
+wb2.Sheets(1).Range("L:L").Copy Destination:=wb.Sheets("DI").Range("B1")
 wb2.Close
 intn_DI = Sheets("DI").Cells(Rows.Count, 1).End(xlUp).Row
 With Sheets("DI")
@@ -1200,11 +1222,11 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "DI Alarm"
 frmDIAlarm.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(13, 2).Value2)
-wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("DI Alarm").range("A1")
-wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("DI Alarm").range("B1")
-wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("DI Alarm").range("C1")
-wb2.Sheets(1).range("H:H").Copy Destination:=wb.Sheets("DI Alarm").range("D1")
-wb2.Sheets(1).range("N:N").Copy Destination:=wb.Sheets("DI Alarm").range("E1")
+wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("DI Alarm").Range("A1")
+wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("DI Alarm").Range("B1")
+wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("DI Alarm").Range("C1")
+wb2.Sheets(1).Range("H:H").Copy Destination:=wb.Sheets("DI Alarm").Range("D1")
+wb2.Sheets(1).Range("N:N").Copy Destination:=wb.Sheets("DI Alarm").Range("E1")
 wb2.Close
 intn_DIAlarm = Sheets("DI Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 With Sheets("DI Alarm")
@@ -1288,13 +1310,14 @@ Set wshRack = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sh
 frmRack.Show
 If Len(wsh_Path.Cells(7, 2)) > 5 Then
     Set wb2 = Workbooks.Open(wsh_Path.Cells(7, 2).Value2)
-    wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("Rack").range("A1")
-    wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("Rack").range("B1")
-    wb2.Sheets(1).range("G:G").Copy Destination:=wb.Sheets("Rack").range("C1")
+    wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("Rack").Range("A1")
+    wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("Rack").Range("B1")
+    wb2.Sheets(1).Range("G:G").Copy Destination:=wb.Sheets("Rack").Range("C1")
     wb2.Close
     With Sheets("Rack")
         intn_Rack = .Cells(Rows.Count, 1).End(xlUp).Row
         intn_Report = Sheets("Report").Cells(Rows.Count, 6).End(xlUp).Row
+        ' skip the trigger tags by stepping twice, only interested in the open and closed states
         For i = 2 To intn_Rack Step 2
             .Cells(i, 4).Value2 = Right(.Cells(i, 1).Value2, Len(.Cells(i, 1)) - 4)
             .Cells(i, 5).Value2 = Right(.Cells(i, 2).Value2, Len(.Cells(i, 2)) - 1)
@@ -1326,11 +1349,11 @@ Set wshAI = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Shee
 frmAI.Show
 If Len(wsh_Path.Cells(8, 2)) > 5 Then
     Set wb2 = Workbooks.Open(wsh_Path.Cells(8, 2).Value2)
-    wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("AI").range("A1")
-    wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("AI").range("B1")
-    wb2.Sheets(1).range("G:G").Copy Destination:=wb.Sheets("AI").range("C1")
-    wb2.Sheets(1).range("J:J").Copy Destination:=wb.Sheets("AI").range("D1")
-    wb2.Sheets(1).range("AB:AB").Copy Destination:=wb.Sheets("AI").range("J1")
+    wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("AI").Range("A1")
+    wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("AI").Range("B1")
+    wb2.Sheets(1).Range("G:G").Copy Destination:=wb.Sheets("AI").Range("C1")
+    wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("AI").Range("D1")
+    wb2.Sheets(1).Range("AB:AB").Copy Destination:=wb.Sheets("AI").Range("J1")
     wb2.Close
 
     
@@ -1352,7 +1375,7 @@ If Len(wsh_Path.Cells(8, 2)) > 5 Then
         .Cells(1, 7).Value2 = "Channel #"
         .Cells(1, 8).Value2 = "Low/High"
     End With
-    With Sheets("AI").range("A:H")
+    With Sheets("AI").Range("A:H")
         .Cells.Sort Key1:=.Columns(Application.Match("Slot #", .Rows(1), 0)), Order1:=xlAscending, _
                     Key2:=.Columns(Application.Match("Channel #", .Rows(1), 0)), Order2:=xlAscending, _
                     Key3:=.Columns(Application.Match("Low/High", .Rows(1), 0)), Order2:=xlAscending, _
@@ -1380,8 +1403,8 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "Normal OC"
 frmNewDigit.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(14, 2).Value2)
-wb2.Sheets(1).range("L:L").Copy Destination:=wb.Sheets("Normal OC").range("A1")
-wb2.Sheets(1).range("K:K").Copy Destination:=wb.Sheets("Normal OC").range("B1")
+wb2.Sheets(1).Range("L:L").Copy Destination:=wb.Sheets("Normal OC").Range("A1")
+wb2.Sheets(1).Range("K:K").Copy Destination:=wb.Sheets("Normal OC").Range("B1")
 wb2.Close
 
 '-----------------------------------new code for AI & NOC
@@ -1418,7 +1441,7 @@ wb2.Close
                       Dim checkForEmpty As String
                       checkForEmpty = Sheets("Report").Cells(q, 13)
                       
-                      
+                      'check for missing "RD_X_AI1" values
                       If Len(checkForEmpty) < 1 Then
                       Dim current_IOBlock As String
                       current_IOBlock = Sheets("AI").Cells(j, 10)
@@ -1517,11 +1540,11 @@ Set wshSOE = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.She
 frmSOE.Show
 If Len(wsh_Path.Cells(9, 2)) > 5 Then
     Set wb2 = Workbooks.Open(wsh_Path.Cells(9, 2).Value2)
-    wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("SOE").range("A1")
-    wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("SOE").range("B1")
-    wb2.Sheets(1).range("G:G").Copy Destination:=wb.Sheets("SOE").range("C1")
-    wb2.Sheets(1).range("J:J").Copy Destination:=wb.Sheets("SOE").range("D1")
-    wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("SOE").range("E1")
+    wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("SOE").Range("A1")
+    wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("SOE").Range("B1")
+    wb2.Sheets(1).Range("G:G").Copy Destination:=wb.Sheets("SOE").Range("C1")
+    wb2.Sheets(1).Range("J:J").Copy Destination:=wb.Sheets("SOE").Range("D1")
+    wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("SOE").Range("E1")
     wb2.Close
     With Sheets("SOE")
         intn_SOE = .Cells(Rows.Count, 1).End(xlUp).Row
@@ -1538,7 +1561,7 @@ If Len(wsh_Path.Cells(9, 2)) > 5 Then
         .Cells(1, 7).Value2 = "I/Q"
         .Cells(1, 8).Value2 = "Channel #"
     End With
-    With Sheets("SOE").range("A:H")
+    With Sheets("SOE").Range("A:H")
             .Cells.Sort Key1:=.Columns(Application.Match("Slot #", .Rows(1), 0)), Order1:=xlAscending, _
                         Key2:=.Columns(Application.Match("Channel #", .Rows(1), 0)), Order2:=xlAscending, _
                         Key3:=.Columns(Application.Match("I/Q", .Rows(1), 0)), Order2:=xlAscending, _
@@ -1567,11 +1590,11 @@ Set wshSOE_Message = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWork
 frmSOE_Message.Show
 If Len(wsh_Path.Cells(10, 2)) > 5 Then
     Set wb2 = Workbooks.Open(wsh_Path.Cells(10, 2).Value2)
-    wb2.Sheets(1).range("B:B").Copy Destination:=wb.Sheets("SOE Message").range("A1")
-    wb2.Sheets(1).range("D:D").Copy Destination:=wb.Sheets("SOE Message").range("B1")
-    wb2.Sheets(1).range("F:F").Copy Destination:=wb.Sheets("SOE Message").range("C1")
-    wb2.Sheets(1).range("H:H").Copy Destination:=wb.Sheets("SOE Message").range("D1")
-    wb2.Sheets(1).range("N:N").Copy Destination:=wb.Sheets("SOE Message").range("E1")
+    wb2.Sheets(1).Range("B:B").Copy Destination:=wb.Sheets("SOE Message").Range("A1")
+    wb2.Sheets(1).Range("D:D").Copy Destination:=wb.Sheets("SOE Message").Range("B1")
+    wb2.Sheets(1).Range("F:F").Copy Destination:=wb.Sheets("SOE Message").Range("C1")
+    wb2.Sheets(1).Range("H:H").Copy Destination:=wb.Sheets("SOE Message").Range("D1")
+    wb2.Sheets(1).Range("N:N").Copy Destination:=wb.Sheets("SOE Message").Range("E1")
     wb2.Close
     With Sheets("SOE Message")
         intn_SOE_Message = .Cells(Rows.Count, 1).End(xlUp).Row
@@ -1587,13 +1610,19 @@ If Len(wsh_Path.Cells(10, 2)) > 5 Then
                 .Cells(i, 9).Value = .Cells(i, 8).Value - 1
             ElseIf .Cells(i, 7).Value2 = 2 Then
                 .Cells(i, 9).Value = .Cells(i, 8).Value2 + 7
-            ElseIf .Cells(i, 7).Value2 = 3 And .Cells(i, 8).Value2 = 1 Then
+            ElseIf .Cells(i, 7).Value2 = 3 Then
                 .Cells(i, 9).Value = .Cells(i, 8).Value + 15
             ElseIf .Cells(i, 7).Value2 = 4 Then
                 .Cells(i, 9).Value = .Cells(i, 8).Value + 23
             End If
         Next i
     End With
+    
+    
+    
+    
+    
+    
     'Add Alarm Text to Report
     With Sheets("Report")
         For i = intn_Report To intn_Report + intn_SOE Step 1
@@ -1610,7 +1639,7 @@ End If
 
 
         'Sort by Rack then Slot then Channel #
-        With Sheets("Report").range("A:Z")
+        With Sheets("Report").Range("A:Z")
                 .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
                             Key2:=.Columns(Application.Match("Rack", .Rows(1), 0)), Order2:=xlAscending, _
                             Key3:=.Columns(Application.Match("Slot", .Rows(1), 0)), Order2:=xlAscending, _
@@ -1658,7 +1687,7 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
                              
                         'Sheets("SOE_Seperator").Cells(2, 2).Value = "test"
                         Sheets("Report").Rows(q).EntireRow.Copy
-                        Sheets("SOE_Seperator").range("A" & iIndex).PasteSpecial Paste:=xlValues
+                        Sheets("SOE_Seperator").Range("A" & iIndex).PasteSpecial Paste:=xlValues
                         iIndex = iIndex + 1
                                            
                     End If
@@ -1714,7 +1743,7 @@ iRowsForSBO = Sheets("Report").UsedRange.Count
                                  
                             'Sheets("SOB_Seperator").Cells(2, 2).Value = "test"
                             Sheets("Report").Rows(q).EntireRow.Copy
-                            Sheets("SBO_Seperator").range("A" & iIndexSBO).PasteSpecial Paste:=xlValues
+                            Sheets("SBO_Seperator").Range("A" & iIndexSBO).PasteSpecial Paste:=xlValues
                             iIndexSBO = iIndexSBO + 1
                                                
                         End If
@@ -1767,7 +1796,7 @@ iRowsForRDX = Sheets("Report").UsedRange.Count
                                  
                             'Sheets("SOB_Seperator").Cells(2, 2).Value = "test"
                             Sheets("Report").Rows(q).EntireRow.Copy
-                            Sheets("RDX_Seperator").range("A" & iIndexRDX).PasteSpecial Paste:=xlValues
+                            Sheets("RDX_Seperator").Range("A" & iIndexRDX).PasteSpecial Paste:=xlValues
                             iIndexRDX = iIndexRDX + 1
                                                
                         End If
@@ -1865,7 +1894,7 @@ Next wks
 
 
 'Add data to template
-Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction ToolV2.xlsx")
+Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction Tool.xlsx")
 
 '' add the new soe tab
 'wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
@@ -1876,7 +1905,7 @@ Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List
 '' add the new rdx tab
 'wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("RDX").range("B1")
 
-wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
+'wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
 
 '' add CPU to report
 'Dim getCountCPU As Integer
@@ -1885,8 +1914,8 @@ wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths
 'wb.Sheets("CPU").Cells(1, 1).Copy Destination:=wbTemplate.Sheets("Report").Cells(getCountCPU, 1)
 
 
-wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
-wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
+wb.Sheets("Report").Range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("Report").Range("A2").PasteSpecial xlPasteValues
 
 ' change the name of the report
 Dim strCPUtemplateName As String
@@ -1894,18 +1923,102 @@ strCPUtemplateName = wb.Sheets("CPU").Cells(1, 1).Value2
 Dim TestArray() As String
 TestArray = Split(strCPUtemplateName, ",")
 strCPUtemplateName = TestArray(1)
+
+Dim strTestForSpec As Integer
+strTestForSpec = InStr(1, strCPUtemplateName, "/")
+
+If strTestForSpec > 0 Then
+   strCPUtemplateName = Replace(strCPUtemplateName, "/", "-")
+End If
+
+
+
+
 wbTemplate.Sheets("Report").Name = Replace(strCPUtemplateName, """", "")
 
-wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
-wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
+wb.Sheets("Report").Range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("SOE").Range("A2").PasteSpecial xlPasteValues
 
-wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
-wbTemplate.Sheets("SBO").range("A2").PasteSpecial xlPasteValues
+wb.Sheets("Report").Range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("SBO").Range("A2").PasteSpecial xlPasteValues
 
-wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
-wbTemplate.Sheets("RDX").range("A2").PasteSpecial xlPasteValues
+wb.Sheets("Report").Range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("RDX").Range("A2").PasteSpecial xlPasteValues
 
 
+
+' Delete everything but DI/DO and AI8x12Bit from template tab report
+   Dim iReportCount
+      iReportCount = wbTemplate.Sheets(Replace(strCPUtemplateName, """", "")).UsedRange.Rows.Count
+        Do While iReportCount > 1
+            Dim strCurrReportType
+            strCurrReportType = wbTemplate.Sheets(Replace(strCPUtemplateName, """", "")).Cells(iReportCount, 14).Value
+            If strCurrReportType = "RD_X_SOE" Or strCurrReportType = "WR_X_SBO" Or Trim(strCurrReportType) = "RD_X_AI1" Or Trim(strCurrReportType) = "RD_X_AI16" Then
+            
+              wbTemplate.Sheets(Replace(strCPUtemplateName, """", "")).Rows(iReportCount).EntireRow.Delete
+              
+              
+            End If
+
+
+         iReportCount = iReportCount - 1
+        Loop
+        
+
+' Delete everything but SOE from template tab report
+   Dim iSOECount
+   iSOECount = wbTemplate.Sheets("SOE").UsedRange.Rows.Count
+   
+        Dim iCurrCountRows As Integer
+        iCurrCountRows = 2
+        
+        Do While iSOECount > 1
+            Dim strCurrSOEType
+            strCurrSOEType = wbTemplate.Sheets("SOE").Cells(iSOECount, 14).Value
+            If strCurrSOEType <> "RD_X_SOE" Then
+              wbTemplate.Sheets("SOE").Rows(iSOECount).EntireRow.Delete
+            Else
+              wbTemplate.Sheets("SOE").Cells(iCurrCountRows, 1).Value = iCurrCountRows
+              iCurrCountRows = iCurrCountRows + 1
+            End If
+
+        iSOECount = iSOECount - 1
+        Loop
+        
+        iCurrCountRows = 1
+
+    ' Delete everything but SBO from template tab report
+   Dim iSBOCount
+   iSBOCount = wbTemplate.Sheets("SBO").UsedRange.Rows.Count
+   
+ 
+        Do While iSBOCount > 1
+            Dim strCurrSBOType
+            strCurrSBOType = wbTemplate.Sheets("SBO").Cells(iSBOCount, 14).Value
+            If strCurrSBOType <> "WR_X_SBO" Then
+              wbTemplate.Sheets("SBO").Rows(iSBOCount).EntireRow.Delete
+            End If
+
+
+         iSBOCount = iSBOCount - 1
+        Loop
+        
+   ' Delete everything but RDX from template tab report
+   Dim irdxCOUNT
+   irdxCOUNT = wbTemplate.Sheets("RDX").UsedRange.Rows.Count
+   
+   
+        Do While irdxCOUNT > 1
+            Dim strCurrRDXType
+            strCurrRDXType = wbTemplate.Sheets("RDX").Cells(irdxCOUNT, 14).Value
+            If Trim(strCurrRDXType) <> "RD_X_AI1" And Trim(strCurrRDXType) <> "RD_X_AI16" Then
+              wbTemplate.Sheets("RDX").Rows(irdxCOUNT).EntireRow.Delete
+            End If
+
+
+         irdxCOUNT = irdxCOUNT - 1
+        Loop
+      
 'wb.Sheets("SOE_Seperator").range("A2:AA" & intn_Report).Copy
 'wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
 '
@@ -1915,9 +2028,223 @@ wbTemplate.Sheets("RDX").range("A2").PasteSpecial xlPasteValues
 'wb.Sheets("RDX_Seperator").range("A2:AA" & intn_Report).Copy
 'wbTemplate.Sheets("RDX").range("A2").PasteSpecial xlPasteValues
 
-wb.Sheets("File Paths").range("A2:AA" & intn_Report).Copy
-wbTemplate.Sheets("File Paths").range("A2").PasteSpecial xlPasteValues
+wb.Sheets("File Paths").Range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("File Paths").Range("A2").PasteSpecial xlPasteValues
 
+' fix the file path header
+'wbTemplate.Sheets("File Paths").Cells(1, 2).Values2 = "File Paths"
+
+
+'Sort by Rack then Slot then Channel #
+
+    ' sort tabs ASC rack/slot/channel
+    ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1").Sort. _
+        SortFields.Clear
+    ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1").Sort. _
+        SortFields.Add2 Key:=Range("Table1[Rack]"), SortOn:=xlSortOnValues, Order _
+        :=xlAscending, DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1").Sort. _
+        SortFields.Add2 Key:=Range("Table1[Slot]"), SortOn:=xlSortOnValues, Order _
+        :=xlAscending, DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1").Sort. _
+        SortFields.Add2 Key:=Range("Table1[Chnl]"), SortOn:=xlSortOnValues, Order _
+        :=xlAscending, DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1").Sort. _
+        SortFields.Add2 Key:=Range("Table1[Alarm-AH]"), SortOn:=xlSortOnValues, _
+        Order:=xlAscending, DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1").Sort. _
+        SortFields.Add2 Key:=Range("Table1[Alarm-WH]"), SortOn:=xlSortOnValues, _
+        Order:=xlAscending, DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1").Sort. _
+        SortFields.Add2 Key:=Range("Table1[Alarm-WL]"), SortOn:=xlSortOnValues, _
+        Order:=xlAscending, DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1").Sort. _
+        SortFields.Add2 Key:=Range("Table1[Alarm-AL]"), SortOn:=xlSortOnValues, _
+        Order:=xlAscending, DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets(Replace(strCPUtemplateName, """", "")).ListObjects("Table1"). _
+        Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+
+    ActiveWorkbook.Worksheets("SOE").ListObjects("Table15").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("SOE").ListObjects("Table15").Sort.SortFields.Add2 _
+        Key:=Range("Table15[Rack]"), SortOn:=xlSortOnValues, Order:=xlAscending, _
+        DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets("SOE").ListObjects("Table15").Sort.SortFields.Add2 _
+        Key:=Range("Table15[Slot]"), SortOn:=xlSortOnValues, Order:=xlAscending, _
+        DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets("SOE").ListObjects("Table15").Sort.SortFields.Add2 _
+        Key:=Range("Table15[Chnl]"), SortOn:=xlSortOnValues, Order:=xlAscending, _
+        DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("SOE").ListObjects("Table15").Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+
+
+    ActiveWorkbook.Worksheets("RDX").ListObjects("Table134").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("RDX").ListObjects("Table134").Sort.SortFields.Add2 _
+        Key:=Range("Table134[Rack]"), SortOn:=xlSortOnValues, Order:=xlAscending _
+        , DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets("RDX").ListObjects("Table134").Sort.SortFields.Add2 _
+        Key:=Range("Table134[Slot]"), SortOn:=xlSortOnValues, Order:=xlAscending _
+        , DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets("RDX").ListObjects("Table134").Sort.SortFields.Add2 _
+        Key:=Range("Table134[Chnl]"), SortOn:=xlSortOnValues, Order:=xlAscending _
+        , DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("RDX").ListObjects("Table134").Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    
+    
+    ActiveWorkbook.Worksheets("SBO").ListObjects("Table13").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("SBO").ListObjects("Table13").Sort.SortFields.Add2 _
+        Key:=Range("Table13[Rack]"), SortOn:=xlSortOnValues, Order:=xlAscending, _
+        DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets("SBO").ListObjects("Table13").Sort.SortFields.Add2 _
+        Key:=Range("Table13[Slot]"), SortOn:=xlSortOnValues, Order:=xlAscending, _
+        DataOption:=xlSortNormal
+    ActiveWorkbook.Worksheets("SBO").ListObjects("Table13").Sort.SortFields.Add2 _
+        Key:=Range("Table13[Chnl]"), SortOn:=xlSortOnValues, Order:=xlAscending, _
+        DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("SBO").ListObjects("Table13").Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    
+    
+    
+    wbTemplate.Sheets(Replace(strCPUtemplateName, """", "")).Activate
+    Range("Table1[Ditial?]").Select
+    Selection.ListObject.ListColumns(26).Delete
+
+    wbTemplate.Sheets("SOE").Activate
+    Range("Table15[Ditial?]").Select
+    Selection.ListObject.ListColumns(26).Delete
+
+    wbTemplate.Sheets("SBO").Activate
+    Range("Table13[Ditial?]").Select
+    Selection.ListObject.ListColumns(26).Delete
+
+    wbTemplate.Sheets("RDX").Activate
+    Range("Table134[Ditial?]").Select
+    Selection.ListObject.ListColumns(26).Delete
+    
+    
+    ' RDX range swap and type inconsistency fix
+    Dim iRdxSwap As Integer
+    iRdxSwap = wbTemplate.Sheets("RDX").UsedRange.Rows.Count
+    
+      For i = 2 To iRdxSwap Step 1
+      
+      ' fix type inconsistency
+      Range("N" & i).Select
+      Dim strCurrType As String
+      strCurrType = ActiveCell.FormulaR1C1
+      If strCurrType <> "RD_X_AI16" Then
+          ActiveCell.FormulaR1C1 = "RD_X_AI16"
+      End If
+      
+      ' swap ranges
+      wbTemplate.Sheets("RDX").Activate
+      Range("H" & i).Select
+      Dim tempLH As String
+      tempLH = ActiveCell.FormulaR1C1
+
+      Range("I" & i).Select
+      Dim tempHI As String
+      tempHI = ActiveCell.FormulaR1C1
+      
+      Range("H" & i).Select
+      ActiveCell.FormulaR1C1 = tempHI
+      
+      Range("I" & i).Select
+      ActiveCell.FormulaR1C1 = tempLH
+    Next
+   
+   
+  
+   
+
+    Dim iReportReCount As Integer
+    Dim iGeRcount As Integer
+    iGeRcount = 1
+    iReportReCount = wbTemplate.Sheets(Replace(strCPUtemplateName, """", "")).UsedRange.Rows.Count
+    For i = 2 To iReportReCount Step 1
+      wbTemplate.Sheets(Replace(strCPUtemplateName, """", "")).Activate
+      Range("A" & i).Select
+      ActiveCell.FormulaR1C1 = iGeRcount
+      iGeRcount = iGeRcount + 1
+    Next
+    iGeRcount = 1
+    
+    ' insert unit col
+    Columns("AC:AC").Select
+    Selection.Cut
+    Columns("J:J").Select
+    Selection.Insert Shift:=xlToRight
+    
+    
+    iReportReCount = wbTemplate.Sheets("SOE").UsedRange.Rows.Count
+    For i = 2 To iReportReCount Step 1
+      wbTemplate.Sheets("SOE").Activate
+      Range("A" & i).Select
+      ActiveCell.FormulaR1C1 = iGeRcount
+      iGeRcount = iGeRcount + 1
+    Next
+    iGeRcount = 1
+    
+    ' insert unit col
+    Columns("AC:AC").Select
+    Selection.Cut
+    Columns("J:J").Select
+    Selection.Insert Shift:=xlToRight
+    
+    
+    iReportReCount = wbTemplate.Sheets("SBO").UsedRange.Rows.Count
+    For i = 2 To iReportReCount Step 1
+      wbTemplate.Sheets("SBO").Activate
+      Range("A" & i).Select
+      ActiveCell.FormulaR1C1 = iGeRcount
+      iGeRcount = iGeRcount + 1
+    Next
+    iGeRcount = 1
+  
+  ' insert unit col
+    Columns("AC:AC").Select
+    Selection.Cut
+    Columns("J:J").Select
+    Selection.Insert Shift:=xlToRight
+    
+    iReportReCount = wbTemplate.Sheets("RDX").UsedRange.Rows.Count
+    For i = 2 To iReportReCount Step 1
+      wbTemplate.Sheets("RDX").Activate
+      Range("A" & i).Select
+      ActiveCell.FormulaR1C1 = iGeRcount
+      iGeRcount = iGeRcount + 1
+    Next
+    
+    'insert unit col
+    Columns("AC:AC").Select
+    Selection.Cut
+    Columns("J:J").Select
+    Selection.Insert Shift:=xlToRight
+     
+    
 'SaveAs
 frmSaveAs.Show
 
