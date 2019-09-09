@@ -15,14 +15,14 @@ Dim strBlock As String
     strBlock = Mid(current_range_interconnetion_block, intStartPos + 1, intEndPos - intStartPos - 1)
     Debug.Print intEndPos, intStartPos, strBlock
  ' End If
-
+  
 End Sub
 
 
 Sub Test3()
 
 
-'Pull over block 3
+'Pull over block 4
 Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     ws2.Name = "test button"
 frmCH_AI_Signals.Show
@@ -36,29 +36,29 @@ wb2.Close
 
 End Sub
 Sub Test2()
-
+    
         Dim seperateString As String
 
-
+        
         seperateString = """test1""""test2"""
 
         Dim range2
         Dim type2
-
-
+        
+        
         Dim POS
         Dim RevPOS
-
+        
         POS = InStr(seperateString, """")
         range2 = Mid(seperateString, POS + 1, Len(seperateString))
-
+        
         POS = InStr(range2, """")
         range2 = Mid(range2, POS + 1, Len(range2))
         Debug.Print range2
-
-
+        
+        
         Dim seperateString2 As String
-
+        
         type2 = Mid(seperateString, 1, POS)
         Debug.Print type2
 
@@ -230,3 +230,10 @@ Debug.Print remander_messages_Range_4_type
 
 
 End Sub
+
+
+                
+                
+
+
+
