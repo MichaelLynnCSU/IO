@@ -1,11 +1,6 @@
-Attribute VB_Name = "BlockType"
-Type BlockTypeStruct
-
-    CH_DO As String
-    CH_DI As String
-    CH_AO As String
-    CH_AI As String
-    MEAS_MON As String
-
-End Type
-
+Attribute VB_Name = "BtnRun"
+Sub btnRunIO_ListScript()
+Attribute btnRunIO_ListScript.VB_ProcData.VB_Invoke_Func = " \n14"
+  'frmSelectPLCType.Show
+  frmPCS7PLCWithOneOrMoreRTU.Show
+End Sub
