@@ -1440,7 +1440,16 @@ wb2.Close
         'Debug.Print type2
         type2 = Replace(type2, """", "")
         
-        Sheets("Report").Cells(q, 13).Value = Trim(range2)
+        Debug.Print range2, "split the strng"
+        
+        Dim LArrayRange() As String
+        LArrayRange = Split(LString, "")
+        
+        Dim strNewString
+        strNewString = LArrayRange(1)
+        strNewString = strNewString & LArrayRange(0)
+        
+        Sheets("Report").Cells(q, 13).Value = Trim(strNewString)
         Sheets("Report").Cells(q, 26).Value = Trim(type2)
         
         
@@ -1730,7 +1739,11 @@ iRowsForRDX = Sheets("Report").UsedRange.Count
 
 
 'shift tab
-    Debug.Print "test shift"
+    Sheets("Report").Columns("Z:Z").Select
+    Selection.Cut
+    Sheets("Report").Columns("N:N").Select
+    Selection.Insert Shift:=xlToRight
+
 
 
 'Clean up workbook
