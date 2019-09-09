@@ -1,4 +1,5 @@
 Attribute VB_Name = "subIO_Name"
+
 Function IsArrayEmpty(arr As Variant) As Boolean
 
 Dim index As Integer
@@ -16,11 +17,11 @@ End Function
 '    lastCol = Sheets(SheetName).Range("a1").End(xlToRight).Column
 '    Lastrow = Sheets(SheetName).Cells(1, 1).End(xlDown).Row
 '    Sheets(SheetName).Range("A1", Sheets(SheetName).Cells(Lastrow, lastCol)).Select
-'    Selection.NumberFormat = "�@�"
-'    Selection.Replace What:="��", Replacement:="""""", LookAt:=xlPart, _
+'    Selection.NumberFormat = "?@?"
+'    Selection.Replace What:="??", Replacement:="""""", LookAt:=xlPart, _
 '    SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
 '    ReplaceFormat:=False
-'    Selection.NumberFormat = "�@�"
+'    Selection.NumberFormat = "?@?"
 'End Sub
 
 Sub subIO_DeleteSheets()
@@ -1221,8 +1222,8 @@ Next wks
 
 'Add data to template
 Dim myPath As String
-path = ThisWorkbook.path
-Set wbTemplate = Workbooks.Open(path & "\TEMPLATE IO List Report For Extraction Tool.xlsx")
+Path = ThisWorkbook.Path
+Set wbTemplate = Workbooks.Open(Path & "\TEMPLATE IO List Report For Extraction Tool.xlsx")
 wb.Sheets("Report").Range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").Range("A2").PasteSpecial xlPasteValues
 
@@ -1659,3 +1660,5 @@ Application.ScreenUpdating = True
 
 '
 End Sub
+
+

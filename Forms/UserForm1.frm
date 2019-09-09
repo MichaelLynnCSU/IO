@@ -1,5 +1,5 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserForm1
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserForm1 
    Caption         =   "UserForm1"
    ClientHeight    =   2145
    ClientLeft      =   120
@@ -25,45 +25,45 @@ If ComboBox1.Value = "NJH" Then
 
  'Hardcoded inputs for testing purposes only. Delete when finished.
   Dim myPath As String
-  path = ThisWorkbook.path
+  Path = ThisWorkbook.Path
   ThisWorkbook.Sheets("File Paths").Cells(2, 1).Value2 = "HW Config File"
-  ThisWorkbook.Sheets("File Paths").Cells(2, 2).Value2 = path & "\NJH_HWConfig.cfg"
+  ThisWorkbook.Sheets("File Paths").Cells(2, 2).Value2 = Path & "\Exported Data Files\NJH_HWConfig.cfg"
 
   ThisWorkbook.Sheets("File Paths").Cells(3, 1).Value2 = "CH_AI_Singals"
-  ThisWorkbook.Sheets("File Paths").Cells(3, 2).Value2 = path & "\Nickajack_Plant_NJH_CH_AI_Signals.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(3, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_CH_AI_Signals.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(4, 1).Value2 = "CH_AI_Ranges"
-  ThisWorkbook.Sheets("File Paths").Cells(4, 2).Value2 = path & "\Nickajack_Plant_NJH_CH_AI_Ranges.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(4, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_CH_AI_Ranges.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(5, 1).Value2 = "Meas_Mon_Alarming"
-  ThisWorkbook.Sheets("File Paths").Cells(5, 2).Value2 = path & "\Nickajack_Plant_NJH_CH_AI_Meas_Mon_Alarming.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(5, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_CH_AI_Meas_Mon_Alarming.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(6, 1).Value2 = "Symbol Table File"
-  ThisWorkbook.Sheets("File Paths").Cells(6, 2).Value2 = path & "\SymbolTable.asc"
+  ThisWorkbook.Sheets("File Paths").Cells(6, 2).Value2 = Path & "\Exported Data Files\SymbolTable.asc"
 
   ThisWorkbook.Sheets("File Paths").Cells(7, 1).Value2 = "WR_X_SBO - Rack 1"
-  ThisWorkbook.Sheets("File Paths").Cells(7, 2).Value2 = path & "\Nickajack_Plant_NJH_WR_X_SBO.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(7, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_WR_X_SBO.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(8, 1).Value2 = "RD_X_AI1 - Rack 1"
-  ThisWorkbook.Sheets("File Paths").Cells(8, 2).Value2 = path & "\Nickajack_Plant_NJH_RD_X_AI1.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(8, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_RD_X_AI1.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(9, 1).Value2 = "RD_X_SOE - Rack 1"
-  ThisWorkbook.Sheets("File Paths").Cells(9, 2).Value2 = path & "\Nickajack_Plant_NJH_RD_X_SOE.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(9, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_RD_X_SOE.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(10, 1).Value2 = "RD_X_SOE_Message"
-  ThisWorkbook.Sheets("File Paths").Cells(10, 2).Value2 = path & "\Nickajack_Plant_NJH_RD_X_SOE_Messages.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(10, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_RD_X_SOE_Messages.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(11, 1).Value2 = "CH_DI_Singals"
-  ThisWorkbook.Sheets("File Paths").Cells(11, 2).Value2 = path & "\Nickajack_Plant_NJH_CH_DI_Signals.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(11, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_CH_DI_Signals.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(12, 1).Value2 = "CH_DI"
-  ThisWorkbook.Sheets("File Paths").Cells(12, 2).Value2 = path & "\Nickajack_Plant_NJH_CH_DI.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(12, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_CH_DI.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(13, 1).Value2 = "Message_Block"
-  ThisWorkbook.Sheets("File Paths").Cells(13, 2).Value2 = path & "\Nickajack_Plant_NJH_CH_DI_Message_Block.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(13, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_CH_DI_Message_Block.csv"
 
   ThisWorkbook.Sheets("File Paths").Cells(14, 1).Value2 = "CH_DI_Signals_NO-NC mod"
-  ThisWorkbook.Sheets("File Paths").Cells(14, 2).Value2 = path & "\Nickajack_Plant_NJH_CH_DI_Signals_NO-NC mod.csv"
+  ThisWorkbook.Sheets("File Paths").Cells(14, 2).Value2 = Path & "\Exported Data Files\Nickajack_Plant_NJH_CH_DI_Signals_NO-NC mod.csv"
 
   Unload Me
 
