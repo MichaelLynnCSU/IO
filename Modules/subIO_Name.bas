@@ -40,6 +40,10 @@ Set wb = ThisWorkbook
 Dim intc, intr As Integer
 intr = 1
 intc = 1
+
+Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+ws2.Name = "CPU"
+
 Set wsh_Path = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     wsh_Path.Name = "File Paths"
     wsh_Path.Cells(1, 1).Value2 = "File Name"
@@ -48,15 +52,33 @@ Set wsh_Path = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.S
     wsh_Path.Columns("B:B").ColumnWidth = 100
 frmHWConfig.Show
 Sheets("HWConfig").Select
+
 Open wsh_Path.Cells(2, 2).Value2 For Input As #1
 'keep data seperated in different columns (each group in original text file is seperated by an empty row)
 Do Until EOF(1)
-    Line Input #1, readLine
-    If readLine = "" Then
+    Line Input #1, readline
+   ' Debug.Print intr, intc, readline
+    If readline = "" Then
+
         intc = intc + 1
         intr = 1
     Else
-        ActiveSheet.Cells(intr, intc).Value = readLine
+    
+       ' Add CPU
+       Dim tArray() As String
+       tArray = Split(readline, " ")
+          'Debug.Print tArray(0)
+          
+          Dim strInString As String
+          strInString = tArray(0)
+      If Trim(strInString) = "STATION" Then
+          Sheets("CPU").Cells(1, 1).Value = readline
+       End If
+    
+    
+    
+    
+        ActiveSheet.Cells(intr, intc).Value = readline
         intr = intr + 1
     End If
 Loop
@@ -329,8 +351,8 @@ Open wsh_Path.Cells(6, 2).Value2 For Input As #1
 intc = 1
 intr = 1
 Do Until EOF(1)
-    Line Input #1, readLine
-    ActiveSheet.Cells(intr, intc).Value = readLine
+    Line Input #1, readline
+    ActiveSheet.Cells(intr, intc).Value = readline
     intr = intr + 1
 Loop
 Close #1
@@ -670,20 +692,25 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
     
     Dim target_message As String
     target_message = ""
+    
+    Dim target_address_AI As String
+    target_address = ""
 
     
     Dim symbol_from_report As String
     symbol_from_report = Sheets("Report").Cells(q, 1).Value2
     'Debug.Print symbol_from_report
     
-          If q > 161 Then
-              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
-                  'Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
-               End If
-          End If
+
+'          If q > 161 Then
+'              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
+'                  'Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
+'               End If
+'          End If
                             
     For i = 2 To cols_HWConfig_T Step 1
-        For j = 2 To rows_HWConfig_T Step 1
+        For j = 1 To rows_HWConfig_T Step 1
+
         'start part A of algorithm
         
               Dim HWConfig_line As String
@@ -693,6 +720,31 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                 'get signal from HWConfig and match it to symbol from report
                 If InStr(HWConfig_line, ",") > 0 Then
                   
+                  Dim LArray() As String
+                  LArray = Split(HWConfig_line, ",")
+                  
+                  If IsEmpty(LArray) Then
+                  Else
+                        ' UBound(LArray, 1) gives the upper limit of the first dimension, which is 5.
+                        x = UBound(LArray, 1) - LBound(LArray, 1) + 1
+                        If x > 4 Then
+                        ' remove the quotes for the comparison
+                          Dim cleanSTRAI As String
+                          cleanSTRAI = Replace(LArray(0), """", "")
+                          If cleanSTRAI = "DPSUBSYSTEM 1" Then
+                            'Debug.Print LArray(0)
+                            'Debug.Print LArray(4)
+                            target_address_AI = LArray(4)
+                          End If
+                          
+               
+                        End If
+                  End If
+                  
+                  
+                  
+                  
+                  
                   intEndPos = InStr(HWConfig_line, ",")
                   intStartPos = 1
                   Dim signal_from_HWCONFIG As String
@@ -701,15 +753,17 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                   Dim remander_current_symbol_T As String
                   remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
                   
-                            If q > 161 Then
-                              If i > 32 Then
-                                'Debug.Print "CURRENT LINE ", HWConfig_line
-                                'Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
-                                    If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
-                                        'Debug.Print "CHECK IF THE SYMBOL O PASSES", signal_from_HWCONFIG
-                                    End If
-                                End If
-                            End If
+
+'                            If q > 161 Then
+'                              If i > 32 Then
+'                                'Debug.Print "CURRENT LINE ", HWConfig_line
+'                                'Debug.Print "CURRENT SYMBOL FROM HWCONFIG", signal_from_HWCONFIG
+'                                    If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
+'                                        'Debug.Print "CHECK IF THE SYMBOL O PASSES", signal_from_HWCONFIG
+'                                    End If
+'                                End If
+'                            End If
+
                                
                                
                                          
@@ -896,7 +950,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                           If Trim(target_channel) = Trim(current_channel_Range_4_type2) Then
                                               'Debug.Print "FOUND CHANNEL MATCH RANGE", target_channel, current_channel_Range_4_type
                                               'Debug.Print "current messages from channel", remander_messages_Range_4_type
-                                              target_message = remander_messages_Range_4_type2 & target_message
+                                              target_message = remander_messages_Range_4_type2 & target_message & target_address_AI
                                               target_channel = ""
                                               'Debug.Print "concatenate messages", target_message
                                           End If
@@ -1290,8 +1344,9 @@ End If
 
 Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     ws2.Name = "Normal OC"
-frmCH_AI_Signals.Show
-Set wb2 = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\NJH\Exported Data Files\Nickajack_Plant_NJH_CH_DI_Signals_NO-NC mod.csv")
+frmNewDigit.Show
+Set wb2 = Workbooks.Open(wsh_Path.Cells(14, 2).Value2)
+
 wb2.Sheets(1).range("L:L").Copy Destination:=wb.Sheets("Normal OC").range("A1")
 wb2.Sheets(1).range("K:K").Copy Destination:=wb.Sheets("Normal OC").range("B1")
 wb2.Close
@@ -1394,14 +1449,16 @@ wb2.Close
         
         Sheets("Report").Cells(q, 13).Value = Trim(range2)
         Sheets("Report").Cells(q, 26).Value = Trim(type2)
-    
+
         
         
-        
-        
+      
+                 
     Next
+
     
-'-----------------------------------end code for AI & NOC
+'-----------------------------------end code for AI & NOC from the report to the new tab
+
 
 
 
@@ -1505,6 +1562,128 @@ If Len(wsh_Path.Cells(10, 2)) > 5 Then
     End With
 End If
 
+
+        'Sort by Rack then Slot then Channel #
+        With Sheets("Report").range("A:Z")
+                .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
+                            Key2:=.Columns(Application.Match("Rack", .Rows(1), 0)), Order2:=xlAscending, _
+                            Key3:=.Columns(Application.Match("Slot", .Rows(1), 0)), Order2:=xlAscending, _
+                            Key3:=.Columns(Application.Match("Channel", .Rows(1), 0)), Order2:=xlAscending, _
+                            Orientation:=xlTopToBottom, Header:=xlYes
+        End With
+                
+                
+
+'Move the SOE data
+'Add the new soe tab
+Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+    ws2.Name = "SOE_Seperator"
+  
+       
+        Dim iRowsForSOE As Integer
+        iRowsForSOE = Sheets("Report").UsedRange.Count
+            
+        Dim iIndex As Integer
+        iIndex = 1
+        
+        Dim bRunnung As Boolean
+        bRunnung = True
+        
+        Dim iStartCount As Integer
+        iStartCount = 0
+        
+        For q = 2 To iRowsForSOE Step 1
+          
+           '   If q > 659 Then
+                    Dim strCurrentSym As String
+                    ' get the current symbol
+                    strCurrentSym = Sheets("Report").Cells(q, 2)
+                      
+                    ' check if the current symbol is the type we want
+                    Dim strCheckType As String
+                    strCheckType = Sheets("Report").Cells(q, 13)
+                
+                    
+                    If strCheckType = "RD_X_SOE" Then
+                             If bRunnung Then
+                                iStartCount = q
+                                bRunnung = False
+                             End If
+                             
+                        'Sheets("SOE_Seperator").Cells(2, 2).Value = "test"
+                        Sheets("Report").Rows(q).EntireRow.Copy
+                        Sheets("SOE_Seperator").range("A" & iIndex).PasteSpecial Paste:=xlValues
+                        iIndex = iIndex + 1
+                                           
+                    End If
+              
+             ' End If
+          
+              
+
+        Next
+        
+        ' Delete SEO fom report
+        Do While iIndex >= 1
+        
+            Sheets("Report").Rows(iStartCount).EntireRow.Delete
+      
+         iIndex = iIndex - 1
+        Loop
+
+
+  ' move SBO data
+  ' create a tab
+   Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+   ws2.Name = "SBO_Seperator"
+   
+   Dim iIndexSBO As Integer
+   iIndexSBO = 1
+   
+   Dim bRunnungSBO As Boolean
+   bRunnungSBO = True
+   
+   Dim iStartCountSBO As Integer
+   iStartCountSBO = 0
+
+Dim iRowsForSBO As Integer
+iRowsForSBO = Sheets("Report").UsedRange.Count
+    
+            For q = 2 To iRowsForSBO Step 1
+                
+                    Dim strCurrentSymSBO As String
+                        ' get the current symbol
+                        strCurrentSymSBO = Sheets("Report").Cells(q, 2)
+                          
+                        ' check if the current symbol is the type we want
+                        Dim strCheckTypeSBO As String
+                        strCheckTypeSBO = Sheets("Report").Cells(q, 13)
+                    
+                        
+                        If strCheckTypeSBO = "WR_X_SBO" Then
+                                 If bRunnungSBO Then
+                                    iStartCountSBO = q
+                                    bRunnungSBO = False
+                                 End If
+                                 
+                            'Sheets("SOB_Seperator").Cells(2, 2).Value = "test"
+                            Sheets("Report").Rows(q).EntireRow.Copy
+                            Sheets("SBO_Seperator").range("A" & iIndexSBO).PasteSpecial Paste:=xlValues
+                            iIndexSBO = iIndexSBO + 1
+                                               
+                        End If
+                           
+            Next
+
+
+        ' Delete SBO fom report
+        Do While iIndexSBO >= 1
+        
+            Sheets("Report").Rows(iStartCountSBO).EntireRow.Delete
+      
+         iIndexSBO = iIndexSBO - 1
+        Loop
+
 'Clean up workbook
 'Application.DisplayAlerts = False
 '    Sheets("Signal Connections").Delete
@@ -1521,14 +1700,16 @@ End If
 '    Sheets("DI Alarm").Delete
 'Application.DisplayAlerts = True
 
-'Sort by Rack then Slot then Channel #
-With Sheets("Report").range("A:Z")
-        .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
-                    Key2:=.Columns(Application.Match("Rack", .Rows(1), 0)), Order2:=xlAscending, _
-                    Key3:=.Columns(Application.Match("Slot", .Rows(1), 0)), Order2:=xlAscending, _
-                    Key3:=.Columns(Application.Match("Channel", .Rows(1), 0)), Order2:=xlAscending, _
-                    Orientation:=xlTopToBottom, Header:=xlYes
-End With
+
+''Sort by Rack then Slot then Channel #
+'With Sheets("Report").range("A:Z")
+'        .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
+'                    Key2:=.Columns(Application.Match("Rack", .Rows(1), 0)), Order2:=xlAscending, _
+'                    Key3:=.Columns(Application.Match("Slot", .Rows(1), 0)), Order2:=xlAscending, _
+'                    Key3:=.Columns(Application.Match("Channel", .Rows(1), 0)), Order2:=xlAscending, _
+'                    Orientation:=xlTopToBottom, Header:=xlYes
+'End With
+
 
 'Clean up report
 'Sheets("Report").Range("V1:Z1").EntireColumn.Delete
@@ -1568,10 +1749,22 @@ For Each wks In Worksheets
 Next wks
 
 'Add data to template
-Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\")
+
+Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction ToolV2.xlsx")
+
+' add the new soe tab
+wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
+
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
-wb.Sheets("Report").range("A2:Z" & intn_Report).Copy
+
+wb.Sheets("CPU").range("A:A").Copy Destination:=wbTemplate.Sheets("CPU").range("A1")
+
+wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
+
+wb.Sheets("SOE_Seperator").range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
+
 
 'SaveAs
 frmSaveAs.Show
