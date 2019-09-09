@@ -1471,10 +1471,12 @@ wb2.Close
         
         Dim LArrayRange() As String
         LArrayRange = Split(range2, " ")
+
         
         Dim icheckarraysize
         
         
+
          ' UBound(LArray, 1) gives the upper limit of the first dimension, which is 5.
         icheckarraysize = UBound(LArrayRange, 1) - LBound(LArrayRange, 1) + 1
         If icheckarraysize > 1 Then
