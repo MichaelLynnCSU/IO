@@ -1675,6 +1675,63 @@ iRowsForSBO = Sheets("Report").UsedRange.Count
          iIndexSBO = iIndexSBO - 1
         Loop
 
+
+  ' move RDX data
+  ' create a tab
+   Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+   ws2.Name = "RDX_Seperator"
+   
+   Dim iIndexRDX As Integer
+   iIndexRDX = 1
+   
+   Dim bRunnungRDX As Boolean
+   bRunnungRDX = True
+   
+   Dim iStartCountRDX As Integer
+   iStartCountRDX = 0
+
+Dim iRowsForSBO As Integer
+iRowsForRDX = Sheets("Report").UsedRange.Count
+    
+            For q = 2 To iRowsForRDX Step 1
+                
+                    Dim strCurrentSymRDX As String
+                        ' get the current symbol
+                        strCurrentSymRDX = Sheets("Report").Cells(q, 2)
+                          
+                        ' check if the current symbol is the type we want
+                        Dim strCheckTypeRDX As String
+                        strCheckTypeRDX = Sheets("Report").Cells(q, 13)
+                    
+                        
+                        If strCheckTypeRDX = "RD_X_AI1 OR RD_X_AI16" Then
+                                 If bRunnungRDX Then
+                                    iStartCountRDX = q
+                                    bRunnungRDX = False
+                                 End If
+                                 
+                            'Sheets("SOB_Seperator").Cells(2, 2).Value = "test"
+                            Sheets("Report").Rows(q).EntireRow.Copy
+                            Sheets("RDX_Seperator").range("A" & iIndexRDX).PasteSpecial Paste:=xlValues
+                            iIndexRDX = iIndexRDX + 1
+                                               
+                        End If
+                           
+            Next
+
+      ' Delete RDX fom report
+        Do While iIndexRDX >= 1
+        
+            Sheets("Report").Rows(iStartCountRDX).EntireRow.Delete
+      
+         iIndexSRDX = iIndexRDX - 1
+        Loop
+
+
+
+
+
+
 'Clean up workbook
 'Application.DisplayAlerts = False
 '    Sheets("Signal Connections").Delete
@@ -1743,6 +1800,9 @@ Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List
 ' add the new soe tab
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
 
+' add the new sbo tab
+wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SBO").range("B1")
+
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
 
 wb.Sheets("CPU").range("A:A").Copy Destination:=wbTemplate.Sheets("CPU").range("A1")
@@ -1752,6 +1812,9 @@ wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
 
 wb.Sheets("SOE_Seperator").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
+
+wb.Sheets("SBO_Seperator").range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("SBO").range("A2").PasteSpecial xlPasteValues
 
 'SaveAs
 frmSaveAs.Show
