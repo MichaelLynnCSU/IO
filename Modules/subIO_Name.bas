@@ -701,7 +701,6 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
     symbol_from_report = Sheets("Report").Cells(q, 1).Value2
     'Debug.Print symbol_from_report
     
-
 '          If q > 161 Then
 '              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
 '                  'Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
@@ -710,7 +709,6 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                             
     For i = 2 To cols_HWConfig_T Step 1
         For j = 1 To rows_HWConfig_T Step 1
-
         'start part A of algorithm
         
               Dim HWConfig_line As String
@@ -753,7 +751,6 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                   Dim remander_current_symbol_T As String
                   remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
                   
-
 '                            If q > 161 Then
 '                              If i > 32 Then
 '                                'Debug.Print "CURRENT LINE ", HWConfig_line
@@ -763,7 +760,6 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
 '                                    End If
 '                                End If
 '                            End If
-
                                
                                
                                          
@@ -1345,7 +1341,6 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
     ws2.Name = "Normal OC"
 frmNewDigit.Show
 Set wb2 = Workbooks.Open(wsh_Path.Cells(14, 2).Value2)
-
 wb2.Sheets(1).range("L:L").Copy Destination:=wb.Sheets("Normal OC").range("A1")
 wb2.Sheets(1).range("K:K").Copy Destination:=wb.Sheets("Normal OC").range("B1")
 wb2.Close
@@ -1447,7 +1442,7 @@ wb2.Close
         
         Sheets("Report").Cells(q, 13).Value = Trim(range2)
         Sheets("Report").Cells(q, 26).Value = Trim(type2)
-
+        
         
       
                  
@@ -1455,7 +1450,6 @@ wb2.Close
 
     
 '-----------------------------------end code for AI & NOC from the report to the new tab
-
 
 
 
@@ -1682,7 +1676,6 @@ iRowsForSBO = Sheets("Report").UsedRange.Count
         Loop
 
 
-
   ' move RDX data
   ' create a tab
    Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
@@ -1697,7 +1690,7 @@ iRowsForSBO = Sheets("Report").UsedRange.Count
    Dim iStartCountRDX As Integer
    iStartCountRDX = 0
 
-Dim iRowsForSBO As Integer
+Dim iRowsForRDX As Integer
 iRowsForRDX = Sheets("Report").UsedRange.Count
     
             For q = 2 To iRowsForRDX Step 1
@@ -1711,7 +1704,7 @@ iRowsForRDX = Sheets("Report").UsedRange.Count
                         strCheckTypeRDX = Sheets("Report").Cells(q, 13)
                     
                         
-                        If strCheckTypeRDX = "RD_X_AI1 OR RD_X_AI16" Then
+                        If strCheckTypeRDX = "RD_X_AI1" Or strCheckTypeRDX = "RD_X_AI16" Then
                                  If bRunnungRDX Then
                                     iStartCountRDX = q
                                     bRunnungRDX = False
@@ -1728,14 +1721,17 @@ iRowsForRDX = Sheets("Report").UsedRange.Count
 
       ' Delete RDX fom report
         Do While iIndexRDX >= 1
-        
+
             Sheets("Report").Rows(iStartCountRDX).EntireRow.Delete
-      
-         iIndexSRDX = iIndexRDX - 1
+
+         iIndexRDX = iIndexRDX - 1
         Loop
 
 
-r
+
+
+
+
 'Clean up workbook
 'Application.DisplayAlerts = False
 '    Sheets("Signal Connections").Delete
@@ -1752,7 +1748,6 @@ r
 '    Sheets("DI Alarm").Delete
 'Application.DisplayAlerts = True
 
-
 ''Sort by Rack then Slot then Channel #
 'With Sheets("Report").range("A:Z")
 '        .Cells.Sort Key1:=.Columns(Application.Match("Type", .Rows(1), 0)), Order1:=xlAscending, _
@@ -1761,7 +1756,6 @@ r
 '                    Key3:=.Columns(Application.Match("Channel", .Rows(1), 0)), Order2:=xlAscending, _
 '                    Orientation:=xlTopToBottom, Header:=xlYes
 'End With
-
 
 'Clean up report
 'Sheets("Report").Range("V1:Z1").EntireColumn.Delete
@@ -1800,21 +1794,31 @@ For Each wks In Worksheets
     wks.Cells.HorizontalAlignment = xlLeft
 Next wks
 
-'Add data to template
+' switch tabs
+ Sheets("Report").Columns("AA:AA").Cut Destination:=Sheets("Report").Columns("AB:AB")
+ Sheets("Report").Columns("O:O").Cut Destination:=Sheets("Report").Columns("AA:AA")
+ Sheets("Report").Columns("AB:AB").Cut Destination:=CSheets("Report").Columns("O:O")
 
+
+'Add data to template
 Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction ToolV2.xlsx")
 
 ' add the new soe tab
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
 
-
 ' add the new sbo tab
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SBO").range("B1")
 
+' add the new rdx tab
+wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("RDX").range("B1")
 
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
 
-wb.Sheets("CPU").range("A:A").Copy Destination:=wbTemplate.Sheets("CPU").range("A1")
+' add CPU to report
+Dim getCountCPU As Integer
+getCountCPU = wbTemplate.Sheets("Report").UsedRange.Rows.Count
+getCountCPU = getCountCPU + 1
+wb.Sheets("CPU").Cells(1, 1).Copy Destination:=wbTemplate.Sheets("Report").Cells(getCountCPU, 1)
 
 wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
@@ -1822,9 +1826,11 @@ wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
 wb.Sheets("SOE_Seperator").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
 
-
 wb.Sheets("SBO_Seperator").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("SBO").range("A2").PasteSpecial xlPasteValues
+
+wb.Sheets("RDX_Seperator").range("A2:AA" & intn_Report).Copy
+wbTemplate.Sheets("RDX").range("A2").PasteSpecial xlPasteValues
 
 'SaveAs
 frmSaveAs.Show
