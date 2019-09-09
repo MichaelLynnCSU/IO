@@ -1668,14 +1668,14 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
               
 
         Next
-        
-        ' Delete SEO fom report
-        Do While iIndex >= 1
-        
-            Sheets("Report").Rows(iStartCount).EntireRow.Delete
-      
-         iIndex = iIndex - 1
-        Loop
+'
+'        ' Delete SEO fom report
+'        Do While iIndex >= 1
+'
+'            Sheets("Report").Rows(iStartCount).EntireRow.Delete
+'
+'         iIndex = iIndex - 1
+'        Loop
 
 
   ' move SBO data
@@ -1722,13 +1722,13 @@ iRowsForSBO = Sheets("Report").UsedRange.Count
             Next
 
 
-        ' Delete SBO fom report
-        Do While iIndexSBO >= 1
-        
-            Sheets("Report").Rows(iStartCountSBO).EntireRow.Delete
-      
-         iIndexSBO = iIndexSBO - 1
-        Loop
+'        ' Delete SBO fom report
+'        Do While iIndexSBO >= 1
+'
+'            Sheets("Report").Rows(iStartCountSBO).EntireRow.Delete
+'
+'         iIndexSBO = iIndexSBO - 1
+'        Loop
 
 
   ' move RDX data
@@ -1774,13 +1774,13 @@ iRowsForRDX = Sheets("Report").UsedRange.Count
                            
             Next
 
-      ' Delete RDX fom report
-        Do While iIndexRDX >= 1
-
-            Sheets("Report").Rows(iStartCountRDX).EntireRow.Delete
-
-         iIndexRDX = iIndexRDX - 1
-        Loop
+'      ' Delete RDX fom report
+'        Do While iIndexRDX >= 1
+'
+'            Sheets("Report").Rows(iStartCountRDX).EntireRow.Delete
+'
+'         iIndexRDX = iIndexRDX - 1
+'        Loop
 
 
 
@@ -1867,14 +1867,14 @@ Next wks
 'Add data to template
 Set wbTemplate = Workbooks.Open("X:\Customer\LSI\LSI001 - TVA IROCS\07 - IO List Tool\TEMPLATE IO List Report For Extraction ToolV2.xlsx")
 
-' add the new soe tab
-wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
+'' add the new soe tab
+'wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SOE").range("B1")
 
-' add the new sbo tab
-wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SBO").range("B1")
-
-' add the new rdx tab
-wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("RDX").range("B1")
+'' add the new sbo tab
+'wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("SBO").range("B1")
+'
+'' add the new rdx tab
+'wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("RDX").range("B1")
 
 wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths").range("B1")
 
@@ -1888,26 +1888,32 @@ wb.Sheets("Report").range("B:B").Copy Destination:=wbTemplate.Sheets("File Paths
 wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("Report").range("A2").PasteSpecial xlPasteValues
 
+' change the name of the report
 Dim strCPUtemplateName As String
 strCPUtemplateName = wb.Sheets("CPU").Cells(1, 1).Value2
-'Debug.Print "testing value ", strCPUtemplateName
-
 Dim TestArray() As String
 TestArray = Split(strCPUtemplateName, ",")
 strCPUtemplateName = TestArray(1)
-
-'Debug.Print "testing value ", strCPUtemplateName
 wbTemplate.Sheets("Report").Name = Replace(strCPUtemplateName, """", "")
 
-
-wb.Sheets("SOE_Seperator").range("A2:AA" & intn_Report).Copy
+wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
 
-wb.Sheets("SBO_Seperator").range("A2:AA" & intn_Report).Copy
+wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("SBO").range("A2").PasteSpecial xlPasteValues
 
-wb.Sheets("RDX_Seperator").range("A2:AA" & intn_Report).Copy
+wb.Sheets("Report").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("RDX").range("A2").PasteSpecial xlPasteValues
+
+
+'wb.Sheets("SOE_Seperator").range("A2:AA" & intn_Report).Copy
+'wbTemplate.Sheets("SOE").range("A2").PasteSpecial xlPasteValues
+'
+'wb.Sheets("SBO_Seperator").range("A2:AA" & intn_Report).Copy
+'wbTemplate.Sheets("SBO").range("A2").PasteSpecial xlPasteValues
+'
+'wb.Sheets("RDX_Seperator").range("A2:AA" & intn_Report).Copy
+'wbTemplate.Sheets("RDX").range("A2").PasteSpecial xlPasteValues
 
 wb.Sheets("File Paths").range("A2:AA" & intn_Report).Copy
 wbTemplate.Sheets("File Paths").range("A2").PasteSpecial xlPasteValues
