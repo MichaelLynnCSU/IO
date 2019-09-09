@@ -63,21 +63,21 @@ Do Until EOF(1)
         intc = intc + 1
         intr = 1
     Else
-    
+
        ' Add CPU
        Dim tArray() As String
        tArray = Split(readline, " ")
           'Debug.Print tArray(0)
-          
+
           Dim strInString As String
           strInString = tArray(0)
       If Trim(strInString) = "STATION" Then
           Sheets("CPU").Cells(1, 1).Value = readline
        End If
-    
-    
-    
-    
+
+
+
+
         ActiveSheet.Cells(intr, intc).Value = readline
         intr = intr + 1
     End If
@@ -165,12 +165,12 @@ With Sheets("HWConfig")
                 'Extract symbol (between 2nd and 3rd comma)
                 strsymbol = Mid(.Cells(i, j), InStr(1, .Cells(i, j), strchannel))
                 strsymbol = Right(strsymbol, Len(strsymbol) - Len(strchannel) - 3)
-                
+
                 'Extract comment (to the right of last comma)
                 strcomment = Right(strsymbol, Len(strsymbol) - InStr(strsymbol, ",") - 2)
                 strcomment = Left(strcomment, Len(strcomment) - 1)
                 strsymbol = Left(strsymbol, Len(strsymbol) - Len(strcomment) - 5)
-                
+
                 'Add channel #, symbol and comment to report
                 Sheets("Report").Cells(intk + intn_Report, 6).Value2 = strchannel
                 Sheets("Report").Cells(intk + intn_Report, 1).Value2 = strsymbol
@@ -444,49 +444,49 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 'Start Part A
 
   Dim current_symbol As String
-  
+
   Dim current_signal As String
   Dim current_signal_block As String
   Dim current_signal_chart As String
-  
+
   Dim rows_Symbol As Integer
   Dim rows_Signal As Integer
-  
+
   rows_Symbol = Sheets("Report").UsedRange.Rows.Count
   rows_Signal = Sheets("Signal Connections").UsedRange.Rows.Count
-  
+
 '  Debug.Print "rows_Symbol: " & rows_Symbol
 '  Debug.Print "rows_Signal: " & rows_Signal
-  
+
     For i = 2 To rows_Symbol Step 1
-    
+
       For j = 2 To rows_Signal Step 1
-      
+
         'get a signal(i) and symbol(j) value
         current_symbol = Sheets("Report").Cells(i, 1).Value2
         current_signal = Sheets("Signal Connections").Cells(j, 1).Value2
          ' Debug.Print "current_symbol: " & current_symbol
          ' Debug.Print "current_signal: " & current_signal
-        
+
         'search for a signal and symbol match
         If current_symbol = current_signal Then
           current_signal_block = Sheets("Signal Connections").Cells(j, 2).Value2
           current_signal_chart = Sheets("Signal Connections").Cells(j, 3).Value2
-           
+
 '          Debug.Print "current_signal: " & current_signal
 '          Debug.Print "current_signal_block: " & current_signal_block
 '          Debug.Print "current_signal_chart: " & current_signal_chart
-          
+
             'Start Part B
-            
-                                                  
+
+
                   Dim current_range_block As String
                   Dim current_range_chart As String
                   Dim current_range_interconnetion_block As String
-                
+
                   Dim row_range As Integer
                   row_range = Sheets("Range").UsedRange.Rows.Count
-                  
+
                       For k = 2 To row_range Step 1
                           'get a range_block(i) and range_chart value
                           current_range_block = Sheets("Range").Cells(k, 1).Value2
@@ -497,13 +497,13 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 '                            Debug.Print "current_range_chart: " & current_range_chart
 
 
-                 
+
                            'search for a symbol and range match
                         If current_signal_block = current_range_block Then
                           If current_signal_chart = current_range_chart Then
                           current_range_interconnetion_block = Sheets("Range").Cells(k, 5).Value2
-                          
-                          
+
+
                 ' start bug check
 '                 If current_symbol = "UNIT 1 STATOR TEMP #10" Then
 '                   Debug.Print "current_symbol: " & current_symbol
@@ -517,24 +517,24 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 '                   Debug.Print "current_range_interconnetion_block: " & current_range_interconnetion_block
 '                 End If
                 ' End bug check
-                          
-                          
-                          
+
+
+
                           'Start Part C
-                                                 
-                          
+
+
                             Dim intEndPos As Integer
                             Dim intStartPos As Integer
                             Dim current_range_interconnetion_block_U As String
-                            
-                            
+
+
                            ' Start new String parsing alogrithm
-                           
+
                             'Separate the block from the string
                             'the .U is a marker in the string to help find where the block name is located. Start from the end and search for .U and check if .U found
                             '  at end or in middle of interconnect string
                             intEndPos = InStrRev(current_range_interconnetion_block, ".U")
-                            
+
                             'if .U is found and it is either at the very end or in the middle but has a " right after it then find the block name
                             If intEndPos > 0 Then
                               If (intEndPos = Len(current_range_interconnetion_block) - 1) Then  'check if .U at the end of the string
@@ -550,8 +550,8 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
                                 current_range_interconnetion_block_U = Mid(current_range_interconnetion_block, intStartPos + 1, intEndPos - intStartPos - 1)
 '                                Debug.Print "Found string:"; current_range_interconnetion_block_U
                               End If
-                                
-                           
+
+
 
                               ' End String parsing alogrithm
 
@@ -563,73 +563,73 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 '                                current_range_interconnetion_block_U = Mid(current_range_interconnetion_block, intStartPos + 1, intEndPos - intStartPos - 1)
 '                                Debug.Print "current_range_chart: " & current_range_chart
 '                                Debug.Print "current_range_interconnetion_block_U: " & current_range_interconnetion_block_U
-                     
-                                               
+
+
                                     Dim intRowsAlarm As Integer
                                     Dim strCurrentAlarmBlock As String
                                     Dim strCurrentAlarmChart As String
-                                    
+
                                     Dim IOTag As String
                                     Dim intAlarmWL As String
                                     Dim intAlarmWH As String
                                     Dim intAlarmAL As String
                                     Dim intAlarmAH As String
-                                    
+
                                     intRowsAlarm = Sheets("Alarm").UsedRange.Rows.Count
-                                    
+
                                         For m = 2 To intRowsAlarm Step 1
-                                        
+
                                           'get a alarm_block(i) and  alarm_chart value
                                           strCurrentAlarmBlock = Sheets("Alarm").Cells(m, 1).Value2
                                           strCurrentAlarmChart = Sheets("Alarm").Cells(m, 4).Value2
-                                          
+
                                           IOTag = Sheets("Alarm").Cells(m, 2).Value2
-                                          
-                                          
-                                                  
+
+
+
                                           intAlarmAH = Sheets("Alarm").Cells(m, 11).Value2
                                           intAlarmWH = Sheets("Alarm").Cells(m, 11).Value2
-                                          
+
                                           intAlarmWL = Sheets("Alarm").Cells(m, 11).Value2
                                           intAlarmAL = Sheets("Alarm").Cells(m, 11).Value2
-                                          
-                                                                                   
-                                          
+
+
+
 '                                          Debug.Print "current_range_chart: " & current_range_chart
 '                                          Debug.Print "current_range_interconnetion_block_U: " & current_range_interconnetion_block_U
 '
 '                                          Debug.Print "strCurrentAlarmBlock: " & strCurrentAlarmBlock
 '                                          Debug.Print "strCurrentAlarmChart: " & strCurrentAlarmChart
-                                          
-                                          
+
+
                                           'search for a range and alarm match
                                            If strCurrentAlarmBlock = current_range_interconnetion_block_U Then
                                              If strCurrentAlarmChart = current_range_chart Then
-                                             
+
                                                 'Debug.Print "IOTag: " & IOTag
-                                                
+
                                                 If IOTag = "U_AH" Then
 '                                                  Debug.Print "intAlarmAH: " & intAlarmAH
                                                   Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 12)
-                                                  
+
                                                 End If
-                                                
+
                                                 If IOTag = "U_WH" Then
 '                                                  Debug.Print "intAlarmWH: " & intAlarmWH
                                                     Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 10)
                                                 End If
-                                                
+
                                                 If IOTag = "U_WL" Then
 '                                                  Debug.Print "intAlarmWL: " & intAlarmWL
                                                     Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 9)
                                                 End If
-                                                
+
                                                 If IOTag = "U_AL" Then
 '                                                  Debug.Print "intAlarmAL: " & intAlarmAL
                                                     Sheets("Alarm").Cells(m, 3).Copy Sheets("Report").Cells(i, 11)
                                                 End If
-                                                
-                                           
+
+
 '                                                Debug.Print "current_symbol: " & current_symbol
 '
 '                                                Debug.Print "current_signal_block: " & current_signal_block
@@ -645,30 +645,30 @@ intn_Alarm = Sheets("Alarm").Cells(Rows.Count, 1).End(xlUp).Row
 '
 '                                                Debug.Print "strCurrentAlarmChart: " & strCurrentAlarmChart
 '                                                Debug.Print "current_range_chart: " & current_range_chart
-                                                
+
                                             End If
                                           End If
-                                                                                         
+
                                 Next
                           End If
                           'End Part C
-                          
+
                           End If
                         End If
                      Next
-  
-            
+
+
             'End Part B
-          
+
         End If
-        
+
      Next
-     
+
     Next
 
 'End Part A
-  
-  
+
+
 Dim rows_symbol_Report
 Dim rows_HWConfig_T
 Dim cols_HWConfig_T
@@ -682,45 +682,45 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
 'Debug.Print rows_HWConfig_T
 'Debug.Print cols_HWConfig_T
 
-    
+
 
   For q = 2 To rows_symbol_Report Step 1
     'Debug.Print "CURRENT COUNT ", q
     ' after symbol is matched with its messafwes set it nack to -1
     Dim target_channel As String
     target_channel = "-1"
-    
+
     Dim target_message As String
     target_message = ""
-    
+
     Dim target_address_AI As String
     target_address = ""
 
-    
+
     Dim symbol_from_report As String
     symbol_from_report = Sheets("Report").Cells(q, 1).Value2
     'Debug.Print symbol_from_report
-    
+
 '          If q > 161 Then
 '              If Trim(symbol_from_report) = Trim("AGC MRU FEEDBACK") Then
 '                  'Debug.Print "CURRENT SYMBOL FROM REPORT", symbol_from_report
 '               End If
 '          End If
-                            
+
     For i = 2 To cols_HWConfig_T Step 1
         For j = 1 To rows_HWConfig_T Step 1
         'start part A of algorithm
-        
+
               Dim HWConfig_line As String
               HWConfig_line = Sheets("HWConfig").Cells(j, i).Value2
-        
-        
+
+
                 'get signal from HWConfig and match it to symbol from report
                 If InStr(HWConfig_line, ",") > 0 Then
-                  
+
                   Dim LArray() As String
                   LArray = Split(HWConfig_line, ",")
-                  
+
                   If IsEmpty(LArray) Then
                   Else
                         ' UBound(LArray, 1) gives the upper limit of the first dimension, which is 5.
@@ -734,15 +734,15 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                             'Debug.Print LArray(4)
                             target_address_AI = LArray(4)
                           End If
-                          
-               
+
+
                         End If
                   End If
-                  
-                  
-                  
-                  
-                  
+
+
+
+
+
                   intEndPos = InStr(HWConfig_line, ",")
                   intStartPos = 1
                   Dim signal_from_HWCONFIG As String
@@ -750,7 +750,7 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                   signal_from_HWCONFIG = Mid(HWConfig_line, intStartPos, intEndPos - 1)
                   Dim remander_current_symbol_T As String
                   remander_current_symbol = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
-                  
+
 '                            If q > 161 Then
 '                              If i > 32 Then
 '                                'Debug.Print "CURRENT LINE ", HWConfig_line
@@ -760,34 +760,34 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
 '                                    End If
 '                                End If
 '                            End If
-                               
-                               
-                                         
+
+
+
                           If Trim(signal_from_HWCONFIG) = Trim("SYMBOL  I") Or Trim(signal_from_HWCONFIG) = Trim("SYMBOL  O") Then
                                Dim strET200 As String
                                strET200 = Sheets("Report").Cells(q, 25).Value2
-                               
+
                                If Len(strET200) < 1 Then
                                     ' repair the rackk 33 et200 errors
                                     Sheets("report").Cells(q, 25).Value = "ET200M"
-                                
+
                                End If
-                                         
-                               
-                          
-                                         
+
+
+
+
                                intEndPos = InStr(remander_current_symbol, ",")
                                intStartPos = 1
                                Dim current_channel_T As String
                                current_channel_T = Mid(remander_current_symbol, intStartPos, intEndPos - 1)
                                remander_current_symbol = Mid(remander_current_symbol, intEndPos + 2, Len(HWConfig_line))
-                               
-                               
+
+
                                intEndPos = InStr(remander_current_symbol, ",")
                                intStartPos = 1
                                Dim current_signal_T As String
                                current_signal_T = Mid(remander_current_symbol, intStartPos + 1, intEndPos - 3)
-                                
+
                                 If current_channel_T = "0" Or current_channel_T = "1" Then
                                    current_channel_T = "0"
                                 ElseIf current_channel_T = "2" Or current_channel_T = "3" Then
@@ -799,28 +799,28 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                 Else
                                    'Debug.Print "WE GOT HERE, OUT OF SIGNAL RANGE ", current_channel_T
                                 End If
-                                   
-                                                                         
-                                         
+
+
+
                                     If Trim(current_signal_T) = Trim(symbol_from_report) Then
-                                         
+
                                        'Debug.Print "found symbol match ", current_signal_T, symbol_from_report
                                         target_channel = current_channel_T
                                         'Debug.Print "current_channel_T ", current_channel_T
                                         'Debug.Print "target_channel ", target_channel
-                                                         
+
                                     End If
                             End If
-                
+
                    End If
-                  
-                              
-                
+
+
+
         ' end part A of algorithm
-        
+
         ' part B of parse String algorithm
-        
- 
+
+
                     'get symbol
                     If InStr(HWConfig_line, ",") > 0 Then
 
@@ -829,54 +829,54 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                           Dim current_symbol_T2
                           current_symbol_T2 = Mid(HWConfig_line, intStartPos, intEndPos - 1)
                           'Debug.Print "current_symbol_T2 for AI_type", Trim(current_symbol_T2)
-                          
-         
-                            
+
+
+
                           If Trim(current_symbol_T2) = Trim("AI_TYPE") Or Trim(current_symbol_T2) = Trim("AO_TYPE") Then
                               'Debug.Print "FOUND AI LINE ", Trim(HWConfig_line)
                               'Debug.Print "CURRENT SYMBOL2 ", current_symbol_T2
-                                  
+
                                  If target_channel <> "-1" Then
                                     'Debug.Print "TARGET CHANNEL ", target_channel
-                              
+
                                     'get AI_type
                                     intEndPos = InStr(HWConfig_line, ",")
                                     intStartPos = 1
                                     Dim current_AI_4_type As String
                                     current_AI_4_type = Mid(HWConfig_line, intStartPos, intEndPos - 1)
                                     'Debug.Print current_AI_4_type
-                                   
-    
+
+
                                       'store the rest of the string
                                       Dim remander_AI_4_type As String
                                       remander_AI_4_type = Mid(HWConfig_line, intEndPos + 2, Len(HWConfig_line))
                                      'Debug.Print remander_AI_4_type
-    
-    
+
+
                                       'get AI_ID_type
                                       intEndPos = InStr(remander_AI_4_type, ",")
                                       intStartPos = 1
                                       Dim current_ID_AI_4_type As String
                                       current_ID_AI_4_type = Mid(remander_AI_4_type, intStartPos, intEndPos - 1)
                                       'Debug.Print "check current ID ", current_ID_AI_4_type
-    
+
                                       'store the rest of the string
                                       Dim remander_ID_Range_4_type
                                       remander_ID_Range_4_type = Mid(remander_AI_4_type, intEndPos + 2, Len(remander_AI_4_type))
                                      'Debug.Print "remander_ID_Range_4_type, "; remander_ID_Range_4_type
-    
+
                                       'get AI_channel_type
                                       intEndPos = InStr(remander_ID_Range_4_type, ",")
                                       intStartPos = 1
                                       Dim current_channel_AI_4_type
                                       current_channel_AI_4_type = Mid(remander_ID_Range_4_type, intStartPos, intEndPos - 1)
                                     'Debug.Print "get AI_channel_type ", Trim(current_channel_AI_4_type)
-    
+
                                       'store the rest of the string, thing left is the messages
                                       Dim remander_messages_AI_4_type
                                       remander_messages_AI_4_type = Mid(remander_ID_Range_4_type, intEndPos + 2, Len(remander_ID_Range_4_type))
                                      'Debug.Print "current sybmol AI messages", remander_messages_AI_4_type
-                                        
+
                                             If Trim(target_channel) = Trim(current_channel_AI_4_type) Then
 
                                                 ' Debug.Print "FOUND CHANNEL MATCH AI", target_channel, current_channel_AI_4_type
@@ -885,18 +885,18 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                                ' Debug.Print "AI MESSAGE", target_message
                                                 'target_channel = ""
                                              End If
-                           
+
                                 End If
 
                          End If
-                      
+
                   End If
 
-                     
+
 
                     ' end part B of algorithm
-                    
-                    
+
+
                     ' part C of String alogrithm
 
 
@@ -908,9 +908,9 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                                 intStartPos = 1
                                 Dim current_symbol_T
                                 current_symbol_T = Mid(HWConfig_line, intStartPos, intEndPos - 1)
-                                
-                                
-                                
+
+
+
                                  If Trim(current_symbol_T) = Trim("AI_RANGE") Or Trim(current_symbol_T) = Trim("AO_RANGE") Then
                                     'Debug.Print "FOUND RANGE LINE ", Trim(HWConfig_line)
                                     If target_channel <> "-1" Then
@@ -963,18 +963,18 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
 
                                  End If
                              End If
-                                
-                                                       
+
+
 
                             End If
 
 
                         ' end C of String alogrithm
-                          
-                    
+
+
               ' reset current_symbol_T
               current_symbol_T = ""
-          
+
         Next j
       Next i
       If Len(target_message) > 1 Then
@@ -984,15 +984,15 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
             Set TxtRng = Sheets("Report").Cells(q, 13)
             TxtRng.Value = target_message
             target_message = ""
-            
-            
-            
+
+
+
              ' repair the slot 7/rack 10 DI 24 error
               Dim strSlotsAI As String
               Dim strRackAI As String
               strSlotsAI = Sheets("Report").Cells(q, 5).Value2
               strRackAI = Sheets("Report").Cells(q, 4).Value2
-              
+
                If strRackAI = "10" Then
                  'Debug.Print "rack: ", strRackAI
                  If strSlotsAI = "7" Then
@@ -1000,24 +1000,24 @@ rows_HWConfig_T = Sheets("HWConfig").UsedRange.Rows.Count
                     Sheets("Report").Cells(q, 13).Value2 = "DI 24V"
                  End If
                End If
-                                         
+
       End If
   Next q
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 'Add alarm to report
 'Sheets("Report").Range("Q:Q").Copy Destination:=wb.Sheets("Alarm").Range("H1")
 'With Sheets("Alarm")
@@ -1287,7 +1287,7 @@ If Len(wsh_Path.Cells(7, 2)) > 5 Then
             .Cells(i, 4).Value2 = Right(.Cells(i, 1).Value2, Len(.Cells(i, 1)) - 4)
             .Cells(i, 5).Value2 = Right(.Cells(i, 2).Value2, Len(.Cells(i, 2)) - 1)
             .Cells(i, 5).Value2 = Left(.Cells(i, 5).Value2, Len(.Cells(i, 5)) - 3)
-            
+
             'Add data to report
             Sheets("Report").Cells(intn_Report + i / 2, 1).Value2 = .Cells(i, 3).Value2
             Sheets("Report").Cells(intn_Report + i / 2, 4).Value = 1
@@ -1321,9 +1321,9 @@ If Len(wsh_Path.Cells(8, 2)) > 5 Then
     wb2.Sheets(1).range("AB:AB").Copy Destination:=wb.Sheets("AI").range("J1")
     wb2.Close
 
-    
-   
-    
+
+
+
     With Sheets("AI")
         intn_AI = .Cells(Rows.Count, 1).End(xlUp).Row
         For i = 2 To intn_AI Step 1
@@ -1346,8 +1346,8 @@ If Len(wsh_Path.Cells(8, 2)) > 5 Then
                     Key3:=.Columns(Application.Match("Low/High", .Rows(1), 0)), Order2:=xlAscending, _
                     Orientation:=xlTopToBottom, Header:=xlYes
     End With
-    
-    
+
+
     'Add data to report
     With Sheets("AI")
         intn_Report = Sheets("Report").Cells(Rows.Count, 6).End(xlUp).Row
@@ -1379,10 +1379,10 @@ wb2.Close
 
     Dim rows_symbol_Report_AI
     rows_symbol_Report_AI = Sheets("Report").UsedRange.Rows.Count
-    
+
     Dim rows_HWConfig_AI
     rows_HWConfig_AI = Sheets("AI").UsedRange.Rows.Count
-    
+
     Dim rows_HWConfig_NOC
     rows_HWConfig_NOC = Sheets("Normal OC").UsedRange.Rows.Count
 
@@ -1392,7 +1392,7 @@ wb2.Close
 
         symbol_from_report_AI = Sheets("Report").Cells(q, 1).Value2
        ' Debug.Print symbol_from_report_AI
-   
+
             'Add missing (AI) RDX block types
             For j = 2 To rows_HWConfig_AI Step 1
 
@@ -1402,11 +1402,11 @@ wb2.Close
 
 
                 If Trim(symbol_from_report_AI) = Trim(current_IOComment) Then
-                
+
                       Dim checkForEmpty As String
                       checkForEmpty = Sheets("Report").Cells(q, 13)
-                      
-                      
+
+
                       If Len(checkForEmpty) < 1 Then
                       Dim current_IOBlock As String
                       current_IOBlock = Sheets("AI").Cells(j, 10)
@@ -1417,20 +1417,20 @@ wb2.Close
                 End If
 
             Next
-            
-                
 
-            
+
+
+
            ' add NOCs from new digital lists to the report
            For k = 2 To rows_HWConfig_NOC Step 1
-            
+
                 Dim noc_signal As String
                 noc_signal = Sheets("Normal OC").Cells(k, 1)
                 'Debug.Print noc_signal
 
 
                 If Trim(symbol_from_report_AI) = Trim(noc_signal) Then
-                        
+
                       If noc_signal <> "Spare" Then
                          Dim current_NOC As String
                          current_NOC = Sheets("Normal OC").Cells(k, 2)
@@ -1439,43 +1439,41 @@ wb2.Close
                          Sheets("Normal OC").Cells(k, 2).Copy Sheets("Report").Cells(q, 14)
                       End If
                 End If
-            
+
 
         Next
-        
+
         'split the AI type and the Range
-        
-          
+
+
         Dim seperateString As String
         seperateString = Sheets("Report").Cells(q, 13)
-      
+
 
         Dim range2
         Dim type2
-             
+
         Dim POS
-        
+
         POS = InStr(seperateString, """")
         range2 = Mid(seperateString, POS + 1, Len(seperateString))
-        
+
         POS = InStr(range2, """")
         range2 = Mid(range2, POS + 1, Len(range2))
         'Debug.Print range2
         range2 = Replace(range2, """", "")
-    
+
         type2 = Mid(seperateString, 1, POS)
         'Debug.Print type2
         type2 = Replace(type2, """", "")
-        
+
         'Debug.Print range2, "split the strng"
-        
+
         Dim LArrayRange() As String
         LArrayRange = Split(range2, " ")
 
-        
         Dim icheckarraysize
-        
-        
+
 
          ' UBound(LArray, 1) gives the upper limit of the first dimension, which is 5.
         icheckarraysize = UBound(LArrayRange, 1) - LBound(LArrayRange, 1) + 1
@@ -1483,17 +1481,17 @@ wb2.Close
           Dim strNewString
           strNewString = LArrayRange(1)
           strNewString = strNewString & ", " & LArrayRange(0)
-          
+
           Sheets("Report").Cells(q, 13).Value = Trim(strNewString)
           Sheets("Report").Cells(q, 26).Value = Trim(type2)
         End If
-        
-        
-      
-                 
+
+
+
+
     Next
 
-    
+
 '-----------------------------------end code for AI & NOC from the report to the new tab
 
 
@@ -1607,63 +1605,63 @@ End If
                             Key3:=.Columns(Application.Match("Channel", .Rows(1), 0)), Order2:=xlAscending, _
                             Orientation:=xlTopToBottom, Header:=xlYes
         End With
-                
-                
+
+
 
 'Move the SOE data
 'Add the new soe tab
 Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
     ws2.Name = "SOE_Seperator"
-  
-       
+
+
         Dim iRowsForSOE As Integer
         iRowsForSOE = Sheets("Report").UsedRange.Count
-            
+
         Dim iIndex As Integer
         iIndex = 1
-        
+
         Dim bRunnung As Boolean
         bRunnung = True
-        
+
         Dim iStartCount As Integer
         iStartCount = 0
-        
+
         For q = 2 To iRowsForSOE Step 1
-          
+
            '   If q > 659 Then
                     Dim strCurrentSym As String
                     ' get the current symbol
                     strCurrentSym = Sheets("Report").Cells(q, 2)
-                      
+
                     ' check if the current symbol is the type we want
                     Dim strCheckType As String
                     strCheckType = Sheets("Report").Cells(q, 13)
-                
-                    
+
+
                     If strCheckType = "RD_X_SOE" Then
                              If bRunnung Then
                                 iStartCount = q
                                 bRunnung = False
                              End If
-                             
+
                         'Sheets("SOE_Seperator").Cells(2, 2).Value = "test"
                         Sheets("Report").Rows(q).EntireRow.Copy
                         Sheets("SOE_Seperator").range("A" & iIndex).PasteSpecial Paste:=xlValues
                         iIndex = iIndex + 1
-                                           
+
                     End If
-              
+
              ' End If
-          
-              
+
+
 
         Next
-        
+
         ' Delete SEO fom report
         Do While iIndex >= 1
-        
+
             Sheets("Report").Rows(iStartCount).EntireRow.Delete
-      
+
          iIndex = iIndex - 1
         Loop
 
@@ -1672,51 +1670,51 @@ Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets
   ' create a tab
    Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
    ws2.Name = "SBO_Seperator"
-   
+
    Dim iIndexSBO As Integer
    iIndexSBO = 1
-   
+
    Dim bRunnungSBO As Boolean
    bRunnungSBO = True
-   
+
    Dim iStartCountSBO As Integer
    iStartCountSBO = 0
 
 Dim iRowsForSBO As Integer
 iRowsForSBO = Sheets("Report").UsedRange.Count
-    
+
             For q = 2 To iRowsForSBO Step 1
-                
+
                     Dim strCurrentSymSBO As String
                         ' get the current symbol
                         strCurrentSymSBO = Sheets("Report").Cells(q, 2)
-                          
+
                         ' check if the current symbol is the type we want
                         Dim strCheckTypeSBO As String
                         strCheckTypeSBO = Sheets("Report").Cells(q, 13)
-                    
-                        
+
+
                         If strCheckTypeSBO = "WR_X_SBO" Then
                                  If bRunnungSBO Then
                                     iStartCountSBO = q
                                     bRunnungSBO = False
                                  End If
-                                 
+
                             'Sheets("SOB_Seperator").Cells(2, 2).Value = "test"
                             Sheets("Report").Rows(q).EntireRow.Copy
                             Sheets("SBO_Seperator").range("A" & iIndexSBO).PasteSpecial Paste:=xlValues
                             iIndexSBO = iIndexSBO + 1
-                                               
+
                         End If
-                           
+
             Next
 
 
         ' Delete SBO fom report
         Do While iIndexSBO >= 1
-        
+
             Sheets("Report").Rows(iStartCountSBO).EntireRow.Delete
-      
+
          iIndexSBO = iIndexSBO - 1
         Loop
 
@@ -1725,43 +1723,43 @@ iRowsForSBO = Sheets("Report").UsedRange.Count
   ' create a tab
    Set ws2 = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
    ws2.Name = "RDX_Seperator"
-   
+
    Dim iIndexRDX As Integer
    iIndexRDX = 1
-   
+
    Dim bRunnungRDX As Boolean
    bRunnungRDX = True
-   
+
    Dim iStartCountRDX As Integer
    iStartCountRDX = 0
 
 Dim iRowsForRDX As Integer
 iRowsForRDX = Sheets("Report").UsedRange.Count
-    
+
             For q = 2 To iRowsForRDX Step 1
-                
+
                     Dim strCurrentSymRDX As String
                         ' get the current symbol
                         strCurrentSymRDX = Sheets("Report").Cells(q, 2)
-                          
+
                         ' check if the current symbol is the type we want
                         Dim strCheckTypeRDX As String
                         strCheckTypeRDX = Sheets("Report").Cells(q, 13)
-                    
-                        
+
+
                         If strCheckTypeRDX = "RD_X_AI1" Or strCheckTypeRDX = "RD_X_AI16" Then
                                  If bRunnungRDX Then
                                     iStartCountRDX = q
                                     bRunnungRDX = False
                                  End If
-                                 
+
                             'Sheets("SOB_Seperator").Cells(2, 2).Value = "test"
                             Sheets("Report").Rows(q).EntireRow.Copy
                             Sheets("RDX_Seperator").range("A" & iIndexRDX).PasteSpecial Paste:=xlValues
                             iIndexRDX = iIndexRDX + 1
-                                               
+
                         End If
-                           
+
             Next
 
       ' Delete RDX fom report
@@ -1836,8 +1834,8 @@ End With
     Selection.Cut
     Sheets("Report").Columns("O:O").Select
     Selection.Insert Shift:=xlToRight
-    
-    
+
+
 'Top align cells
 Dim wks As Worksheet
 For Each wks In Worksheets
@@ -1940,5 +1938,3 @@ Application.ScreenUpdating = True
 
 '
 End Sub
-
-
